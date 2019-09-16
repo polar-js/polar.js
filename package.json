@@ -1,0 +1,19 @@
+{
+  "name": "polarengine",
+  "version": "0.1.0",
+  "description": "JavaScript Game Engine",
+  "main": "PolarEngine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JellyAlex/PolarEngine.git"
+  },
+  "author": "Alexander Brown",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JellyAlex/PolarEngine/issues"
+  },
+  "homepage": "https://github.com/JellyAlex/PolarEngine#readme"
+}

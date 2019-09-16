@@ -1,8 +1,14 @@
 
 class PolarEngine {
 
+    static Create(canvasid) {
 
+    }
+
+    constructor() {
+        
+    }
     
 }
 
-export {  }
+export { PolarEngine };
