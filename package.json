@@ -4,7 +4,7 @@
   "description": "JavaScript Game Engine",
   "main": "PolarEngine.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "./node_modules/.bin/webpack-cli"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,20 @@
   "bugs": {
     "url": "https://github.com/JellyAlex/PolarEngine/issues"
   },
-  "homepage": "https://github.com/JellyAlex/PolarEngine#readme"
+  "homepage": "https://github.com/JellyAlex/PolarEngine#readme",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [
+    "polar",
+    "engine",
+    "graphics",
+    "webgl"
+  ],
+  "devDependencies": {
+    "ts-loader": "^6.1.0",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  }
 }
