@@ -15,7 +15,7 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js' ]
     },
     output: {
-        filename: 'polarbundle.js',
+        filename: 'polar.min.js',
         path: path.resolve(__dirname, 'tests')
     }
 };  
