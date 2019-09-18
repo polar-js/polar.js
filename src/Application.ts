@@ -1,9 +1,27 @@
+
+
 abstract class Application {
+    private isRunning: boolean;
+    private lastFrameTime: number;
+
     constructor() {
-        console.log('Created application');
+        this.isRunning = false;
     }
 
-    abstract OnLoad(): void;
+    public run() {
+        this.isRunning = true;
+        while (this.isRunning) {
+            const time = performance.now();
+            const deltaTime = time - this.lastFrameTime;
+            this.lastFrameTime = time;
+
+
+        }
+    }
+
+    public pushLayer(layer: Layer): void {
+
+    }
 }
 
 export { Application };

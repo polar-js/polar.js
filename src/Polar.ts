@@ -5,8 +5,10 @@ class Engine {
 
     constructor(canvasid: string, app: Application) {
         this.application = app;
+    }
 
-        this.application.OnLoad();
+    run(): void {
+        this.application.run();
     }
 }
 
