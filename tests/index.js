@@ -1,16 +1,19 @@
-class Sandbox extends Polar.Application {
+class ExampleLayer extends Polar.Layer {
     constructor() {
-        super();
-        console.log('Created sandbox!');
+        super("example");
+
     }
 
-    onLoad() {
-        console.log('sandbox on load');
+    onUpdate(deltaTime) {
+
     }
 }
 
-const engine = new Polar.Engine('polar-canvas', new Sandbox());
+class Sandbox extends Polar.Application {
+    constructor() {
+        super();
+        this.pushLayer(new ExampleLayer());
+    }
+}
 
-
-
-engine.run();
+Polar.create('polar-canvas', new Sandbox());

@@ -1,15 +1,15 @@
-import { Application } from "./Application";
+import Application from "./Application";
+import Layer from "./Layer";
 
-class Engine {
-    private application: Application;
+let application: Application;
 
-    constructor(canvasid: string, app: Application) {
-        this.application = app;
-    }
-
-    run(): void {
-        this.application.run();
-    }
+function create(canvasid: string, app: Application) {
+    application = app;
+    application.start();
 }
 
-export { Engine, Application };
+function stop() {
+    application.stop();
+}
+
+export { create, Application, Layer };
