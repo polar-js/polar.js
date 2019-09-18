@@ -3,7 +3,10 @@ class Sandbox extends Polar.Application {
         super();
         console.log('Created sandbox!');
     }
+
+    OnLoad() {
+        console.log('sandbox on load');
+    }
 }
 
-const engine = Polar.Polar.Create('polar-canvas', new Sandbox());
-
+const engine = new Polar.Engine('polar-canvas', new Sandbox());

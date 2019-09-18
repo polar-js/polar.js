@@ -1,11 +1,13 @@
 import { Application } from "./Application";
 
-class Polar {
-    private m_Application: Application;
+class Engine {
+    private application: Application;
 
     constructor(canvasid: string, app: Application) {
-        this.m_Application = app;
+        this.application = app;
+
+        this.application.OnLoad();
     }
 }
 
-export { Polar, Application };
+export { Engine, Application };
