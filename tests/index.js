@@ -1,3 +1,9 @@
-const Polar = require('PolarEngine');
+const pol = new Polar('canvas-id');
 
-const engine = Polar.Create("test-canvas");
+pol.onready = () => {
+    console.log('ready')
+};
+
+pol.ontick = () => {
+    console.log('tick')
+}

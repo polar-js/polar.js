@@ -1,34 +1,31 @@
 {
-  "name": "polarengine",
-  "version": "0.1.0",
-  "description": "JavaScript Game Engine",
-  "main": "PolarEngine.js",
-  "scripts": {
-    "compile": "./node_modules/.bin/webpack-cli"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JellyAlex/PolarEngine.git"
-  },
-  "author": "Alexander Brown",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JellyAlex/PolarEngine/issues"
-  },
-  "homepage": "https://github.com/JellyAlex/PolarEngine#readme",
-  "directories": {
-    "test": "tests"
-  },
-  "keywords": [
-    "polar",
-    "engine",
-    "graphics",
-    "webgl"
-  ],
-  "devDependencies": {
-    "ts-loader": "^6.1.0",
-    "typescript": "^3.6.3",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
-  }
+    "name": "polarengine",
+    "version": "0.1.0",
+    "description": "JavaScript Game Engine",
+    "main": "src/Polar.ts",
+    "scripts": {
+      "watch": "./node_modules/.bin/webpack-cli"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/JellyAlex/PolarEngine.git"
+    },
+    "author": "Alexander Brown",
+    "license": "ISC",
+    "homepage": "https://github.com/JellyAlex/PolarEngine#readme",
+    "directories": {
+      "test": "tests"
+    },
+    "keywords": [
+      "polar",
+      "engine",
+      "graphics",
+      "webgl"
+    ],
+    "devDependencies": {
+      "ts-loader": "^6.1.0",
+      "typescript": "^3.6.3",
+      "webpack": "^4.40.2",
+      "webpack-cli": "^3.3.9"
+    }
 }

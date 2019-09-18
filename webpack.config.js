@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: './src/Polar.ts',
+    watch: true,
     module: {
         rules: [
         {
@@ -16,6 +17,8 @@ module.exports = {
     },
     output: {
         filename: 'polar.min.js',
-        path: path.resolve(__dirname, 'tests')
+        path: path.resolve(__dirname, 'tests'),
+        library: 'polar',
+        libraryTarget: 'window',
     }
-};  
+};
