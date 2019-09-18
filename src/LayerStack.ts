@@ -47,9 +47,6 @@ class LayerStack {
             layer.onUpdate(deltaTime);
         }
     }
-
-    // Allow the layers to be iterated over in a for loop.
-    [Symbol.iterator]() { return this.layers.values }
 }
 
 export default LayerStack;

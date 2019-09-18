@@ -10,10 +10,10 @@ class ExampleLayer extends Polar.Layer {
 }
 
 class Sandbox extends Polar.Application {
-    constructor() {
-        super();
+    constructor(canvasid) {
+        super(canvasid);
         this.pushLayer(new ExampleLayer());
     }
 }
 
-Polar.create('polar-canvas', new Sandbox());
+Polar.create(new Sandbox('polar-canvas'));

@@ -3,7 +3,7 @@ import Layer from "./Layer";
 
 let application: Application;
 
-function create(canvasid: string, app: Application) {
+function create(app: Application) {
     application = app;
     application.start();
 }
