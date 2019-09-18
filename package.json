@@ -2,7 +2,7 @@
     "name": "polarengine",
     "version": "0.1.0",
     "description": "JavaScript Game Engine",
-    "main": "PolarEngine.js",
+    "main": "src/Polar.ts",
     "scripts": {
         "webpack": "./node_modules/.bin/webpack-cli"
     },
