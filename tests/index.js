@@ -1,9 +1,9 @@
-const pol = new Polar('canvas-id');
-
-pol.onready = () => {
-    console.log('ready')
-};
-
-pol.ontick = () => {
-    console.log('tick')
+class Sandbox extends Polar.Application {
+    constructor() {
+        super();
+        console.log('Created sandbox!');
+    }
 }
+
+const engine = Polar.Polar.Create('polar-canvas', new Sandbox());
+

@@ -18,7 +18,7 @@ module.exports = {
     output: {
         filename: 'polar.min.js',
         path: path.resolve(__dirname, 'tests'),
-        library: 'polar',
+        library: 'Polar',
         libraryTarget: 'window',
     }
 };
