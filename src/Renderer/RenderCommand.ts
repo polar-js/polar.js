@@ -1,5 +1,6 @@
 import Canvas from './Canvas';
-import * as glMatrix from "gl-matrix";
+import * as glMatrix from 'gl-matrix';
+import VertexArray from './VertexArray';
 
 class RenderCommand {
     public static init(): void {
@@ -15,8 +16,9 @@ class RenderCommand {
         Canvas.gl.clear(Canvas.gl.COLOR_BUFFER_BIT | Canvas.gl.DEPTH_BUFFER_BIT);
     }
 
-    // TODO: draw indexed.
-    // public static drawIndexed()
+    public static drawIndexed(vertexArray: VertexArray): void {
+        Canvas.gl.drawElements(Canvas.gl.TRIANGLES, vertexArray.getIndexBuffer().getCount(), Canvas.gl.UNSIGNED_SHORT, 0);
+    }
 }
 
 export default RenderCommand;
