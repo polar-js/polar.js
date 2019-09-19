@@ -39,7 +39,6 @@ export default class VertexArray {
     }
 
     public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
-        console.log('Adding vertex buffer...');
         console.assert(vertexBuffer.getLayout().getElements().length != 0, 'Vertex Buffer has no layout!');
 
         Canvas.gl.bindVertexArray(this.rendererID);
@@ -48,7 +47,6 @@ export default class VertexArray {
         let index = 0;
         const layout: BufferLayout = vertexBuffer.getLayout();
         for (let element of layout.getElements()) {
-            console.log('element: \n' + element);
             const location = shader.getAttribLocation(element.name);
             Canvas.gl.enableVertexAttribArray(location);
             Canvas.gl.vertexAttribPointer(location, 

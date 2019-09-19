@@ -1,4 +1,5 @@
 import Canvas from './Canvas';
+import { vec2, vec3, vec4, mat3, mat4 } from 'gl-matrix';
 
 function shaderTypeFromString(type: string): number {
     if (type == "vertex")
@@ -10,9 +11,11 @@ function shaderTypeFromString(type: string): number {
 export default class Shader {
     private rendererID: WebGLProgram;
     private name: string;
+    private locations: { [id: string]: WebGLUniformLocation };
 
     public constructor(name: string, vertexSrc: string, fragmentSrc: string) {
         this.name = name;
+        this.locations = {};
 
         this.compile({[shaderTypeFromString("vertex")]: vertexSrc, [shaderTypeFromString("fragment")]: fragmentSrc});
     }
@@ -71,5 +74,44 @@ export default class Shader {
 
     public getAttribLocation(name: string): number {
         return Canvas.gl.getAttribLocation(this.rendererID, name);
+    }
+
+    private getUniformLocation(name: string): WebGLUniformLocation {
+        if (name in this.locations) {
+            return this.locations[name];
+        }
+        else {
+            const location = Canvas.gl.getUniformLocation(this.rendererID, name);
+            this.locations[name] = location;
+            return location;
+        }
+    }
+
+    public uploadUniformInt(name: string, value: number) {
+        Canvas.gl.uniform1i(this.getUniformLocation(name), value);
+    }
+
+    public uploadUniformFloat(name: string, value: number) {
+        Canvas.gl.uniform1f(this.getUniformLocation(name), value);
+    }
+
+    public uploadUniformFloat2(name: string, value: vec2) {
+        Canvas.gl.uniform2f(this.getUniformLocation(name), value[0], value[1]);
+    }
+
+    public uploadUniformFloat3(name: string, value: vec3) {
+        Canvas.gl.uniform3f(this.getUniformLocation(name), value[0], value[1], value[2]);
+    }
+
+    public uploadUniformFloat4(name: string, value: vec4) {
+        Canvas.gl.uniform4f(this.getUniformLocation(name), value[0], value[1], value[2], value[3]);
+    }
+
+    public uploadUniformMat3(name: string, value: mat3) {
+        Canvas.gl.uniform3fv(this.getUniformLocation(name), value);
+    }
+
+    public uploadUniformMat4(name: string, value: mat4) {
+        Canvas.gl.uniform4fv(this.getUniformLocation(name), value);
     }
 }

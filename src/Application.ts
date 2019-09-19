@@ -1,6 +1,7 @@
 import Layer from "./Layer"
 import LayerStack from "./LayerStack"
 import RenderCommand from "./Renderer/RenderCommand";
+import Renderer from "./Renderer/Renderer";
 import { vec4 } from "gl-matrix";
 import Canvas from "./Renderer/Canvas";
 
@@ -14,12 +15,12 @@ abstract class Application {
         this.lastFrameTime = 0;
 
         Canvas.init(canvasid);
-        RenderCommand.init();
+        Renderer.init();
     }
 
     public start(): void {
         const update = (time: DOMHighResTimeStamp) => {
-            const deltaTime = (time - this.lastFrameTime) / 10e6;
+            const deltaTime = (time - this.lastFrameTime) / 10e3;
             this.lastFrameTime = time;
 
             const color = vec4.create();
