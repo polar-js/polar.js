@@ -108,10 +108,10 @@ export default class Shader {
     }
 
     public uploadUniformMat3(name: string, value: mat3) {
-        Canvas.gl.uniform3fv(this.getUniformLocation(name), value);
+        Canvas.gl.uniformMatrix3fv(this.getUniformLocation(name), false, value);
     }
 
     public uploadUniformMat4(name: string, value: mat4) {
-        Canvas.gl.uniform4fv(this.getUniformLocation(name), value);
+        Canvas.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
     }
 }

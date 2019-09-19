@@ -8,13 +8,16 @@ class ExampleLayer extends Polar.Layer {
         
         layout(location = 0) in vec3 a_Position;
         layout(location = 1) in vec4 a_Color;
+
+        uniform mat4 u_ViewProjection;
+		uniform mat4 u_Transform;
+
         out vec3 v_Position;
         out vec4 v_Color;
         
         void main() {
-            v_Position = a_Position;
             v_Color = a_Color;
-            gl_Position = vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
         `;
 
@@ -23,13 +26,10 @@ class ExampleLayer extends Polar.Layer {
         precision mediump float;
 
         out vec4 color;
-        in vec3 v_Position;
         in vec4 v_Color;
 
-        uniform vec3 u_Color;
-
         void main() {
-            color = vec4(u_Color, 1.0);
+            color = v_Color;
         }
         `;
 
@@ -59,15 +59,19 @@ class ExampleLayer extends Polar.Layer {
         this.triangleVA.addVertexBuffer(triangleVertexBuffer, this.triangleShader);
         
         this.timeElapsed = 0;
+
+        this.camera = new Polar.OrthographicCamera(-2.0, 2.0, -1.0, 1.0);
+        this.cameraPosition = Polar.glMatrix.vec3.create();
     }
 
     onUpdate(deltaTime) {
-        this.timeElapsed += deltaTime;
-        Polar.Renderer.beginScene();
+        this.camera.setPosition(this.cameraPosition);
 
+        Polar.Renderer.beginScene(this.camera);
 
-        this.triangleShader.uploadUniformFloat3('u_Color', [this.timeElapsed % 1.0, 0.5, 0.5]);
-        Polar.Renderer.submit(this.triangleShader, this.triangleVA);
+        let transform = Polar.glMatrix.mat4.create();
+        //Polar.glMatrix.mat4.fromTranslation(transform, [0, 0, 0]);
+        Polar.Renderer.submit(this.triangleShader, this.triangleVA, transform);
 
         Polar.Renderer.endScene();
     }

@@ -4,6 +4,7 @@ import RenderCommand from "./Renderer/RenderCommand";
 import Renderer from "./Renderer/Renderer";
 import { vec4 } from "gl-matrix";
 import Canvas from "./Renderer/Canvas";
+import Input from './Input';
 
 abstract class Application {
     private lastFrameTime: number = 0;
@@ -15,6 +16,7 @@ abstract class Application {
         this.lastFrameTime = 0;
 
         Canvas.init(canvasid);
+        Input.init();
         Renderer.init();
     }
 
