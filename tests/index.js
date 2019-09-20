@@ -60,14 +60,15 @@ class ExampleLayer extends Polar.Layer {
         
         this.timeElapsed = 0;
 
-        this.camera = new Polar.OrthographicCamera(-2.0, 2.0, -1.0, 1.0);
-        this.cameraPosition = Polar.glMatrix.vec3.create();
+        this.cameraController = new Polar.OrthographicCameraController(1280 / 720, 1.0, true);
     }
 
     onUpdate(deltaTime) {
-        this.camera.setPosition(this.cameraPosition);
+        // Update
+        this.cameraController.onUpdate(deltaTime);
 
-        Polar.Renderer.beginScene(this.camera);
+        // Render
+        Polar.Renderer.beginScene(this.cameraController.getCamera());
 
         let transform = Polar.glMatrix.mat4.create();
         //Polar.glMatrix.mat4.fromTranslation(transform, [0, 0, 0]);

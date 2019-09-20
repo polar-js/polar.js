@@ -7,8 +7,10 @@ export default class Input {
     private static mousePosition: vec2;
     
     public static init() {
+        this.keyStates = {};
+        this.mouseButtonStates = {};
         this.mousePosition = vec2.create();
-
+        
         window.addEventListener('keydown', (ev: KeyboardEvent) => {
             this.keyStates[ev.key] = true;
         });

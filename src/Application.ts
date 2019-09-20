@@ -21,8 +21,9 @@ abstract class Application {
     }
 
     public start(): void {
-        const update = (time: DOMHighResTimeStamp) => {
-            const deltaTime = (time - this.lastFrameTime) / 10e3;
+        const update = (_: DOMHighResTimeStamp) => {
+            const time = performance.now();
+            const deltaTime = (time - this.lastFrameTime) / 1000;
             this.lastFrameTime = time;
 
             const color = vec4.create();

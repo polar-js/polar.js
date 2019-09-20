@@ -8,6 +8,7 @@ import VertexArray from './Renderer/VertexArray';
 import Shader from './Renderer/Shader';
 import OrthographicCamera from './Renderer/Camera';
 import Input from './Input';
+import OrthographicCameraController from './OrthographicCameraController';
 
 
 let application: Application;
@@ -21,4 +22,4 @@ export function stop() {
     application.stop();
 }
 
-export { Application, Layer, Renderer, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer, VertexArray, Shader, glMatrix, OrthographicCamera, Input };
+export { Application, Layer, Renderer, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer, VertexArray, Shader, glMatrix, OrthographicCamera, Input, OrthographicCameraController };
