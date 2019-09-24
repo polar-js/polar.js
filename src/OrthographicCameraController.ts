@@ -13,8 +13,6 @@ export default class OrhtographicCameraController {
 
     // The camera's position in world space.
     private cameraPosition: vec3 = vec3.create();
-    // How fast the camera moves in world units per second.
-    private cameraTranslationSpeed = 3.0;
     // The camera's current rotation.
     private cameraRotation = 0.0;
     // How fast the camera rotates in degrees per second.
@@ -39,8 +37,8 @@ export default class OrhtographicCameraController {
             this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
         });
 
-        Canvas.get().addEventListener('resize', (ev: UIEvent) => {
-            this.aspectRatio = ev.view.innerWidth / ev.view.innerHeight;
+        window.addEventListener('resize', (ev: UIEvent) => {
+            this.aspectRatio = Canvas.get().offsetWidth / Canvas.get().offsetHeight;
             this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
         });
     }
@@ -52,19 +50,19 @@ export default class OrhtographicCameraController {
     public onUpdate(deltaTime: number) {
         let doPosition = false;
         if (Input.isKeyPressed('a')) {
-            this.cameraPosition[0] -= this.cameraTranslationSpeed * deltaTime;
+            this.cameraPosition[0] -=  this.cameraTranslationSpeed(this.zoomLevel) * deltaTime;
             doPosition = true;
         }
         if (Input.isKeyPressed('d')) {
-            this.cameraPosition[0] += this.cameraTranslationSpeed * deltaTime;
+            this.cameraPosition[0] += this.cameraTranslationSpeed(this.zoomLevel) * deltaTime;
             doPosition = true;
         }
         if (Input.isKeyPressed('s')) {
-            this.cameraPosition[1] -= this.cameraTranslationSpeed * deltaTime;
+            this.cameraPosition[1] -= this.cameraTranslationSpeed(this.zoomLevel) * deltaTime;
             doPosition = true;
         }
         if (Input.isKeyPressed('w')) {
-            this.cameraPosition[1] += this.cameraTranslationSpeed * deltaTime;
+            this.cameraPosition[1] += this.cameraTranslationSpeed(this.zoomLevel) * deltaTime;
             doPosition = true;
         }
 
@@ -93,5 +91,14 @@ export default class OrhtographicCameraController {
      */
     public getCamera(): Camera {
         return this.camera;
+    }
+
+    /**
+     * A sigmoid function to calculate The speed of the camaera at the specified zoom.
+     * @param {number} zoom The current zoom of the camera.
+     * @returns {Camera} The speed of the camaera in world units / second.
+     */
+    private cameraTranslationSpeed(zoom: number): number {
+        return 20 / (1 + 30 * Math.pow(Math.E, -0.4 * zoom));
     }
 }

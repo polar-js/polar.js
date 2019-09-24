@@ -1,6 +1,6 @@
-import Layer from "./Layer";
+import Layer from "Layer";
 
-class LayerStack {
+export default class LayerStack {
     private layers: Layer[];
     private layerInsertIndex = 0;
 
@@ -48,5 +48,3 @@ class LayerStack {
         }
     }
 }
-
-export default LayerStack;

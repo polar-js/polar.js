@@ -6,6 +6,8 @@ function shaderTypeFromString(type: string): number {
         return Canvas.gl.VERTEX_SHADER;
     if (type == "fragment" || type == "pixel")
         return Canvas.gl.FRAGMENT_SHADER;
+    
+    return null;
 }
 
 export default class Shader {
@@ -18,6 +20,61 @@ export default class Shader {
         this.locations = {};
 
         this.compile({[shaderTypeFromString("vertex")]: vertexSrc, [shaderTypeFromString("fragment")]: fragmentSrc});
+    }
+
+    /**
+     * Loads a shader from a file path.
+     * @param {string} filepath The filepath of the shader source code.
+     * @param {string} [name] The name of the shader (Optional). If null, will use the filename.
+     * @returns {Shader} The shader that was loaded from the path.
+     */
+    public static async loadFromFetch(filepath: string, name: string = null): Promise<Shader> {
+        if (!name) name = filepath.substr(filepath.lastIndexOf('/') + 1);
+        
+        return new Promise<Shader>(async (resolve: any, reject: any) => {
+            const response = await fetch(filepath);
+            const source = await response.text();
+            const shaderSources = this.preProcess(source);
+            resolve(new Shader(name, shaderSources[shaderTypeFromString("vertex")], shaderSources[shaderTypeFromString("fragment")]));
+        });
+    }
+
+    private static preProcess(source: string): {[id: number]: string} {
+        let sources: {[id: number]: string} = {};
+
+        const typeToken = '#type';
+        let pos = source.indexOf(typeToken);
+        while (pos != -1) {
+            let eol = this.findNextEOL(source, pos);
+
+            const begin = pos + typeToken.length + 1;
+            const type = source.substr(begin, eol - begin);
+            console.assert(shaderTypeFromString(type) != null, 'Invalid shader type specified');
+
+            pos = source.indexOf(typeToken, eol + 1);
+            sources[shaderTypeFromString(type)] = source.substr(eol + 1, pos - (eol + 1));
+        }
+
+        return sources;
+    }
+
+    private static findNextEOL(source: string, pos: number): number {
+        const nextNewLine = source.indexOf('\n', pos);
+        const nextCarriageReturn = source.indexOf('\r', pos);
+        let eol = -1;
+        if (nextNewLine == -1 && nextCarriageReturn == -1) {
+            console.assert(false, 'Syntax error');
+        }
+        else if (nextNewLine == -1) {
+            eol = nextCarriageReturn;
+        }
+        else if (nextCarriageReturn == -1) {
+            eol = nextNewLine;
+        }
+        else {
+            eol = nextNewLine <= nextCarriageReturn ? nextNewLine : nextCarriageReturn;
+        }
+        return eol;
     }
 
     private compile(shaderSources: {[id: number]: string}) {
@@ -64,19 +121,43 @@ export default class Shader {
         this.rendererID = program;
     }
 
+    /**
+     * Binds the shader.
+     */
     public bind(): void {
         Canvas.gl.useProgram(this.rendererID);
     }
 
+    /**
+     * Unbinds the shader.
+     */
     public unbind(): void {
         Canvas.gl.useProgram(0);
     }
 
+    /**
+     * Get the shader's name.
+     * @returns {string} The shader's name.
+     */
+    public getName(): string {
+        return this.name;
+    }
+
+    /**
+     * Get the location of an attribute within the shader.
+     * @param {string} name The name of the attribute within the shader.
+     * @returns {number} The location of the attribute.
+     */
     public getAttribLocation(name: string): number {
         return Canvas.gl.getAttribLocation(this.rendererID, name);
     }
 
-    private getUniformLocation(name: string): WebGLUniformLocation {
+    /**
+     * Get the location of a uniform within the shader.
+     * @param {string} name The name of the uniform within the shader.
+     * @returns {WebGLUniformLocation} The location of the uniform.
+     */
+    public getUniformLocation(name: string): WebGLUniformLocation {
         if (name in this.locations) {
             return this.locations[name];
         }

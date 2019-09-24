@@ -9,7 +9,8 @@ import Shader from './Renderer/Shader';
 import OrthographicCamera from './Renderer/Camera';
 import Input from './Input';
 import OrthographicCameraController from './OrthographicCameraController';
-
+import Canvas from './Renderer/Canvas';
+import Texture2D from './Renderer/Texture';
 
 let application: Application;
 
@@ -22,4 +23,4 @@ export function stop() {
     application.stop();
 }
 
-export { Application, Layer, Renderer, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer, VertexArray, Shader, glMatrix, OrthographicCamera, Input, OrthographicCameraController };
+export { Application, Layer, Renderer, Canvas, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer, VertexArray, Shader, Texture2D, glMatrix, OrthographicCamera, Input, OrthographicCameraController };

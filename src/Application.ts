@@ -1,21 +1,22 @@
-import Layer from "./Layer"
-import LayerStack from "./LayerStack"
+import Layer from "Layer";
+import LayerStack from "./LayerStack";
 import RenderCommand from "./Renderer/RenderCommand";
 import Renderer from "./Renderer/Renderer";
 import { vec4 } from "gl-matrix";
 import Canvas from "./Renderer/Canvas";
 import Input from './Input';
+import Settings from 'Settings';
 
 abstract class Application {
     private lastFrameTime: number = 0;
     private layerStack: LayerStack;
     private frameID: number;
 
-    public constructor(canvasid: string) {
+    public constructor(settings: Settings) {
         this.layerStack = new LayerStack();
         this.lastFrameTime = 0;
 
-        Canvas.init(canvasid);
+        Canvas.init(settings);
         Input.init();
         Renderer.init();
     }

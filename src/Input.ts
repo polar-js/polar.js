@@ -1,4 +1,3 @@
-import Canvas from "./Renderer/Canvas"
 import { vec2 } from "gl-matrix";
 
 export default class Input {

@@ -7,16 +7,16 @@ class ExampleLayer extends Polar.Layer {
         precision highp float;
         
         layout(location = 0) in vec3 a_Position;
-        layout(location = 1) in vec4 a_Color;
+        layout(location = 1) in vec2 a_TexCoord;
 
         uniform mat4 u_ViewProjection;
 		uniform mat4 u_Transform;
 
         out vec3 v_Position;
-        out vec4 v_Color;
+        out vec2 v_TexCoord;
         
         void main() {
-            v_Color = a_Color;
+            v_TexCoord = a_TexCoord;
             gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
         `;
@@ -26,41 +26,47 @@ class ExampleLayer extends Polar.Layer {
         precision mediump float;
 
         out vec4 color;
-        in vec4 v_Color;
+        in vec2 v_TexCoord;
+
+        uniform sampler2D u_Texture;
 
         void main() {
-            color = v_Color;
+            color = texture(u_Texture, v_TexCoord);
         }
         `;
 
-        this.triangleShader = new Polar.Shader("TriangleShader", shaderVertexSrc, shaderFragmentSrc);
-        this.triangleShader.bind();
+        this.textureShader = new Polar.Shader("TriangleShader", shaderVertexSrc, shaderFragmentSrc);
+        this.textureShader.bind();
 
-        this.triangleVA = new Polar.VertexArray();
+        this.quadVA = new Polar.VertexArray();
 
-        const triangleVertices = [
-            -0.5, -0.5, 0.0, 0.1, 0.1, 0.9, 1.0,
-			 0.5, -0.5, 0.0, 0.1, 0.9, 0.1, 1.0,
-			 0.5,  0.5, 0.0, 0.9, 0.1, 0.1, 1.0
+        const quadVertices = [
+            -0.5, -0.5, 0.0, 0.0, 1.0,
+			 0.5, -0.5, 0.0, 1.0, 1.0,
+             0.5,  0.5, 0.0, 1.0, 0.0,
+            -0.5,  0.5, 0.0, 0.0, 0.0
         ];
 
-        const triangleVertexBuffer = new Polar.VertexBuffer(new Float32Array(triangleVertices));
+        const triangleVertexBuffer = new Polar.VertexBuffer(new Float32Array(quadVertices));
 
-        const triangleIndices = [0, 1, 2];
+        const triangleIndices = [0, 1, 2, 0, 2, 3];
         const triangleIndexBuffer = new Polar.IndexBuffer(new Uint16Array(triangleIndices));
-        this.triangleVA.setIndexBuffer(triangleIndexBuffer);
+        this.quadVA.setIndexBuffer(triangleIndexBuffer);
 
-        const triangleLayout = new Polar.BufferLayout([
+        const quadLayout = new Polar.BufferLayout([
             new Polar.BufferElement(Polar.ShaderDataType.Float3, 'a_Position'),
-            new Polar.BufferElement(Polar.ShaderDataType.Float4, 'a_Color')
+            new Polar.BufferElement(Polar.ShaderDataType.Float2, 'a_TexCoord')
         ]);
 
-        triangleVertexBuffer.setLayout(triangleLayout);
-        this.triangleVA.addVertexBuffer(triangleVertexBuffer, this.triangleShader);
+        triangleVertexBuffer.setLayout(quadLayout);
+        this.quadVA.addVertexBuffer(triangleVertexBuffer, this.textureShader);
+
+        this.checkerboardTexture = new Polar.Texture2D('checkerboard.png');
+        this.alphaTexture = new Polar.Texture2D('alphatest.png');
+        this.textureShader.uploadUniformInt('u_Texture', 0);
         
         this.timeElapsed = 0;
-
-        this.cameraController = new Polar.OrthographicCameraController(1280 / 720, 1.0, true);
+        this.cameraController = new Polar.OrthographicCameraController(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight);
     }
 
     onUpdate(deltaTime) {
@@ -70,9 +76,13 @@ class ExampleLayer extends Polar.Layer {
         // Render
         Polar.Renderer.beginScene(this.cameraController.getCamera());
 
+        this.checkerboardTexture.bind();
         let transform = Polar.glMatrix.mat4.create();
-        //Polar.glMatrix.mat4.fromTranslation(transform, [0, 0, 0]);
-        Polar.Renderer.submit(this.triangleShader, this.triangleVA, transform);
+        Polar.Renderer.submit(this.textureShader, this.quadVA, transform);
+        this.alphaTexture.bind();
+        let transform2 = Polar.glMatrix.mat4.create();
+        //Polar.glMatrix.mat4.translate(transform2, transform2, [0.3, 0.3, 0.0]);
+        Polar.Renderer.submit(this.textureShader, this.quadVA, transform2);
 
         Polar.Renderer.endScene();
     }
@@ -85,4 +95,8 @@ class Sandbox extends Polar.Application {
     }
 }
 
-Polar.create(new Sandbox('polar-canvas'));
+if (window.location.protocol == 'file:') {
+    document.writeln('Error: Must be run in http-server to allow file access.');
+} else {
+    Polar.create(new Sandbox({displayMode: 'fill'}));
+}

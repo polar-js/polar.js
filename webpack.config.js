@@ -1,5 +1,7 @@
 const path = require('path');
 
+const ASSET_PATH = process.env.ASSET_PATH || '/';
+
 module.exports = {
     entry: './src/Polar.ts',
     mode: 'development',
