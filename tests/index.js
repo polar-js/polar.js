@@ -39,7 +39,7 @@ class ExampleLayer extends Polar.Layer {
         // this.textureShader.bind();
 
         this.shaderLibrary = new Polar.ShaderLibrary();
-        this.shaderLibrary.loadFromFetch('shader.glsl', 'TextureShader').then(textureShader => {
+        this.shaderLibrary.load('shader.glsl', 'TextureShader').then(textureShader => {
             this.quadVA = new Polar.VertexArray();
 
             const quadVertices = [
