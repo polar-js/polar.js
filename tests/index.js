@@ -2,41 +2,44 @@ class ExampleLayer extends Polar.Layer {
     constructor() {
         super("example");
 
-        const shaderVertexSrc = 
-        `#version 300 es
-        precision highp float;
+        // const shaderVertexSrc = 
+        // `#version 300 es
+        // precision highp float;
         
-        layout(location = 0) in vec3 a_Position;
-        layout(location = 1) in vec2 a_TexCoord;
+        // layout(location = 0) in vec3 a_Position;
+        // layout(location = 1) in vec2 a_TexCoord;
 
-        uniform mat4 u_ViewProjection;
-		uniform mat4 u_Transform;
+        // uniform mat4 u_ViewProjection;
+		// uniform mat4 u_Transform;
 
-        out vec3 v_Position;
-        out vec2 v_TexCoord;
+        // out vec3 v_Position;
+        // out vec2 v_TexCoord;
         
-        void main() {
-            v_TexCoord = a_TexCoord;
-            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-        }
-        `;
+        // void main() {
+        //     v_TexCoord = a_TexCoord;
+        //     gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+        // }
+        // `;
 
-        const shaderFragmentSrc = 
-        `#version 300 es
-        precision mediump float;
+        // const shaderFragmentSrc = 
+        // `#version 300 es
+        // precision mediump float;
 
-        out vec4 color;
-        in vec2 v_TexCoord;
+        // out vec4 color;
+        // in vec2 v_TexCoord;
 
-        uniform sampler2D u_Texture;
+        // uniform sampler2D u_Texture;
 
-        void main() {
-            color = texture(u_Texture, v_TexCoord);
-        }
-        `;
+        // void main() {
+        //     color = texture(u_Texture, v_TexCoord);
+        // }
+        // `;
 
-        this.textureShader = new Polar.Shader("TriangleShader", shaderVertexSrc, shaderFragmentSrc);
-        this.textureShader.bind();
+        // this.textureShader = new Polar.Shader("TriangleShader", shaderVertexSrc, shaderFragmentSrc);
+        // this.textureShader.bind();
+
+        this.shaderLibrary = new Polar.ShaderLibrary();
+        const textureShader = this.shaderLibrary.loadFromFetch('shader.glsl', 'TextureShader');
 
         this.quadVA = new Polar.VertexArray();
 
@@ -59,17 +62,18 @@ class ExampleLayer extends Polar.Layer {
         ]);
 
         triangleVertexBuffer.setLayout(quadLayout);
-        this.quadVA.addVertexBuffer(triangleVertexBuffer, this.textureShader);
+        this.quadVA.addVertexBuffer(triangleVertexBuffer, textureShader);
 
         this.checkerboardTexture = new Polar.Texture2D('checkerboard.png');
         this.alphaTexture = new Polar.Texture2D('alphatest.png');
-        this.textureShader.uploadUniformInt('u_Texture', 0);
+        textureShader.uploadUniformInt('u_Texture', 0);
         
         this.timeElapsed = 0;
         this.cameraController = new Polar.OrthographicCameraController(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight);
     }
 
     onUpdate(deltaTime) {
+        const textureShader = this.shaderLibrary.get('TextureShader');
         // Update
         this.cameraController.onUpdate(deltaTime);
 
@@ -78,11 +82,11 @@ class ExampleLayer extends Polar.Layer {
 
         this.checkerboardTexture.bind();
         let transform = Polar.glMatrix.mat4.create();
-        Polar.Renderer.submit(this.textureShader, this.quadVA, transform);
+        Polar.Renderer.submit(textureShader, this.quadVA, transform);
         this.alphaTexture.bind();
         let transform2 = Polar.glMatrix.mat4.create();
         //Polar.glMatrix.mat4.translate(transform2, transform2, [0.3, 0.3, 0.0]);
-        Polar.Renderer.submit(this.textureShader, this.quadVA, transform2);
+        Polar.Renderer.submit(textureShader, this.quadVA, transform2);
 
         Polar.Renderer.endScene();
     }

@@ -4,6 +4,10 @@ import Shader from './Shader';
 export default class ShaderLibrary {
     private shaders: { [id: string]: Shader };
 
+    public constructor() {
+        this.shaders = {};
+    }
+
     /**
      * Add a shader to be stored in the shader library.
      * @param {Shader} shader The shader to add.
@@ -22,5 +26,14 @@ export default class ShaderLibrary {
         const shader = await Shader.loadFromFetch(filepath, name);
         this.add(shader, name);
         return shader;
+    }
+
+    public get(name: string): Shader {
+        console.assert(name in this.shaders, 'Shader not found!');
+        return this.shaders[name];
+    }
+
+    public exists(name: string): boolean {
+        return name in this.shaders;
     }
 }
