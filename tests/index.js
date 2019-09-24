@@ -39,37 +39,37 @@ class ExampleLayer extends Polar.Layer {
         // this.textureShader.bind();
 
         this.shaderLibrary = new Polar.ShaderLibrary();
-        const textureShader = this.shaderLibrary.loadFromFetch('shader.glsl', 'TextureShader');
+        this.shaderLibrary.loadFromFetch('shader.glsl', 'TextureShader').then(textureShader => {
+            this.quadVA = new Polar.VertexArray();
 
-        this.quadVA = new Polar.VertexArray();
-
-        const quadVertices = [
-            -0.5, -0.5, 0.0, 0.0, 1.0,
-			 0.5, -0.5, 0.0, 1.0, 1.0,
-             0.5,  0.5, 0.0, 1.0, 0.0,
-            -0.5,  0.5, 0.0, 0.0, 0.0
-        ];
-
-        const triangleVertexBuffer = new Polar.VertexBuffer(new Float32Array(quadVertices));
-
-        const triangleIndices = [0, 1, 2, 0, 2, 3];
-        const triangleIndexBuffer = new Polar.IndexBuffer(new Uint16Array(triangleIndices));
-        this.quadVA.setIndexBuffer(triangleIndexBuffer);
-
-        const quadLayout = new Polar.BufferLayout([
-            new Polar.BufferElement(Polar.ShaderDataType.Float3, 'a_Position'),
-            new Polar.BufferElement(Polar.ShaderDataType.Float2, 'a_TexCoord')
-        ]);
-
-        triangleVertexBuffer.setLayout(quadLayout);
-        this.quadVA.addVertexBuffer(triangleVertexBuffer, textureShader);
-
-        this.checkerboardTexture = new Polar.Texture2D('checkerboard.png');
-        this.alphaTexture = new Polar.Texture2D('alphatest.png');
-        textureShader.uploadUniformInt('u_Texture', 0);
-        
-        this.timeElapsed = 0;
-        this.cameraController = new Polar.OrthographicCameraController(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight);
+            const quadVertices = [
+                -0.5, -0.5, 0.0, 0.0, 1.0,
+                 0.5, -0.5, 0.0, 1.0, 1.0,
+                 0.5,  0.5, 0.0, 1.0, 0.0,
+                -0.5,  0.5, 0.0, 0.0, 0.0
+            ];
+    
+            const triangleVertexBuffer = new Polar.VertexBuffer(new Float32Array(quadVertices));
+    
+            const triangleIndices = [0, 1, 2, 0, 2, 3];
+            const triangleIndexBuffer = new Polar.IndexBuffer(new Uint16Array(triangleIndices));
+            this.quadVA.setIndexBuffer(triangleIndexBuffer);
+    
+            const quadLayout = new Polar.BufferLayout([
+                new Polar.BufferElement(Polar.ShaderDataType.Float3, 'a_Position'),
+                new Polar.BufferElement(Polar.ShaderDataType.Float2, 'a_TexCoord')
+            ]);
+    
+            triangleVertexBuffer.setLayout(quadLayout);
+            this.quadVA.addVertexBuffer(triangleVertexBuffer, textureShader);
+    
+            this.checkerboardTexture = new Polar.Texture2D('checkerboard.png');
+            this.alphaTexture = new Polar.Texture2D('alphatest.png');
+            textureShader.uploadUniformInt('u_Texture', 0);
+            
+            this.timeElapsed = 0;
+            this.cameraController = new Polar.OrthographicCameraController(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight);
+        })
     }
 
     onUpdate(deltaTime) {
