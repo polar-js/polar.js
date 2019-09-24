@@ -19,11 +19,8 @@ export default class ShaderLibrary {
     }
 
     public async load(filepath: string, name: string = null): Promise<Shader> {
-
-        return Shader.loadFromFetch(filepath, name).then((shader: Shader) => {
-            this.add(shader, name);
-        });
+        const shader = await Shader.loadFromFetch(filepath, name);
+        this.add(shader, name);
+        return shader;
     }
-
-
 }

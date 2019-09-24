@@ -30,13 +30,10 @@ export default class Shader {
      */
     public static async loadFromFetch(filepath: string, name: string = null): Promise<Shader> {
         if (!name) name = filepath.substr(filepath.lastIndexOf('/') + 1);
-        
-        return new Promise<Shader>(async (resolve: any, reject: any) => {
-            const response = await fetch(filepath);
-            const source = await response.text();
-            const shaderSources = this.preProcess(source);
-            resolve(new Shader(name, shaderSources[shaderTypeFromString("vertex")], shaderSources[shaderTypeFromString("fragment")]));
-        });
+        const response = await fetch(filepath);
+        const source = await response.text();
+        const shaderSources = this.preProcess(source);
+        return new Shader(name, shaderSources[shaderTypeFromString("vertex")], shaderSources[shaderTypeFromString("fragment")]);
     }
 
     private static preProcess(source: string): {[id: number]: string} {
