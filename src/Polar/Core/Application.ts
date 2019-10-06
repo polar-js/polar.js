@@ -1,12 +1,14 @@
-import Layer from "Layer";
-import LayerStack from "./LayerStack";
-import RenderCommand from "./Renderer/RenderCommand";
-import Renderer from "./Renderer/Renderer";
 import { vec4 } from "gl-matrix";
-import Canvas from "./Renderer/Canvas";
-import Input from './Input';
-import Settings from 'Settings';
 
+import Layer from "Polar/Core/Layer";
+import LayerStack from "Polar/Core/LayerStack";
+import RenderCommand from "../Renderer/RenderCommand";
+import Renderer from "../Renderer/Renderer";
+import Canvas from "Polar/Renderer/Canvas";
+import Input from 'Polar/Core/Input';
+import Settings from 'Polar/Core/Settings';
+
+/** Represents a Polar Application to be attached to the engine. */
 abstract class Application {
     private lastFrameTime: number = 0;
     private layerStack: LayerStack;
@@ -14,14 +16,15 @@ abstract class Application {
 
     public constructor(settings: Settings) {
         this.layerStack = new LayerStack();
-        this.lastFrameTime = 0;
 
         Canvas.init(settings);
         Input.init();
         Renderer.init();
     }
 
+    /** Starts the update loop of the application. */
     public start(): void {
+        // Start the update loop.
         const update = (_: DOMHighResTimeStamp) => {
             const time = performance.now();
             const deltaTime = (time - this.lastFrameTime) / 1000;
@@ -33,23 +36,25 @@ abstract class Application {
             RenderCommand.clear();
 
             this.layerStack.onUpdate(deltaTime);
-
             this.frameID = window.requestAnimationFrame(update);
         }
 
         this.frameID = window.requestAnimationFrame(update);
     }
 
+    /** Stops the update loop of the application. */
     public stop() {
         console.assert(this.frameID != null, "Application has not begun!");
         window.cancelAnimationFrame(this.frameID);
     }
 
+    /** Adds a new layer to the top of the current layers (Below overlays). */
     public pushLayer(layer: Layer): void {
         this.layerStack.pushLayer(layer);
         layer.onAttach();
     }
 
+    /** Adds a new layer to the top of the current overlays (Above everything).*/
     public pushOverlay(layer: Layer): void {
         this.layerStack.pushOverlay(layer);
         layer.onAttach();

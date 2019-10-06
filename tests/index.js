@@ -2,42 +2,6 @@ class ExampleLayer extends Polar.Layer {
     constructor() {
         super("example");
         this.ready = false;
-
-        // const shaderVertexSrc = 
-        // `#version 300 es
-        // precision highp float;
-        
-        // layout(location = 0) in vec3 a_Position;
-        // layout(location = 1) in vec2 a_TexCoord;
-
-        // uniform mat4 u_ViewProjection;
-		// uniform mat4 u_Transform;
-
-        // out vec3 v_Position;
-        // out vec2 v_TexCoord;
-        
-        // void main() {
-        //     v_TexCoord = a_TexCoord;
-        //     gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-        // }
-        // `;
-
-        // const shaderFragmentSrc = 
-        // `#version 300 es
-        // precision mediump float;
-
-        // out vec4 color;
-        // in vec2 v_TexCoord;
-
-        // uniform sampler2D u_Texture;
-
-        // void main() {
-        //     color = texture(u_Texture, v_TexCoord);
-        // }
-        // `;
-
-        // this.textureShader = new Polar.Shader("TriangleShader", shaderVertexSrc, shaderFragmentSrc);
-        // this.textureShader.bind();
         this.load();
     }
 
@@ -69,15 +33,18 @@ class ExampleLayer extends Polar.Layer {
 
         this.checkerboardTexture = new Polar.Texture2D('checkerboard.png');
         this.alphaTexture = new Polar.Texture2D('alphatest.png');
+
+        textureShader.bind();
         textureShader.uploadUniformInt('u_Texture', 0);
         
         this.timeElapsed = 0;
         this.cameraController = new Polar.OrthographicCameraController(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight);
-        this.ready = true; // change this if u want Alex
+        this.ready = true;
     }
 
     onUpdate(deltaTime) {
-        if (!this.ready) return; // change this if u want Alex
+        if (!this.ready) return;
+
         const textureShader = this.shaderLibrary.get('TextureShader');
         // Update
         this.cameraController.onUpdate(deltaTime);

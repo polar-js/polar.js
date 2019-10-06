@@ -1,8 +1,8 @@
 import { mat4 } from 'gl-matrix';
-import VertexArray from './VertexArray';
-import Shader from 'Renderer/Shader';
-import RenderCommand from './RenderCommand';
-import OrthographicCamera from 'Renderer/Camera';
+import VertexArray from 'Polar/Renderer/VertexArray';
+import Shader from 'Polar/Renderer/Shader';
+import RenderCommand from 'Polar/Renderer/RenderCommand';
+import OrthographicCamera from 'Polar/Renderer/Camera';
 
 export default class Renderer {
     private static viewProjectionMatrix: mat4;

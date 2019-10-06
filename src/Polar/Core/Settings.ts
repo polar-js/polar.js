@@ -1,5 +1,4 @@
 
-
 export default interface Settings {
     canvasID: string;
     displayMode: string;

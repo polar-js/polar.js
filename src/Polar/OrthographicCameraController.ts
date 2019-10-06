@@ -1,6 +1,6 @@
-import Camera from './Renderer/Camera';
-import Input from './Input';
-import Canvas from './Renderer/Canvas';
+import Camera from 'Polar/Renderer/Camera';
+import Input from 'Polar/Core/Input';
+import Canvas from 'Polar/Renderer/Canvas';
 import { vec3 } from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
@@ -31,7 +31,6 @@ export default class OrhtographicCameraController {
         this.camera = new Camera(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 
         window.addEventListener('mousewheel', (ev: MouseWheelEvent) => {
-            console.log(`Scroll: ${ev.deltaY}`);
             this.zoomLevel += ev.deltaY / 1000 * this.zoomLevel;
             this.zoomLevel = this.zoomLevel > 0.1 ? this.zoomLevel : 0.1;
             this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);

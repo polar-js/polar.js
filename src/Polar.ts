@@ -1,17 +1,17 @@
 import * as glMatrix from 'gl-matrix';
 
-import Application from "./Application";
-import Layer from "./Layer";
-import Renderer from './Renderer/Renderer'
-import { ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer } from './Renderer/Buffer'
-import VertexArray from './Renderer/VertexArray';
-import Shader from './Renderer/Shader';
-import OrthographicCamera from './Renderer/Camera';
-import Input from './Input';
-import OrthographicCameraController from './OrthographicCameraController';
-import Canvas from './Renderer/Canvas';
-import Texture2D from './Renderer/Texture';
-import ShaderLibrary from './Renderer/ShaderLibrary';
+import Application from "Polar/Core/Application";
+import Layer from "Polar/Core/Layer";
+import Renderer from 'Polar/Renderer/Renderer'
+import { ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer } from 'Polar/Renderer/Buffer'
+import VertexArray from 'Polar/Renderer/VertexArray';
+import Shader from 'Polar/Renderer/Shader';
+import OrthographicCamera from 'Polar/Renderer/Camera';
+import Input from 'Polar/Core/Input';
+import OrthographicCameraController from 'Polar/OrthographicCameraController';
+import Canvas from 'Polar/Renderer/Canvas';
+import Texture2D from 'Polar/Renderer/Texture';
+import ShaderLibrary from 'Polar/Renderer/ShaderLibrary';
 
 let application: Application;
 

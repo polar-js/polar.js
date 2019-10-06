@@ -1,5 +1,6 @@
 import c from './Canvas';
 
+/** Represents a 2D OpenGL Texture */
 export default class Texture2D {
     private path: string;
     private width: number;
@@ -8,6 +9,10 @@ export default class Texture2D {
 
     private loaded: boolean;
 
+    /**
+     * Create a texture.
+     * @param path The path of the texture image file.
+     */
     public constructor(path: string) {
         this.loaded = false;
         this.path = path;
@@ -29,18 +34,31 @@ export default class Texture2D {
         });
     }
 
+    /**
+     * Get the texture's width.
+     * @returns {number} The texture's width.
+     */
     public getWidth(): number {
         return this.width;
     }
 
+    /**
+     * Get the texture's height.
+     * @returns {number} The texture's height.
+     */
     public getHeight(): number {
         return this.height;
     }
 
+    /** Bind the texture */
     public bind() {
         c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
     }
 
+    /**
+     * Test if the texture has been loaded.
+     * @returns {boolean} Whether the texture has been loaded.
+     */
     public isLoaded(): boolean {
         return this.loaded;
     }

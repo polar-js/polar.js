@@ -1,6 +1,6 @@
 import * as glMatrix from 'gl-matrix';
-import Canvas from './Canvas';
-import VertexArray from 'Renderer/VertexArray';
+import Canvas from 'Polar/Renderer/Canvas';
+import VertexArray from 'Polar/Renderer/VertexArray';
 
 class RenderCommand {
     public static init(): void {

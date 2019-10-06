@@ -1,9 +1,18 @@
-import Settings from "Settings";
+import Settings from "Polar/Core/Settings";
 
-class Canvas {
+export default class Canvas {
     private static canvas: HTMLCanvasElement;
+
+    /**
+     * The WebGL2 rendering context.
+     * @static
+     */
     public static gl: WebGL2RenderingContext;
 
+    /** 
+     * Initialise the canvas.
+     * @param {settings} settings The engine settings.
+     */
     public static init(settings: Settings) {
         if (settings.canvasID) {
             this.canvas = <HTMLCanvasElement> document.getElementById(settings.canvasID);
@@ -30,14 +39,21 @@ class Canvas {
         });
     }
 
+    /**
+     * Get the html canvas element.
+     * @returns {HTMLCanvasElement} The canvas.
+     */
     public static get(): HTMLCanvasElement {
         return this.canvas;
     }
 
+    /**
+     * Resize the canvas.
+     * @param {number} width The new width of the canvas.
+     * @param {number} height The new height of the canvas. 
+     */
     public static resize(width: number, height: number) {
         this.canvas.width = width;
         this.canvas.height = height;
     }
 }
-
-export default Canvas;
