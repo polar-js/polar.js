@@ -11,11 +11,11 @@ export default class Texture2D {
 
     /**
      * Create a texture.
-     * @param path The path of the texture image file.
+     * @param {string} [path] The path of the texture image file.
      */
-    public constructor(path: string) {
+    public constructor() {
         this.loaded = false;
-        this.path = path;
+
         this.texture = c.gl.createTexture();
         c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
         // Fill texture with a 1x1 sample pixel.
@@ -23,15 +23,30 @@ export default class Texture2D {
         // Set texture parameters.
         c.gl.texParameteri(c.gl.TEXTURE_2D, c.gl.TEXTURE_MIN_FILTER, c.gl.LINEAR);
         c.gl.texParameteri(c.gl.TEXTURE_2D, c.gl.TEXTURE_MAG_FILTER, c.gl.NEAREST);
+    }
 
-        const image = new Image();
-        image.src = this.path;
-        image.addEventListener('load', () => {
-            c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
-            c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, c.gl.RGBA, c.gl.UNSIGNED_BYTE, image);
-            c.gl.generateMipmap(c.gl.TEXTURE_2D);
-            this.loaded = true;
-        });
+    public loadFromPath(path: string) {
+        this.path = path;
+        
+        if(path) {
+            const image = new Image();
+            image.src = this.path;
+            image.addEventListener('load', () => {
+                c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
+                c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, c.gl.RGBA, c.gl.UNSIGNED_BYTE, image);
+                c.gl.generateMipmap(c.gl.TEXTURE_2D);
+                this.loaded = true;
+                this.width = image.clientWidth;
+                this.height = image.clientHeight;
+            });
+        }
+    }
+
+    public loadFromArray(pixels: Uint8Array, width: number, height: number) {
+        c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
+        c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, width, height, 0, c.gl.RGBA, c.gl.UNSIGNED_BYTE, pixels);
+
+        this.loaded = true;
     }
 
     /**

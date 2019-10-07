@@ -12,6 +12,7 @@ import OrthographicCameraController from 'Polar/OrthographicCameraController';
 import Canvas from 'Polar/Renderer/Canvas';
 import Texture2D from 'Polar/Renderer/Texture';
 import ShaderLibrary from 'Polar/Renderer/ShaderLibrary';
+import Sprite from 'Polar/Renderer/Sprite'
 
 let application: Application;
 
@@ -24,4 +25,6 @@ export function stop() {
     application.stop();
 }
 
-export { Application, Layer, Renderer, Canvas, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer, VertexArray, Shader, ShaderLibrary, Texture2D, glMatrix, OrthographicCamera, Input, OrthographicCameraController };
+export { Application, Layer, Renderer, Canvas, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, 
+    IndexBuffer, VertexArray, Shader, ShaderLibrary, Texture2D, glMatrix, OrthographicCamera, Input, OrthographicCameraController,
+    Sprite };
