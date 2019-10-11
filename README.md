@@ -1,5 +1,5 @@
 # Polar Engine
-Polar Engine is a 2D game engine for use in the browsor. It is developed in TypeScript and is used in the browsor through the compiled `polar.min.js` file.
+Polar Engine is a 2D game engine for use in the browser. It is developed in TypeScript and is used in the browser through the compiled `polar.min.js` file.
 
 *Created by Alex Brown*
 ## Use
