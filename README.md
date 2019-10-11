@@ -21,4 +21,10 @@ npm run webpack
 ```
 
 ## Contribute
+Feel free to fork a recent commit to add / edit / optimise the engine.
 
+If you think your additions are worthy of the master branch, create a pull request.
+To make my life easier:
+- Originate your branch from a recent commit.
+- Include a brief description of what you changed.
+- Include a brief explanation of why you changed it.
