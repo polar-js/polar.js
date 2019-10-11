@@ -1,9 +1,9 @@
 
 
 class UIElement {
-    private elements: [UIElement];
-    
-    public constructor() {
-        
-    }
+	private elements: [UIElement];
+	
+	public constructor() {
+		
+	}
 }
