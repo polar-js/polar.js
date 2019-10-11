@@ -1,19 +1,19 @@
 
 class Layer {
-    private debugName: string;
+	private debugName: string;
 
-    public constructor(name: string) {
-        this.debugName = name;
-    }
+	public constructor(name: string) {
+		this.debugName = name;
+	}
 
-    public onAttach(): void {}
-    public onDetach(): void {}
-    public onUpdate(deltaTime: number): void {}
-    public onEvent(): void {}
+	public onAttach(): void {}
+	public onDetach(): void {}
+	public onUpdate(deltaTime: number): void {}
+	public onEvent(): void {}
 
-    public getName(): string { 
-        return this.debugName;
-    }
+	public getName(): string { 
+		return this.debugName;
+	}
 }
 
 export default Layer;
