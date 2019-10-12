@@ -10,7 +10,7 @@ export default class OrthographicCamera {
 	private rotation: number;
 
 	/**
-	 * Create an orthograpic camera.
+	 * Create an orthographic camera.
 	 * @param {number} left The left bound of the camera.
 	 * @param {number} right The right bound of the camera.
 	 * @param {number} bottom The bottom bound of the camera.
@@ -29,6 +29,7 @@ export default class OrthographicCamera {
 		this.recalculateViewMatrix();
 	}
 
+	/** Recalculates the camera's view projection matrix. */
 	private recalculateViewMatrix() {
 		let transform = mat4.create();
 		mat4.translate(transform, transform, this.position);
@@ -109,5 +110,4 @@ export default class OrthographicCamera {
 		mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
 		mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
 	}
-
 }

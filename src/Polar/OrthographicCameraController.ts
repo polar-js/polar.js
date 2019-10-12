@@ -4,7 +4,7 @@ import Canvas from 'Polar/Renderer/Canvas';
 import { vec3 } from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
-export default class OrhtographicCameraController {
+export default class OrthographicCameraController {
 	private aspectRatio: number;
 	private zoomLevel: number;
 	private camera: Camera;
@@ -22,7 +22,7 @@ export default class OrhtographicCameraController {
 	 * Create an orthographic camera controller.
 	 * @param {number} aspectRatio The aspect ratio of the camera's view port. width / height.
 	 * @param {number} [initialZoomLevel=1.0] The initial zoom of the camera.
-	 * @param {boolean} [doRotation=false] Turn on / off camera rotation controlls.
+	 * @param {boolean} [doRotation=false] Turn on / off camera rotation controls.
 	 */
 	public constructor(aspectRatio: number, initialZoomLevel: number = 1.0, doRotation: boolean = false) {
 		this.aspectRatio = aspectRatio;
@@ -86,7 +86,7 @@ export default class OrhtographicCameraController {
 	}
 
 	/**
-	 * Get the internal camera controlled by the OrhtographicCameraController.
+	 * Get the internal camera controlled by the OrthographicCameraController.
 	 * @returns {Camera} The internal camera  object.
 	 */
 	public getCamera(): Camera {
@@ -94,9 +94,9 @@ export default class OrhtographicCameraController {
 	}
 
 	/**
-	 * A sigmoid function to calculate The speed of the camaera at the specified zoom.
+	 * A sigmoid function to calculate The speed of the camera at the specified zoom.
 	 * @param {number} zoom The current zoom of the camera.
-	 * @returns {Camera} The speed of the camaera in world units / second.
+	 * @returns {Camera} The speed of the camera in world units / second.
 	 */
 	private cameraTranslationSpeed(zoom: number): number {
 		return 20 / (1 + 30 * Math.pow(Math.E, -0.4 * zoom));
