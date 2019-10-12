@@ -1,7 +1,7 @@
-import Shader from './Shader';
+import { Shader } from './Shader';
 
 /** Stores a number of shaders. */
-export default class ShaderLibrary {
+export  class ShaderLibrary {
 	private shaders: { [id: string]: Shader };
 
 	public constructor() {

@@ -1,6 +1,6 @@
 import { vec2 } from 'gl-matrix';
 
-export default class Input {
+export class Input {
 	private static keyStates: {[id: string]: boolean};
 	private static mouseButtonStates: {[id: number]: boolean};
 	private static mousePosition: vec2;

@@ -1,13 +1,14 @@
 import { mat4 } from 'gl-matrix';
-import VertexArray from 'Polar/Renderer/VertexArray';
-import Shader from 'Polar/Renderer/Shader';
-import RenderCommand from 'Polar/Renderer/RenderCommand';
-import OrthographicCamera from 'Polar/Renderer/Camera';
-import ShaderLibrary from 'Polar/Renderer/ShaderLibrary';
+import { VertexArray } from 'Polar/Renderer/VertexArray';
+import { Shader } from 'Polar/Renderer/Shader';
+import { RenderCommand } from 'Polar/Renderer/RenderCommand';
+import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
-import Sprite from './Sprite';
+import { Sprite } from './Sprite';
+import { Texture2D } from 'Polar/Renderer/Texture';
 
-export default class Renderer {
+export  class Renderer {
 	private static viewProjectionMatrix: mat4;
 	private static quadVA: VertexArray;
 	private static shaderLibrary: ShaderLibrary;
@@ -71,15 +72,15 @@ export default class Renderer {
 		this.quadVA.addVertexBuffer(quadVB, textureShader);
 	}
 
-	public static beginScene(camera: OrthographicCamera): void {
+	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 	}
 
-	public static endScene(): void {
+	public static endScene() {
 
 	}
 
-	public static submit(sprite: Sprite): void {
+	public static submitSprite(sprite: Sprite) {
 		const shader = this.shaderLibrary.get('TextureShader');
 		sprite.getTexture().bind();
 
@@ -87,6 +88,19 @@ export default class Renderer {
 		shader.uploadUniformInt('u_Texture', 0);
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
 		shader.uploadUniformMat4('u_Transform', sprite.getTransform());
+
+		this.quadVA.bind();
+		RenderCommand.drawIndexed(this.quadVA);
+	}
+
+	public static submit(texture: Texture2D, transform: mat4) {
+		const shader = this.shaderLibrary.get('TextureShader');
+		texture.bind();
+
+		shader.bind();
+		shader.uploadUniformInt('u_Texture', 0);
+		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
+		shader.uploadUniformMat4('u_Transform', transform);
 
 		this.quadVA.bind();
 		RenderCommand.drawIndexed(this.quadVA);

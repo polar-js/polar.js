@@ -1,15 +1,15 @@
 import { vec4 } from 'gl-matrix';
 
-import Layer from 'Polar/Core/Layer';
-import LayerStack from 'Polar/Core/LayerStack';
-import RenderCommand from '../Renderer/RenderCommand';
-import Renderer from '../Renderer/Renderer';
-import Canvas from 'Polar/Renderer/Canvas';
-import Input from 'Polar/Core/Input';
-import Settings from 'Polar/Core/Settings';
+import { Layer } from 'Polar/Core/Layer';
+import { LayerStack } from 'Polar/Core/LayerStack';
+import { RenderCommand } from '../Renderer/RenderCommand';
+import { Renderer } from '../Renderer/Renderer';
+import { Canvas } from 'Polar/Renderer/Canvas';
+import { Input } from 'Polar/Core/Input';
+import { Settings } from 'Polar/Core/Settings';
 
 /** Represents a Polar Application to be attached to the engine. */
-abstract class Application {
+export abstract class Application {
 	private lastFrameTime: number = 0;
 	private layerStack: LayerStack;
 	private frameID: number;
@@ -37,7 +37,7 @@ abstract class Application {
 
 			this.layerStack.onUpdate(deltaTime);
 			this.frameID = window.requestAnimationFrame(update);
-		}
+		};
 
 		this.frameID = window.requestAnimationFrame(update);
 	}
@@ -60,5 +60,3 @@ abstract class Application {
 		layer.onAttach();
 	}
 }
-
-export default Application;

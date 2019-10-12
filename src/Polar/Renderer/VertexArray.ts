@@ -1,6 +1,6 @@
 import { ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer } from './Buffer';
-import Canvas from './Canvas';
-import Shader  from './Shader';
+import { Canvas } from './Canvas';
+import { Shader }  from './Shader';
 
 function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 	switch (type) {
@@ -20,7 +20,7 @@ function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 	return 0;
 }
 
-export default class VertexArray {
+export  class VertexArray {
 	private rendererID: WebGLVertexArrayObject;
 	private vertexBuffers: VertexBuffer[];
 	private indexBuffer: IndexBuffer;

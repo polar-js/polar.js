@@ -1,4 +1,3 @@
-import Texture2D from "Polar/Renderer/Texture";
 
 /** Represents a collection of components relating to a single entity in the world. */
 export class Entity {
@@ -6,7 +5,7 @@ export class Entity {
 	
 	public readonly components: Map<string, Component>;
 
-	public subscribers: number[] = [];
+	//public subscribers: number[] = [];
 
 	public constructor(id: number) {
 		this.id = id;
@@ -31,25 +30,62 @@ export class Entity {
 }
 
 /**
- * Represents a collection of information about an entity used to define behaviour.
- * Should contain no behaviour / functionality, only data.
+ * Represents a collection of information about an entity used to define behavior.
+ * Should contain no behavior / functionality, only data.
  * @abstract
  */
 export abstract class Component {
 	/**
 	 * Get the type of the component.
 	 * To be overridden in every component subclass to return a string unique to the component type.
+	 * Recommended format: '<Namespace>:<ComponentClassName>'.
+	 * Example: 'Sandbox:Goal'.
 	 * @returns {string} A unique identifier for the component type.
 	 */
 	public abstract getType(): string;
 }
 
 /**
- * Represents a behaviour which is applied to entities' components.
+ * Represents a behavior which is applied to entities' components.
  * Should contain no state / data.
  * @abstract
  */
 export abstract class System {
+	public manager: WorldManager;
+	public subscribers: Map<number, number>;
+
+	public constructor() {
+		this.subscribers = new Map<number, number>();
+	}
+
+	/** Called after the system is added to the world manager. */
+	public abstract onAttach(): void;
+
+	/** Called before the system is removed from the world manager. */
+	public onDetach(): void { this.manager = null; };
+
+	/**
+	 * Called every update for each entity subscribed to system.
+	 * @param {number} dt The elapsed time since the last frame in seconds.
+	 * @param {Array<Entity>} entity The entity to be updated.
+	 * @param {number} subIndex The index of the tuple which the entity subscribed to in System.getComponentTuples();
+	 */
+	public abstract onEntityUpdate(dt: number, entity: Entity, subIndex: number): void;
+
+	/**
+	 * Called by the world manager at the start of an update cycle.
+	 * @param dt Time elapsed since last update in seconds.
+	 * @abstract
+	 */
+	public abstract beginUpdate(dt: number): void;
+
+	/**
+	 * Called by the world manager at the end of an update cycle.
+	 * @param dt Time elapsed since last update in seconds.
+	 * @abstract
+	 */
+	public abstract endUpdate(dt: number): void;
+
 	/**
 	 * Returns the component tuples for a system.
 	 * @returns {string[][]} An array of tuples which contain the types of components which are to be updated.
@@ -59,6 +95,8 @@ export abstract class System {
 
 	/**
 	 * Returns the name of the system, unique to each system type.
+	 * Recommended format: '<Namespace>:<SystemClassName>'.
+	 * Example: 'Sandbox:GoalSystem'.
 	 * @returns {string} The name of the system.
 	 * @abstract
 	 */
@@ -71,26 +109,21 @@ export abstract class System {
 	 * @abstract
 	 * @deprecated
 	 */
-	//public abstract onUpdate(dt: number, entities: Array<Entity>): void;
-
-	/**
-	 * Called every update for each entity subscribed to system.
-	 * @param {number} dt The elapsed time since the last frame in seconds.
-	 * @param {Array<Entity>} entity The entity to be updated.
-	 */
-	public abstract onEntityUpdate(dt: number, entity: Entity): void;
 }
 
+/** Controls and manages the entity component system of a world. */
 export abstract class WorldManager {
-	private systems: Map<number, System>;
-	private systemTrack: number = 0;
+	private systems: Array<System>;
 
 	private entities: Map<number, Entity>;
 	private entityTrack: number = 0;
 
+	private singletons: Entity;
+
 	public constructor() {
-		this.systems = new Map<number, System>();
+		this.systems = new Array<System>();
 		this.entities = new Map<number, Entity>();
+		this.singletons = new Entity(-1);
 	}
 
 	/**
@@ -98,18 +131,23 @@ export abstract class WorldManager {
 	 * @param {number} dt The time elapsed since the last frame in seconds.
 	 */
 	public onUpdate(dt: number) {
-		for (const entity of this.entities.values()) {
-			for (const sub of entity.subscribers)
-				this.systems.get(sub).onEntityUpdate(dt, entity);
+		for (const system of this.systems) {
+			system.beginUpdate(dt);
+			for (const [eid, subIndex] of system.subscribers) {
+				system.onEntityUpdate(dt, this.entities.get(eid), subIndex);
+			}
+			system.endUpdate(dt);
 		}
 	}
 
 	/**
 	 * Add a system to the world.
-	 * @param {System} system The system object to be added.
+	 * @param {System} system The system to be added.
 	 */
 	public addSystem(system: System) {
-		this.systems.set(this.systemTrack++, system);
+		system.manager = this;
+		this.systems.push(system);
+		system.onAttach();
 	}
 
 	/**
@@ -117,16 +155,17 @@ export abstract class WorldManager {
 	 * @param name The name of the system, the overridden return value of System.getName().
 	 */
 	public removeSystemByName(name: string) {
-		for (let [key, system] of this.systems) {
-			if (system.getName() == name) {
-				this.systems.delete(key);
+		for (let i = this.systems.length - 1; i >= 0; i--) {
+			if (this.systems[i].getName() == name) {
+				this.systems[i].onDetach();
+				this.systems.splice(i, 1);
 			}
 		}
 	}
 
 	/**
 	 * Get an entity from the manager using its ID.
-	 * @param id The ID of the entity.
+	 * @param {number} id The ID of the entity.
 	 * @returns {Entity} The entity.
 	 */
 	public getEntityById(id: number): Entity {
@@ -141,6 +180,7 @@ export abstract class WorldManager {
 		let eid = this.entityTrack++;
 		let entity = new Entity(eid);
 		this.entities.set(eid, entity);
+		this.addEntitySubscriptions(eid);
 		return entity;
 	}
 
@@ -150,26 +190,33 @@ export abstract class WorldManager {
 	 * @returns {boolean} Whether the entity existed and was removed.
 	 */
 	public removeEntityById(eid: number): boolean {
+
+		this.removeEntitySubscriptions(eid);
 		return this.entities.delete(eid);
 	}
 
 	/**
 	 * Recalculates the systems which are subscribed to this entity.
-	 * @param {Map<number, System>} systems The system list.
+	 * @param {number} eid The entity to be subscribed to the appropriate systems.
 	 */
-	public recalculateEntitySubscribers(eid: number) {
+	public addEntitySubscriptions(eid: number) {
 		const entity = this.entities.get(eid);
-		entity.subscribers = [];
-		for (const [skey, system] of this.systems) {
+
+		for (const system of this.systems) {
+			// If the system already has the entity subscribed, continue.
+			if (system.subscribers.has(eid)) {
+				continue;
+			}
+			
+			// Check if the entity is subscribed to this system.
 			let systemAdded = false;
 			for (const tuples of system.getComponentTuples()) {
-				for (const tuple of tuples) {
+				//for (const tuple of tuples) {
+				for (let i = 0; i < tuples.length; i++) {
 					// Check if the tuple array is a subset of the components array.
-					if( Array.from(entity.components.keys()).every(val => tuple.includes(val)) ) {
-						if (entity.subscribers.indexOf(skey) === -1) {
-							entity.subscribers.push(skey);
-							systemAdded = true;
-							break;
+					if( Array.from(entity.components.keys()).every(val => tuples[i].includes(val)) ) {
+						if (!system.subscribers.has(eid)) {
+							system.subscribers.set(eid, i);
 						}
 					}
 				}
@@ -180,11 +227,37 @@ export abstract class WorldManager {
 	}
 
 	/**
+	 * Removes the entity from all system subscriptions.
+	 * Stops the entity from being updated.
+	 * @param {number} eid The entity's ID.
+	 */
+	public removeEntitySubscriptions(eid: number) {
+		// Remove the system subscribers.
+		for (const system of this.systems) {
+			system.subscribers.delete(eid);
+		}
+	}
+
+	/**
 	 * Recalculates all entity subscribers.
 	 * High performance cost - use sparingly.
+	 * To be used after a new system is added after the entities.
 	 */
 	public recalculateAllSubscribers() {
+		// Clear all current subscribers.
+		for (const system of this.systems)
+			system.subscribers.clear();
+		
+		// Add all current entity subscriptions.
 		for (const eid of this.entities.keys())
-			this.recalculateEntitySubscribers(eid);
+			this.addEntitySubscriptions(eid);
+	}
+
+	public getSingleton(componentId: string): Component {
+		return this.singletons.getComponent(componentId);
+	}
+
+	public addSingleton(component: Component) {
+		this.singletons.addComponent(component);
 	}
 }

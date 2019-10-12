@@ -1,8 +1,8 @@
 import { vec2, vec3, mat4 } from 'gl-matrix';
-import Texture2D from 'Polar/Renderer/Texture';
+import { Texture2D } from 'Polar/Renderer/Texture';
 
-/** Represents a texture within worldspace. */
-export default class Sprite {
+/** Represents a texture within world-space. */
+export  class Sprite {
 	private position: vec2;
 	private rotation: number;
 	private scale: number;

@@ -1,13 +1,13 @@
-import Camera from 'Polar/Renderer/Camera';
-import Input from 'Polar/Core/Input';
-import Canvas from 'Polar/Renderer/Canvas';
+import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import { Input } from 'Polar/Core/Input';
+import { Canvas } from 'Polar/Renderer/Canvas';
 import { vec3 } from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
-export default class OrthographicCameraController {
+export  class OrthographicCameraController {
 	private aspectRatio: number;
 	private zoomLevel: number;
-	private camera: Camera;
+	private camera: OrthographicCamera;
 
 	private doRotation: boolean;
 
@@ -28,7 +28,7 @@ export default class OrthographicCameraController {
 		this.aspectRatio = aspectRatio;
 		this.zoomLevel = initialZoomLevel;
 		this.doRotation = doRotation;
-		this.camera = new Camera(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
+		this.camera = new OrthographicCamera(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 
 		window.addEventListener('mousewheel', (ev: MouseWheelEvent) => {
 			this.zoomLevel += ev.deltaY / 1000 * this.zoomLevel;
@@ -89,7 +89,7 @@ export default class OrthographicCameraController {
 	 * Get the internal camera controlled by the OrthographicCameraController.
 	 * @returns {Camera} The internal camera  object.
 	 */
-	public getCamera(): Camera {
+	public getCamera(): OrthographicCamera {
 		return this.camera;
 	}
 

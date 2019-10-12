@@ -1,30 +1,35 @@
 import * as glMatrix from 'gl-matrix';
-
-import Application from 'Polar/Core/Application';
-import Layer from 'Polar/Core/Layer';
-import Renderer from 'Polar/Renderer/Renderer';
-import { ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer } from 'Polar/Renderer/Buffer';
-import VertexArray from 'Polar/Renderer/VertexArray';
-import Shader from 'Polar/Renderer/Shader';
-import OrthographicCamera from 'Polar/Renderer/Camera';
-import Input from 'Polar/Core/Input';
-import OrthographicCameraController from 'Polar/OrthographicCameraController';
-import Canvas from 'Polar/Renderer/Canvas';
-import Texture2D from 'Polar/Renderer/Texture';
-import ShaderLibrary from 'Polar/Renderer/ShaderLibrary';
-import Sprite from 'Polar/Renderer/Sprite';
+import { Application } from 'Polar/Core/Application';
 
 let application: Application;
 
 export function create(app: Application) {
+	console.assert(application == null, 'Application has already been created!');
 	application = app;
 	application.start();
 }
 
 export function stop() {
+	console.assert(application != null, 'Application has not been created yet!');
 	application.stop();
+	application = null;
 }
 
-export { Application, Layer, Renderer, Canvas, ShaderDataType, BufferElement, BufferLayout, VertexBuffer, 
-	IndexBuffer, VertexArray, Shader, ShaderLibrary, Texture2D, glMatrix, OrthographicCamera, Input, OrthographicCameraController,
-	Sprite };
+export { Application, glMatrix };
+
+export * from 'Polar/Core/Layer';
+export * from 'Polar/Renderer/Renderer';
+export * from 'Polar/Renderer/Buffer';
+export * from 'Polar/Renderer/VertexArray';
+export * from 'Polar/Renderer/Shader';
+export * from 'Polar/Renderer/Camera';
+export * from 'Polar/Core/Input';
+export * from 'Polar/OrthographicCameraController';
+export * from 'Polar/Renderer/Canvas';
+export * from 'Polar/Renderer/Texture';
+export * from 'Polar/Renderer/ShaderLibrary';
+export * from 'Polar/Renderer/Sprite';
+export * from 'Polar/ECS/ECS';
+export * from 'Polar/ECS/Components';
+export * from 'Polar/ECS/CameraControllerSystem';
+export * from 'Polar/ECS/RenderSystem';

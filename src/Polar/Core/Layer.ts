@@ -1,5 +1,5 @@
 
-class Layer {
+export class Layer {
 	private debugName: string;
 
 	public constructor(name: string) {
@@ -15,5 +15,3 @@ class Layer {
 		return this.debugName;
 	}
 }
-
-export default Layer;

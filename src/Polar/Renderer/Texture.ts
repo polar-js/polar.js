@@ -1,7 +1,7 @@
-import c from './Canvas';
+import { Canvas as c } from './Canvas';
 
 /** Represents a 2D OpenGL Texture */
-export default class Texture2D {
+export  class Texture2D {
 	private path: string;
 	private width: number;
 	private height: number;

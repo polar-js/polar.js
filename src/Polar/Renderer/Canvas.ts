@@ -1,6 +1,6 @@
-import Settings from 'Polar/Core/Settings';
+import { Settings } from 'Polar/Core/Settings';
 
-export default class Canvas {
+export  class Canvas {
 	private static canvas: HTMLCanvasElement;
 
 	/**

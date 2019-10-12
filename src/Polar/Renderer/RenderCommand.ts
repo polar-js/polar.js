@@ -1,8 +1,8 @@
 import * as glMatrix from 'gl-matrix';
-import Canvas from 'Polar/Renderer/Canvas';
-import VertexArray from 'Polar/Renderer/VertexArray';
+import { Canvas } from 'Polar/Renderer/Canvas';
+import { VertexArray } from 'Polar/Renderer/VertexArray';
 
-class RenderCommand {
+export class RenderCommand {
 	public static init(): void {
 		Canvas.gl.enable(Canvas.gl.BLEND);
 		Canvas.gl.blendFunc(Canvas.gl.SRC_ALPHA, Canvas.gl.ONE_MINUS_SRC_ALPHA);
@@ -20,5 +20,3 @@ class RenderCommand {
 		Canvas.gl.drawElements(Canvas.gl.TRIANGLES, vertexArray.getIndexBuffer().getCount(), Canvas.gl.UNSIGNED_SHORT, 0);
 	}
 }
-
-export default RenderCommand;

@@ -1,4 +1,4 @@
-import Canvas from './Canvas';
+import { Canvas } from './Canvas';
 import { vec2, vec3, vec4, mat3, mat4 } from 'gl-matrix';
 
 function shaderTypeFromString(type: string): number {
@@ -11,7 +11,7 @@ function shaderTypeFromString(type: string): number {
 }
 
 /** Represents an OpenGL shader. */
-export default class Shader {
+export  class Shader {
 	private rendererID: WebGLProgram;
 	private name: string;
 	private locations: { [id: string]: WebGLUniformLocation };

@@ -1,7 +1,7 @@
 import { vec3, mat4 } from 'gl-matrix';
 
 /** Class representing an orthographic camera for use in a Polar scene. */
-export default class OrthographicCamera {
+export  class OrthographicCamera {
 	private projectionMatrix: mat4;
 	private viewMatrix: mat4;
 	private viewProjectionMatrix: mat4;
