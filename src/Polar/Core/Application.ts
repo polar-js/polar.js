@@ -34,6 +34,7 @@ export abstract class Application {
 			color.set([0.1, 0.1, 0.1, 1.0]);
 			RenderCommand.setClearColor(color);
 			RenderCommand.clear();
+			Canvas.font.clearRect(0, 0, Canvas.get().width, Canvas.get().height);
 
 			this.layerStack.onUpdate(deltaTime);
 			this.frameID = window.requestAnimationFrame(update);

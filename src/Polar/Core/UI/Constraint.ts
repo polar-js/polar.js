@@ -14,7 +14,7 @@ export class PixelConstraint extends Constraint {
 }
 
 export class PercentageConstraint extends Constraint {
-
+	private amount: number;
 
 	public constructor() {
 		super();

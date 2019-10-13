@@ -2,15 +2,22 @@ import { Settings } from 'Polar/Core/Settings';
 
 export  class Canvas {
 	private static canvas: HTMLCanvasElement;
+	private static fontCanvas: HTMLCanvasElement;
 
 	/**
 	 * The WebGL2 rendering context.
 	 * @static
 	 */
 	public static gl: WebGL2RenderingContext;
+	
+	/**
+	 * The font rendering context.
+	 * @static
+	 */
+	public static font: CanvasRenderingContext2D;
 
 	/** 
-	 * Initialise the canvas.
+	 * Initialize the canvas.
 	 * @param {settings} settings The engine settings.
 	 */
 	public static init(settings: Settings) {
@@ -34,7 +41,22 @@ export  class Canvas {
 		}
 		this.gl = this.canvas.getContext('webgl2');
 
+		this.fontCanvas = document.createElement('canvas');
+		this.canvas.parentElement.appendChild(this.fontCanvas);
+		this.fontCanvas.style.position = 'absolute';
+		this.fontCanvas.style.left =  this.canvas.offsetLeft.toString();
+		this.fontCanvas.style.top = this.canvas.offsetTop.toString();
+		this.fontCanvas.width = this.canvas.width;
+		this.fontCanvas.height = this.canvas.height;
+
+		this.font = this.fontCanvas.getContext('2d');
+
 		window.addEventListener('resize', (ev: UIEvent) => {
+			this.fontCanvas.style.left =  this.canvas.offsetLeft.toString();
+			this.fontCanvas.style.top = this.canvas.offsetTop.toString();
+			this.fontCanvas.width = this.canvas.width;
+			this.fontCanvas.height = this.canvas.height;
+
 			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});
 	}
@@ -45,6 +67,10 @@ export  class Canvas {
 	 */
 	public static get(): HTMLCanvasElement {
 		return this.canvas;
+	}
+
+	public static getFontCanvas(): HTMLCanvasElement {
+		return this.fontCanvas;
 	}
 
 	/**
