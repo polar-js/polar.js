@@ -13,7 +13,7 @@ Include `polar.min.js` into your HTML file
 ## Building
 To install node modules
 ```
-npm init
+npm install
 ```
 To build using [WebPack](https://webpack.js.org/)
 ```
