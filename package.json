@@ -4,7 +4,7 @@
     "description": "JavaScript Game Engine",
     "main": "src/Polar.ts",
     "scripts": {
-        "webpack": "./node_modules/.bin/webpack-cli",
+        "webpack": "node generate.js",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "repository": {
@@ -28,9 +28,9 @@
         "eslint": "^6.5.1",
         "maxrects-packer": "^2.5.0",
         "ts-loader": "^6.1.0",
+        "typedoc": "^0.15.0",
         "typescript": "^3.6.3",
-        "webpack": "^4.40.2",
-        "webpack-cli": "^3.3.9"
+        "webpack": "^4.40.2"
     },
     "dependencies": {
         "@types/gl-matrix": "^2.4.5",
