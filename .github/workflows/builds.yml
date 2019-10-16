@@ -1,26 +1,29 @@
-name: UMD & Docs Build
-
-on: [push]
+name: Builds
+on:
+  push:
+    branches:
+      - stable
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Checkout repo
+      uses: actions/checkout@v1
+    - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+        node-version: '12.x'
+    - name: Publish to npm
       run: |
-        npm install
-        node build.js prod
-        npm test
+        npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+        npm run trypublish
       env:
         CI: true
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Build webpack
+      run: |
+        git subtree push --prefix webpack origin webpack
+    - name: Build docs
+      run: |
+        git subtree push --prefix docs origin gh-pages

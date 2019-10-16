@@ -1,0 +1,22 @@
+name: Lint
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/*'
+
+jobs:
+  lint: 
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v1
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Linting
+      run: |
+        npm install
+        npx eslint . --ext .js,.jsx,.ts,.tsx
