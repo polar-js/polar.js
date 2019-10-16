@@ -14,16 +14,16 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+    - name: Build webpack
+      run: node build.js umd
     - name: Publish to npm
       run: |
         npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
-        npm run trypublish
+        npm publish
       env:
         CI: true
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - name: Build webpack
+    - name: Publish docs
       run: |
-        git subtree push --prefix webpack origin webpack
-    - name: Build docs
-      run: |
+        node build.js docs
         git subtree push --prefix docs origin gh-pages
