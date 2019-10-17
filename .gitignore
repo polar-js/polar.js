@@ -1,2 +1,10 @@
-node_modules
-tests/polar.min.js
+# Packages
+node_modules/
+yarn.lock
+
+# Log files
+logs/
+*.log
+
+# temporary stuff (delete soon!!!)
+tests/polar.min.js 
