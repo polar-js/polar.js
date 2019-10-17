@@ -5,17 +5,36 @@ on:
       - stable
 
 jobs:
-  build:
+  docs:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v1
-    - name: Use Node.js 12.x
+
+    - name: Use Node.js v12
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: 12
+
+    - name: Publish docs
+      run: |
+        node build.js docs
+        git subtree push --prefix docs origin gh-pages
+
+  deploy:
+    name: npm & webpack
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Use Node.js v12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
     - name: Build webpack
       run: node build.js umd
+      
     - name: Publish to npm
       run: |
         npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
@@ -23,7 +42,3 @@ jobs:
       env:
         CI: true
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - name: Publish docs
-      run: |
-        node build.js docs
-        git subtree push --prefix docs origin gh-pages
