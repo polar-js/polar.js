@@ -24,7 +24,7 @@ jobs:
         git subtree push --prefix docs origin gh-pages
 
   deploy:
-    name: npm & webpack
+    name: build npm & webpack
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -37,6 +37,9 @@ jobs:
 
     - name: Build webpack
       run: node build.js umd
+
+    - name: Build .js & .ts declaration
+      run: npx typescript
       
     - name: Publish to npm
       run: |

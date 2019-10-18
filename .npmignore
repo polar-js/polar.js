@@ -16,3 +16,6 @@ build.js
 .vscode/
 tests/
 tsconfig.json
+
+# Typescript
+src/

@@ -1,12 +1,17 @@
 {
     "compilerOptions": {
-        "outDir": "./tests/",
+        "outDir": "./dist",
         "noImplicitAny": true,
-        "module": "es6",
-        "target": "es6",
+        "module": "commonjs",
+        "target": "es5",
         "jsx": "react",
         "allowJs": true,
         "downlevelIteration": true,
-        "baseUrl": "./src/"
-    }
-  }
+        "baseUrl": "./src/",
+        "moduleResolution": "node",
+        "declaration": true 
+    },
+    "include": [
+        "src/*"
+    ],
+}
