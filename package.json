@@ -4,7 +4,7 @@
     "description": "JavaScript Game Engine",
     "main": "src/Polar.ts",
     "scripts": {
-        "webpack": "node generate.js",
+        "webpack": "node build.js watch",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "repository": {
