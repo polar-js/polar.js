@@ -20,6 +20,7 @@ jobs:
     - name: Publish docs
       run: |
         node build.js docs
+        echo polar.js.org > ./docs/CNAME
         git subtree push --prefix docs origin gh-pages
 
   deploy:
