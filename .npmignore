@@ -13,5 +13,6 @@ build.js
 .eslintrc.json
 .gitignore
 .github/
+.vscode/
 tests/
 tsconfig.json
