@@ -2,4 +2,8 @@
     "editor.tabSize": 4,
 	"editor.insertSpaces": false,
 	"files.eol": "\r\n",
+	"files.exclude": {
+		"**/node_modules": true,
+		"**/.vscode": true
+	}
 }
