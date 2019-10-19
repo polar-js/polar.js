@@ -75,7 +75,7 @@ if (mode === 'docs') {
 	console.log('TypeDoc: generating docs');
 	const project = app.convert(app.expandInputFiles(['src']));
 	if (project) {
-		console.log('TypeDoc: generated succesfully');
+		console.log('TypeDoc: generated successfully');
 		const outputDir = 'docs';
 		app.generateDocs(project, 'docs');
 		app.generateJson(project, 'docs/documentation.json');
