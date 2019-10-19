@@ -3,12 +3,11 @@
 class UIElement {
 	public children: [UIElement];
 
-	public left: Constraint;
-	public right: Constraint;
-	public top: Constraint;
-	public bottom: Constraint;
+	public dx: Constraint;
+	public dy: Constraint;
 
 	public width: Constraint;
+	public height: Constraint;
 	
 	public constructor() {
 		
@@ -21,12 +20,9 @@ class Constraint {
 	
 	// 'px', '%'
 	public type: string;
-	
-	public relativeTo: UIElement;
 
-	public constructor(amount: number = 0, type: string = 'px', relativeTo?: UIElement) {
+	public constructor(amount: number = 0, type: string = 'px') {
 		this.amount = amount;
 		this.type = type;
-		this.relativeTo = relativeTo;
 	}
 }
