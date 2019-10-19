@@ -27,7 +27,7 @@ class ExampleECSLayer extends Polar.Layer {
 		this.currentFPS = 0;
 
 		
-		const atlas = new Polar.TextureAtlas(['textures/1.png', 'textures/2.png', 'textures/3.png', 'textures/4.png']);
+		const atlas = new Polar.TextureAtlas(['textures/1.png', 'textures/2.png', 'textures/3.png', 'textures/4.png', 'textures/5.png', 'textures/6.png']);
 	}
 
 	onUpdate(deltaTime) {

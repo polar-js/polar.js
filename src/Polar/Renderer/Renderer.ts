@@ -5,14 +5,21 @@ import { RenderCommand } from 'Polar/Renderer/RenderCommand';
 import { OrthographicCamera } from 'Polar/Renderer/Camera';
 import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
-import { Sprite } from './Sprite';
+import { Sprite } from 'Polar/Renderer/Sprite';
 import { Texture2D } from 'Polar/Renderer/Texture';
+import { TextureAtlas } from 'Polar/Renderer/TextureAtlas';
+import { TransformCP } from 'Polar/ECS/Components';
+
+
+import { Canvas } from 'Polar/Renderer/Canvas';
 
 export  class Renderer {
 	private static viewProjectionMatrix: mat4;
 	private static quadVA: VertexArray;
 	private static shaderLibrary: ShaderLibrary;
+	private static textureAtlas: TextureAtlas;
 
+	/** Initialize the renderer. */
 	public static init() {
 		RenderCommand.init();
 
@@ -23,6 +30,8 @@ export  class Renderer {
 			
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec2 a_TexCoord;
+			
+			layout(location = 2) in mat4 a_Transform;
 			
 			uniform mat4 u_ViewProjection;
 			uniform mat4 u_Transform;
@@ -70,16 +79,25 @@ export  class Renderer {
 
 		quadVB.setLayout(quadLayout);
 		this.quadVA.addVertexBuffer(quadVB, textureShader);
+
+
+		// INIT BATCHED
+		const instanceVBO = new VertexBuffer();
 	}
 
+	/** Begin the rendering of a scene. */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 	}
 
+	/** End the rendering of a scene. */
 	public static endScene() {
 
 	}
 
+	/** Submit a sprite for rendering.
+	 * @param {Sprite} sprite The sprite to be rendered.
+	 */
 	public static submitSprite(sprite: Sprite) {
 		const shader = this.shaderLibrary.get('TextureShader');
 		sprite.getTexture().bind();
@@ -93,6 +111,10 @@ export  class Renderer {
 		RenderCommand.drawIndexed(this.quadVA);
 	}
 
+	/** Submit a texture for rendering.
+	 * @param {Texture2D} texture The texture.
+	 * @param {mat4} transform The transform to be applied to the texture.
+	 */
 	public static submit(texture: Texture2D, transform: mat4) {
 		const shader = this.shaderLibrary.get('TextureShader');
 		texture.bind();
@@ -104,5 +126,16 @@ export  class Renderer {
 
 		this.quadVA.bind();
 		RenderCommand.drawIndexed(this.quadVA);
+	}
+
+	public static submitBatched(texturePath: string, transform: mat4) {
+		
+	}
+
+	/** Register the textures that the renderer will use.
+	 * @param paths
+	 */
+	public static registerTextures(paths: string[]) {
+		this.textureAtlas = new TextureAtlas(paths);
 	}
 }

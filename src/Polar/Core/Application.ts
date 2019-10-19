@@ -31,7 +31,7 @@ export abstract class Application {
 			this.lastFrameTime = time;
 
 			const color = vec4.create();
-			color.set([0.1, 0.1, 0.1, 1.0]);
+			color.set([0.0, 0.0, 0.0, 1.0]);
 			RenderCommand.setClearColor(color);
 			RenderCommand.clear();
 			Canvas.font.clearRect(0, 0, Canvas.get().width, Canvas.get().height);
@@ -40,7 +40,7 @@ export abstract class Application {
 			this.frameID = window.requestAnimationFrame(update);
 		};
 
-		this.frameID = window.requestAnimationFrame(update);
+		update(null);
 	}
 
 	/** Stops the update loop of the application. */
