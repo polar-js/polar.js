@@ -4,7 +4,7 @@ import { Layer } from 'Polar/Core/Layer';
 import { LayerStack } from 'Polar/Core/LayerStack';
 import { RenderCommand } from '../Renderer/RenderCommand';
 import { Renderer } from '../Renderer/Renderer';
-import { Canvas } from 'Polar/Renderer/Canvas';
+import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
 import { Settings } from 'Polar/Core/Settings';
 
@@ -17,7 +17,7 @@ export abstract class Application {
 	public constructor(settings: Settings) {
 		this.layerStack = new LayerStack();
 
-		Canvas.init(settings);
+		Surface.init(settings);
 		Input.init();
 		Renderer.init();
 	}
@@ -34,7 +34,7 @@ export abstract class Application {
 			color.set([0.0, 0.0, 0.0, 1.0]);
 			RenderCommand.setClearColor(color);
 			RenderCommand.clear();
-			Canvas.font.clearRect(0, 0, Canvas.get().width, Canvas.get().height);
+			Surface.font.clearRect(0, 0, Surface.get().width, Surface.get().height);
 
 			this.layerStack.onUpdate(deltaTime);
 			this.frameID = window.requestAnimationFrame(update);

@@ -1,7 +1,7 @@
 import { System, Entity } from 'Polar/ECS/ECS';
 import { CameraCP, CameraControllerCP } from 'Polar/ECS/Components';
 import { OrthographicCamera } from 'Polar/Renderer/Camera';
-import { Canvas } from 'Polar/Renderer/Canvas';
+import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
 
 /** A simple camera movement controller. */
@@ -21,7 +21,7 @@ export  class CameraControllerSystem extends System {
 		});
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			controllerData.aspectRatio = Canvas.get().offsetWidth / Canvas.get().offsetHeight;
+			controllerData.aspectRatio = Surface.get().offsetWidth / Surface.get().offsetHeight;
 			camera.setProjection(-controllerData.aspectRatio * controllerData.zoomLevel, controllerData.aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
 	}

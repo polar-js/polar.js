@@ -25,7 +25,7 @@ export * from 'Polar/Renderer/Shader';
 export * from 'Polar/Renderer/Camera';
 export * from 'Polar/Core/Input';
 export * from 'Polar/Util/OrthographicCameraController';
-export * from 'Polar/Renderer/Canvas';
+export * from 'Polar/Renderer/Surface';
 export * from 'Polar/Renderer/Texture';
 export * from 'Polar/Renderer/ShaderLibrary';
 export * from 'Polar/Renderer/Sprite';

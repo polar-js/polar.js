@@ -11,7 +11,7 @@ import { TextureAtlas } from 'Polar/Renderer/TextureAtlas';
 import { TransformCP } from 'Polar/ECS/Components';
 
 
-import { Canvas } from 'Polar/Renderer/Canvas';
+import { Surface } from 'Polar/Renderer/Surface';
 
 export  class Renderer {
 	private static viewProjectionMatrix: mat4;
@@ -79,15 +79,13 @@ export  class Renderer {
 
 		quadVB.setLayout(quadLayout);
 		this.quadVA.addVertexBuffer(quadVB, textureShader);
-
-
-		// INIT BATCHED
-		const instanceVBO = new VertexBuffer();
 	}
 
 	/** Begin the rendering of a scene. */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
+		const shader = this.shaderLibrary.get('TextureShader');
+		shader.bind();
 	}
 
 	/** End the rendering of a scene. */
@@ -102,7 +100,6 @@ export  class Renderer {
 		const shader = this.shaderLibrary.get('TextureShader');
 		sprite.getTexture().bind();
 
-		shader.bind();
 		shader.uploadUniformInt('u_Texture', 0);
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
 		shader.uploadUniformMat4('u_Transform', sprite.getTransform());
@@ -119,7 +116,6 @@ export  class Renderer {
 		const shader = this.shaderLibrary.get('TextureShader');
 		texture.bind();
 
-		shader.bind();
 		shader.uploadUniformInt('u_Texture', 0);
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
 		shader.uploadUniformMat4('u_Transform', transform);
@@ -128,9 +124,9 @@ export  class Renderer {
 		RenderCommand.drawIndexed(this.quadVA);
 	}
 
-	public static submitBatched(texturePath: string, transform: mat4) {
+	// public static submitBatched(texturePath: string, transform: mat4) {
 		
-	}
+	// }
 
 	/** Register the textures that the renderer will use.
 	 * @param paths

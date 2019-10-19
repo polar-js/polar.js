@@ -7,7 +7,7 @@ class ExampleECSLayer extends Polar.Layer {
 
 		// Initialize singletons.
 		this.world.addSingleton(new Polar.CameraCP());
-		this.world.addSingleton(new Polar.CameraControllerCP(Polar.Canvas.get().offsetWidth / Polar.Canvas.get().offsetHeight));
+		this.world.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
 
 		// Add systems.
 		this.world.addSystem(new Polar.RenderSystem());
@@ -37,9 +37,9 @@ class ExampleECSLayer extends Polar.Layer {
 			this.deltaNum = 0;
 		}
 
-		Polar.Canvas.font.font = '20px Arial';
-		Polar.Canvas.font.fillStyle = 'red';
-		Polar.Canvas.font.fillText(`FPS: ${this.currentFPS}`, 10, 30);
+		Polar.Surface.font.font = '20px Arial';
+		Polar.Surface.font.fillStyle = 'red';
+		Polar.Surface.font.fillText(`FPS: ${this.currentFPS}`, 10, 30);
 		
 
 		// Update

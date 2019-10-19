@@ -1,6 +1,6 @@
 import { OrthographicCamera } from 'Polar/Renderer/Camera';
 import { Input } from 'Polar/Core/Input';
-import { Canvas } from 'Polar/Renderer/Canvas';
+import { Surface } from 'Polar/Renderer/Surface';
 import { vec3 } from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
@@ -37,7 +37,7 @@ export  class OrthographicCameraController {
 		});
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			this.aspectRatio = Canvas.get().offsetWidth / Canvas.get().offsetHeight;
+			this.aspectRatio = Surface.get().offsetWidth / Surface.get().offsetHeight;
 			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 		});
 	}

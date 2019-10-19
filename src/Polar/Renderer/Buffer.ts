@@ -1,4 +1,4 @@
-import { Canvas } from './Canvas';
+import { Surface } from './Surface';
 
 export enum ShaderDataType {
 	None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
@@ -87,17 +87,17 @@ export class VertexBuffer {
 	private layout: BufferLayout;
 
 	public constructor (vertices: Float32Array) {
-		this.rendererID = Canvas.gl.createBuffer();
-		Canvas.gl.bindBuffer(Canvas.gl.ARRAY_BUFFER, this.rendererID);
-		Canvas.gl.bufferData(Canvas.gl.ARRAY_BUFFER, vertices, Canvas.gl.STATIC_DRAW);
+		this.rendererID = Surface.gl.createBuffer();
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.rendererID);
+		Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, Surface.gl.STATIC_DRAW);
 	}
 
 	public bind(): void {
-		Canvas.gl.bindBuffer(Canvas.gl.ARRAY_BUFFER, this.rendererID);
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.rendererID);
 	}
 
 	public unbind(): void {
-		Canvas.gl.bindBuffer(Canvas.gl.ARRAY_BUFFER, 0);
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, 0);
 	}
 
 	public getLayout(): BufferLayout {
@@ -114,18 +114,18 @@ export class IndexBuffer {
 	private count: number;
 
 	public constructor (indices: Uint16Array) {
-		this.rendererID = Canvas.gl.createBuffer();
+		this.rendererID = Surface.gl.createBuffer();
 		this.count = indices.length;
-		Canvas.gl.bindBuffer(Canvas.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
-		Canvas.gl.bufferData(Canvas.gl.ELEMENT_ARRAY_BUFFER, indices, Canvas.gl.STATIC_DRAW);
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
+		Surface.gl.bufferData(Surface.gl.ELEMENT_ARRAY_BUFFER, indices, Surface.gl.STATIC_DRAW);
 	}
 
 	public bind(): void {
-		Canvas.gl.bindBuffer(Canvas.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
 	}
 
 	public unbind(): void {
-		Canvas.gl.bindBuffer(Canvas.gl.ELEMENT_ARRAY_BUFFER, 0);
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	public getCount(): number {

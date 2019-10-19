@@ -1,4 +1,4 @@
-import { Canvas as c } from './Canvas';
+import { Surface as c } from './Surface';
 
 /** Represents a 2D OpenGL Texture */
 export  class Texture2D {
