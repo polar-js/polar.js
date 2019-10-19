@@ -46,8 +46,18 @@ const compiler = webpack({
 function handleCompile(err, stats) {
 	if (err)
 		console.log(`Webpack: error, something catastrophic happened\n${err}`);
-	else if (stats.hasErrors() || stats.hasWarnings()) 
-		console.log('Webpack: compiled with errors and/or warnings');
+	else if (stats.hasErrors() && stats.hasWarnings()) {
+		console.log('Webpack: compiled with errors and warnings.');
+		console.log(stats.toString());
+	}
+	else if (stats.hasErrors()) {
+		console.log('Webpack: compiled with errors.');
+		console.log(stats.toString());
+	}
+	else if (stats.hasWarnings()) {
+		console.log('Webpack: compiled with warnings.');
+		console.log(stats.toString());
+	}
 	else 
 		console.log('Webpack: compiled successfully');
 }
