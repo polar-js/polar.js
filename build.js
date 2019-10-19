@@ -6,16 +6,15 @@ const { version } = require('./package.json');
 const mode = process.argv[2] || 'watch';
 
 /*
- docs: Generates the typescript docs into /docs dir
- umd: Generates the webpack code into /umd dir
+ prod: npm js and declaration in dist/ + minified webpack in umd/
  watch: For development, watches for file changes and generates webpack into /tests
 */
 
-if (mode !== 'docs' && mode !== 'umd' && mode !== 'watch') throw new Error('Invalid mode, please choose docs, umd or watch');
+if (mode !== 'prod' && mode !== 'watch') throw new Error('Invalid mode, please choose prod or watch');
 
 console.log(`Generating for v${version} of Polar Engine in ${mode} mode`);
 
-console.log('Webpack: configuring');
+console.log('Configuring webpack');
 const compiler = webpack({
 	entry: './src/Polar.ts',
 	mode: mode === 'watch' ? 'development' : 'production',
@@ -45,51 +44,38 @@ const compiler = webpack({
 
 function handleCompile(err, stats) {
 	if (err)
-		console.log(`Webpack: error, something catastrophic happened\n${err}`);
-	else if (stats.hasErrors() && stats.hasWarnings()) {
-		console.log('Webpack: compiled with errors and warnings.');
+		console.log(`Webpack error, something catastrophic happened\n${err}`);
+	else if (stats.hasErrors() || stats.hasWarnings()) {
+		console.log(`Webpack compiled with${stats.hasErrors() ? 'some' : ' no'} errors and${stats.hasWarnings() ? 'some' : ' no'} warnings.`);
 		console.log(stats.toString());
-	}
-	else if (stats.hasErrors()) {
-		console.log('Webpack: compiled with errors.');
-		console.log(stats.toString());
-	}
-	else if (stats.hasWarnings()) {
-		console.log('Webpack: compiled with warnings.');
-		console.log(stats.toString());
-	}
-	else 
-		console.log('Webpack: compiled successfully');
+	} else 
+		console.log('Webpack compiled successfully');
 }
 
 if (mode === 'watch') {
-	console.log('Webpack: watching for file changes...');
+	console.log('Webpack now watching for file changes...');
 	compiler.watch({}, handleCompile);
 }
 
-console.log('TypeDoc: configuring');
+console.log('Configuring TypeDoc');
 const app = new TypeDoc.Application({
 	mode:   'Modules',
 	logger: 'none',
-	target: 'ES5',
+	target: 'ES6',
 	module: 'CommonJS',
 	experimentalDecorators: true
 });
 
-if (mode === 'umd') {
-	console.log('Webpack: generating once');
-	compiler.run(handleCompile);
+console.log('Building webpack');
+compiler.run(handleCompile);
+
+console.log('Building docs');
+const project = app.convert(app.expandInputFiles(['src']));
+if (project) {
+	console.log('TypeDoc built successfully');
+	app.generateDocs(project, 'docs');
+	app.generateJson(project, 'docs/documentation.json');
+} else {
+	console.log('TypeDoc had an error');
 }
 
-if (mode === 'docs') {
-	console.log('TypeDoc: generating docs');
-	const project = app.convert(app.expandInputFiles(['src']));
-	if (project) {
-		console.log('TypeDoc: generated successfully');
-		const outputDir = 'docs';
-		app.generateDocs(project, 'docs');
-		app.generateJson(project, 'docs/documentation.json');
-	} else {
-		console.log('TypeDoc: error, something went wrong');
-	}
-}

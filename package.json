@@ -7,18 +7,15 @@
     "main": "dist/Polar.js",
     "types": "dist/Polar.d.ts",
     "scripts": {
-        "webpack": "node build.js watch",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+        "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+        "watch": "node build.js watch",
+        "build": "npx typescript && node build prod"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/JellyAlex/polar.js.git"
     },
     "keywords": [ "polar", "engine", "graphics", "webgl" ],
-    "dependencies": {
-        "@types/gl-matrix": "^2.4.5",
-        "gl-matrix": "^3.1.0"
-    },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^2.3.3",
         "@typescript-eslint/parser": "^2.3.3",
@@ -28,5 +25,9 @@
         "typedoc": "^0.15.0",
         "typescript": "^3.6.3",
         "webpack": "^4.40.2"
+    },
+    "dependencies": {
+        "@types/gl-matrix": "^2.4.5",
+        "gl-matrix": "^3.1.0"
     }
 }

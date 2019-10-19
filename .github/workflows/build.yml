@@ -1,12 +1,12 @@
-name: Builds
+name: Build
 on:
   push:
     branches:
       - stable
 
 jobs:
-  docs:
-    name: Documentation
+  build:
+    name: Build & Deploy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -17,31 +17,15 @@ jobs:
       with:
         node-version: 12
 
-    - name: Publish docs
+    - name: Build
+      run: npm run build
+
+    - name: Deploy to gh-pages
       run: |
-        node build.js docs
         echo polar.js.org > ./docs/CNAME
         git subtree push --prefix docs origin gh-pages
-
-  deploy:
-    name: build npm & webpack
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v1
-
-    - name: Use Node.js v12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-
-    - name: Build webpack
-      run: node build.js umd
-
-    - name: Build .js & .ts declaration
-      run: npx typescript
       
-    - name: Publish to npm
+    - name: Deploy to npm
       run: |
         npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
         npm publish

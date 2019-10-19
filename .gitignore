@@ -8,6 +8,8 @@ logs/
 
 # Build output
 dist/
+docs/
+umd/
 
 # temporary stuff (delete soon!!!)
 tests/polar.min.js 

@@ -1,14 +1,15 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
-        "noImplicitAny": true,
         "module": "commonjs",
         "target": "es6",
-        "jsx": "react",
+        "lib": [ "es2015", "dom" ],
+        "outDir": "./dist",
+        "noImplicitAny": true,
         "downlevelIteration": true,
         "baseUrl": "./src/",
         "moduleResolution": "node",
-        "declaration": true 
+        "declaration": true,
+        "sourceMap": true
     },
     "include": [
         "src/*"

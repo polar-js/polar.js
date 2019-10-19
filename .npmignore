@@ -15,6 +15,7 @@ build.js
 .github/
 .vscode/
 tests/
+docs/
 tsconfig.json
 
 # Typescript
