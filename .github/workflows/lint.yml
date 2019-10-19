@@ -19,4 +19,4 @@ jobs:
     - name: Linting
       run: |
         npm install
-        npx eslint . --ext .js,.jsx,.ts,.tsx
+        npm run lint
