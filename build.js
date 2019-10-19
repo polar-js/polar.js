@@ -3,17 +3,23 @@ const TypeDoc = require('typedoc');
 const path = require('path');
 
 const { version } = require('./package.json');
-const mode = process.argv[2] || 'dev';
+const mode = process.argv[2] || 'watch';
 
-if (mode !== 'dev' && mode !== 'prod') throw new Error('Invalid mode, please choose dev or prod');
+/*
+ docs: Generates the typescript docs into /docs dir
+ umd: Generates the webpack code into /umd dir
+ watch: For development, watches for file changes and generates webpack into /tests
+*/
+
+if (mode !== 'docs' && mode !== 'umd' && mode !== 'watch') throw new Error('Invalid mode, please choose docs, umd or watch');
 
 console.log(`Generating for v${version} of Polar Engine in ${mode} mode`);
 
 console.log('Webpack: configuring');
 const compiler = webpack({
 	entry: './src/Polar.ts',
-	mode: 'development',
-	watch: true,
+	mode: mode === 'watch' ? 'development' : 'production',
+	watch: mode === 'watch' ? true : false,
 	module: {
 		rules: [
 			{
@@ -31,7 +37,7 @@ const compiler = webpack({
 	},
 	output: {
 		filename: 'polar.min.js',
-		path: path.resolve(__dirname, 'tests'),
+		path: path.resolve(__dirname, mode === 'watch' ? 'tests' : 'umd',),
 		library: 'Polar',
 		libraryTarget: 'window'
 	}
@@ -46,7 +52,7 @@ function handleCompile(err, stats) {
 		console.log('Webpack: compiled successfully');
 }
 
-if (mode === 'dev') {
+if (mode === 'watch') {
 	console.log('Webpack: watching for file changes...');
 	compiler.watch({}, handleCompile);
 }
@@ -60,10 +66,12 @@ const app = new TypeDoc.Application({
 	experimentalDecorators: true
 });
 
-if (mode === 'prod') {
+if (mode === 'umd') {
 	console.log('Webpack: generating once');
 	compiler.run(handleCompile);
+}
 
+if (mode === 'docs') {
 	console.log('TypeDoc: generating docs');
 	const project = app.convert(app.expandInputFiles(['src']));
 	if (project) {

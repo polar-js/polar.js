@@ -15,6 +15,6 @@
 		"indent": [ "error", "tab" ],
 		"quotes": [ "error", "single" ],
 		"semi": [ "error", "always" ],
-		"linebreak-style": 1
+		"linebreak-style": [1, "unix"]
 	}
 }

@@ -1,27 +1,24 @@
 {
-    "name": "polarengine",
+    "name": "polarjs",
     "version": "0.1.0",
     "description": "JavaScript Game Engine",
-    "main": "src/Polar.ts",
+    "author": "Alexander Brown",
+    "license": "ISC",
+    "main": "dist/Polar.js",
+    "types": "dist/Polar.d.ts",
     "scripts": {
-        "webpack": "node generate.js",
+        "webpack": "node build.js watch",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/JellyAlex/PolarEngine.git"
+        "url": "git+https://github.com/JellyAlex/polar.js.git"
     },
-    "author": "Alexander Brown",
-    "license": "ISC",
-    "directories": {
-        "test": "tests"
+    "keywords": [ "polar", "engine", "graphics", "webgl" ],
+    "dependencies": {
+        "@types/gl-matrix": "^2.4.5",
+        "gl-matrix": "^3.1.0"
     },
-    "keywords": [
-        "polar",
-        "engine",
-        "graphics",
-        "webgl"
-    ],
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^2.3.3",
         "@typescript-eslint/parser": "^2.3.3",
@@ -31,9 +28,5 @@
         "typedoc": "^0.15.0",
         "typescript": "^3.6.3",
         "webpack": "^4.40.2"
-    },
-    "dependencies": {
-        "@types/gl-matrix": "^2.4.5",
-        "gl-matrix": "^3.1.0"
     }
 }

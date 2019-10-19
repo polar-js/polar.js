@@ -1,0 +1,21 @@
+# Packages
+node_modules/
+yarn.lock
+
+# Log files
+logs/
+*.log
+
+# Miscellaneous
+build.js
+
+# NPM ignore
+.eslintrc.json
+.gitignore
+.github/
+.vscode/
+tests/
+tsconfig.json
+
+# Typescript
+src/

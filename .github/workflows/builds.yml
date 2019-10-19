@@ -1,0 +1,50 @@
+name: Builds
+on:
+  push:
+    branches:
+      - stable
+
+jobs:
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Use Node.js v12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Publish docs
+      run: |
+        node build.js docs
+        echo polar.js.org > ./docs/CNAME
+        git subtree push --prefix docs origin gh-pages
+
+  deploy:
+    name: build npm & webpack
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Use Node.js v12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Build webpack
+      run: node build.js umd
+
+    - name: Build .js & .ts declaration
+      run: npx typescript
+      
+    - name: Publish to npm
+      run: |
+        npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+        npm publish
+      env:
+        CI: true
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
