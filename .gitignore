@@ -6,5 +6,8 @@ yarn.lock
 logs/
 *.log
 
+# Build output
+dist/
+
 # temporary stuff (delete soon!!!)
 tests/polar.min.js 
