@@ -55,27 +55,27 @@ function handleCompile(err, stats) {
 if (mode === 'watch') {
 	console.log('Webpack now watching for file changes...');
 	compiler.watch({}, handleCompile);
-}
-
-console.log('Configuring TypeDoc');
-const app = new TypeDoc.Application({
-	mode:   'Modules',
-	logger: 'none',
-	target: 'ES6',
-	module: 'CommonJS',
-	experimentalDecorators: true
-});
-
-console.log('Building webpack');
-compiler.run(handleCompile);
-
-console.log('Building docs');
-const project = app.convert(app.expandInputFiles(['src']));
-if (project) {
-	console.log('TypeDoc built successfully');
-	app.generateDocs(project, 'docs');
-	app.generateJson(project, 'docs/documentation.json');
 } else {
-	console.log('TypeDoc had an error');
+	console.log('Configuring TypeDoc');
+	const app = new TypeDoc.Application({
+		mode:   'Modules',
+		logger: 'none',
+		target: 'ES6',
+		module: 'CommonJS',
+		experimentalDecorators: true
+	});
+
+	console.log('Building webpack');
+	compiler.run(handleCompile);
+
+	console.log('Building docs');
+	const project = app.convert(app.expandInputFiles(['src']));
+	if (project) {
+		console.log('TypeDoc built successfully');
+		app.generateDocs(project, 'docs');
+		app.generateJson(project, 'docs/documentation.json');
+	} else {
+		console.log('TypeDoc had an error');
+	}
 }
 
