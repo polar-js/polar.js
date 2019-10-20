@@ -1,0 +1,3 @@
+src/Polar/vendor/*
+dist/*
+tests/polar.min.js
