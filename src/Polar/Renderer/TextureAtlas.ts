@@ -1,5 +1,5 @@
 import { Texture2D } from 'Polar/Renderer/Texture';
-import { MaxRectsPacker, Rectangle } from 'Polar/vendor/maxrects-packer/maxrects-packer';
+import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 import { vec4 } from 'gl-matrix';
 
 export class AtlasEntry extends Rectangle {
