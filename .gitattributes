@@ -1,3 +1,6 @@
+# Auto
+*                 text=auto
+
 # Source code
 *.bash            text eol=lf
 *.bat             text eol=lf
