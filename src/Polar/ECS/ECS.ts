@@ -145,6 +145,7 @@ export abstract class WorldManager {
 	 * @param {System} system The system to be added.
 	 */
 	public addSystem(system: System) {
+		console.log('addSystem(system: System) --> Added system ' + system.getName());
 		system.manager = this;
 		this.systems.push(system);
 		system.onAttach();
@@ -176,11 +177,10 @@ export abstract class WorldManager {
 	 * Add an empty entity to the world.
 	 * @returns {Entity} The entity which was added.
 	 */
-	public addEntity(): Entity {
+	public createEntity(): Entity {
 		let eid = this.entityTrack++;
 		let entity = new Entity(eid);
 		this.entities.set(eid, entity);
-		this.addEntitySubscriptions(eid);
 		return entity;
 	}
 
@@ -205,21 +205,20 @@ export abstract class WorldManager {
 		for (const system of this.systems) {
 			// If the system already has the entity subscribed, continue.
 			if (system.subscribers.has(eid)) {
+				console.log(`eid ${eid} is already a subscriber of system ${system.getName()}`);
 				continue;
 			}
 			
 			// Check if the entity is subscribed to this system.
 			let systemAdded = false;
-			for (const tuples of system.getComponentTuples()) {
-				//for (const tuple of tuples) {
-				for (let i = 0; i < tuples.length; i++) {
-					// Check if the tuple array is a subset of the components array.
-					if( Array.from(entity.components.keys()).every(val => tuples[i].includes(val)) ) {
-						if (!system.subscribers.has(eid)) {
-							system.subscribers.set(eid, i);
-						}
+			const tuples = system.getComponentTuples();
+			for (let i = 0; i < tuples.length; i++) {
+				if( tuples[i].every(val => Array.from(entity.components.keys()).includes(val))) {
+					if (!system.subscribers.has(eid)) {
+						system.subscribers.set(eid, i);
 					}
 				}
+				
 				if (systemAdded)
 					break;
 			}
