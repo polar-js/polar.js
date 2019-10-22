@@ -1,7 +1,7 @@
 class Sandbox extends Polar.Application {
 	constructor(canvasId) {
 		super(canvasId);
-		this.pushLayer(new ExampleECSLayer());
+		this.pushLayer(new ExamplePhysicsLayer());
 	}
 }
 
