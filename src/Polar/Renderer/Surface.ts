@@ -16,6 +16,10 @@ export class Surface {
 	 */
 	public static font: CanvasRenderingContext2D;
 
+	/**
+	 * A HTML div used to display UI elements
+	 * @static
+	 */
 	public static ui: HTMLDivElement;
 
 	/** 

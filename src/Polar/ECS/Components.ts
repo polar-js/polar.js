@@ -6,20 +6,22 @@ import { OrthographicCamera } from 'Polar/Renderer/Camera';
 /** Polar component which stores information about an entity's transform (position, rotation, scale). */
 export class TransformCP extends Component {
 
-	public position: vec2;
+	public x: number;
+	public y: number;
 	public rotation: number;
 	public scale: number;
 
 	public transform: mat4;
 
 	/** Create a new transform component. */
-	public constructor(position: vec2 = vec2.create(), rotation: number = 0, scale: number = 1) {
+	public constructor(x: number = 0, y: number = 0, rotation: number = 0, scale: number = 1) {
 		super();
-		this.position = position;
+		this.x = x;
+		this.y = y;
 		this.rotation = rotation;
 		this.scale = scale;
 
-		this.recalculateTransform();
+		this.recalculate();
 	}
 
 	public getType(): string { return 'Polar:Transform'; }
@@ -28,9 +30,9 @@ export class TransformCP extends Component {
 	 * Recalculate the transform component's transformation matrix.
 	 * To be called after editing position, rotation or scale.
 	 */
-	public recalculateTransform() {
+	public recalculate() {
 		this.transform = mat4.create();
-		this.transform = mat4.translate(this.transform, this.transform, vec3.fromValues(this.position[0], this.position[1], 0));
+		this.transform = mat4.translate(this.transform, this.transform, vec3.fromValues(this.x, this.y, 0));
 		this.transform = mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, vec3.fromValues(0, 0, 1));
 		this.transform = mat4.scale(this.transform, this.transform, vec3.fromValues(this.scale, this.scale, this.scale));
 	}
