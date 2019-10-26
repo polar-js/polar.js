@@ -1,5 +1,9 @@
 import * as p2 from 'p2';
-import { System, Component } from 'Polar/ECS/ECS';
+import { System, Component, Entity } from 'Polar/ECS/ECS';
+import { Renderer } from 'Polar/Renderer/Renderer';
+import { vec2, vec4, mat4, vec3 } from 'gl-matrix';
+import { createTransform } from 'Polar/Util/Math';
+import { Input } from 'Polar/Core/Input';
 
 export class PhysicsSystem extends System {
 
@@ -14,7 +18,7 @@ export class PhysicsSystem extends System {
 			(<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world.step(dt, null, 3);
 	}
 
-	public onEntityUpdate() {
+	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
 
 	}
 
@@ -66,5 +70,196 @@ export class PhysicsWorldCP extends Component {
 
 	public getType(): string {
 		return 'Polar:PhysicsWorld';
+	}
+}
+
+export class PhysicsDebugRenderSystem extends System {
+	public onAttach(): void {}
+
+	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
+		const body = (<PhysicsBodyCP>entity.getComponent('Polar:PhysicsBody')).body;
+		// Render shapes...
+		for (const shape of body.shapes) {
+			//console.log('Rendering shape ' + shape.type);
+			
+			if (shape.type == p2.Shape.BOX || shape.type == p2.Shape.CONVEX) {
+				const box = <p2.Box>shape;
+				Renderer.submitColoredOutline(vec4.fromValues(0.9, 0.1, 0.9, 1.0), 
+					createTransform(body.position[0] + box.position[0], body.position[1] + box.position[1], 
+						box.width, box.height, (body.angle + box.angle) * 180 / Math.PI));
+				Renderer.submitLine(body.position[0] + box.position[0], body.position[1] + box.position[1],
+					body.position[0] + box.position[0] + box.width / 2 * Math.cos(body.angle + box.angle), 
+					body.position[1] + box.position[1] + box.width / 2 * Math.sin(body.angle + box.angle), 
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+			}
+			else if (shape.type == p2.Shape.CIRCLE) {
+				const circle = <p2.Circle>shape;
+				Renderer.submitCircle(body.position[0] + circle.position[0], body.position[1] + circle.position[1], circle.radius, vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+				Renderer.submitLine(body.position[0] + circle.position[0], body.position[1] + circle.position[1], 
+					body.position[0] + circle.position[0] + circle.radius * Math.cos(body.angle + circle.angle), 
+					body.position[1] + circle.position[1] + circle.radius * Math.sin(body.angle + circle.angle),
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+			}
+			else if (shape.type == p2.Shape.LINE) {
+				const line = <p2.Line>shape;
+				Renderer.submitLine(line.position[0], line.position[1], 
+					line.position[0] + line.length * Math.cos(body.angle + line.angle), 
+					line.position[1] + line.length * Math.sin(body.angle + line.angle), 
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+			}
+		}
+	}
+
+	public beginUpdate(dt: number) {}
+
+	public endUpdate(dt: number) {}
+
+	public getComponentTuples(): string[][] {
+		return [['Polar:PhysicsBody']];
+	}
+
+	public getName(): string {
+		return 'Polar:PhysicsDebugRendererSystem';
+	}
+}
+
+export class PhysicsDebugInteractionSystem extends System {
+
+	public onAttach(): void {
+		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody = new p2.Body({mass: 0});
+
+		(<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world.islandSplit = false;
+
+		window.addEventListener('mousedown', (ev: MouseEvent) => {
+			if (ev.button === 0) {
+				(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).doClick = true;
+			}
+		});
+
+		window.addEventListener('mousemove', (ev: MouseEvent) => {
+			if (Input.isMouseButtonPressed(0)) {
+				const position = Renderer.screenToWorldPosition(vec2.fromValues(ev.x, ev.y));
+				const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+				info.nullBody.position = [position[0], position[1]];
+			}
+		});
+
+		window.addEventListener('mouseup', (ev: MouseEvent) => {
+			if (ev.button === 0) {
+				const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+				const world = (<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world;
+				world.removeConstraint(info.constraint);
+				info.constraint = null;
+				info.currentBody = null;
+			}
+		});
+	}
+
+	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
+
+	}
+
+	public beginUpdate(dt: number) {}
+
+	public endUpdate(dt: number) {
+		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+		if (systemData.doClick) 
+			this.startClick();
+
+		// RENDER DEBUG LINES //
+		if (systemData.doDebugRendering && Input.isMouseButtonPressed(0) && systemData.nullBody && systemData.currentBody) {
+
+			/////////////////////////////// TODO: JAKE - Task 2 ///////////////////////////////
+			// Render the line at the correct coordinate.
+			// Function Renderer.submitLine(x0, y0, x1, y1, color, zIndex);
+			// Currently set to the center of the body: systemData.currentBody.position[0], systemData.currentBody.position[1],
+			// Useful variables:
+			// systemData.currentBody.position[0] --> x position of body.
+			// systemData.currentBody.position[1] --> y position of body.
+			// systemData.currentBody.angle --> angle in radians.
+			// systemData.constraint.localAnchorB[0] --> x position of anchor within body (rotated axis).
+			// systemData.constraint.localAnchorB[1] --> y position of anchor within body (rotated axis).
+			Renderer.submitLine(systemData.nullBody.position[0], systemData.nullBody.position[1], 
+				// Set x1 and y1 to the position of the point within the body
+				systemData.currentBody.position[0], systemData.currentBody.position[1],
+				/////////////////////////////// END TODO ///////////////////////////////
+				vec4.fromValues(0.9, 0.9, 0.9, 0.9), 0);
+
+			
+		}
+	}
+
+	public getComponentTuples(): string[][] {
+		return [['Polar:PhysicsBody']];
+	}
+
+	public getName(): string {
+		return 'Polar:PhysicsDebugInteractionSystem';
+	}
+
+	private startClick() {
+		console.log('Start click');
+		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).doClick = false;
+
+		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+		const world = (<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world;
+		systemData.constraint = null;
+		systemData.currentBody = null;
+		
+		const position = Renderer.screenToWorldPosition(Input.getMousePosition());
+		systemData.nullBody.position = [position[0], position[1]];
+
+		for (const body of world.bodies) {
+			if (body.aabb.containsPoint(systemData.nullBody.position) && body.mass < 1e308) {
+				systemData.currentBody = body;
+				break;
+			}
+		}
+		if (systemData.currentBody) {
+			systemData.constraint = new p2.DistanceConstraint(systemData.nullBody, systemData.currentBody, null);
+			systemData.constraint.setRelaxation(10);
+			systemData.constraint.setStiffness(50 * systemData.currentBody.mass);
+
+			///////////////////////////////// TODO: JAKE - Task 1 ///////////////////////////////
+			// Useful variables:
+			// systemData.currentBody.position[0] --> x position of body.
+			// systemData.currentBody.position[1] --> y position of body.
+			// systemData.currentBody.angle --> angle in radians.
+			// position[0] --> x position of mouse within the world.
+			// position[1] --> y position of mouse within the world.
+
+			// Calculate x and y
+			const x = 0;
+			const y = 0;
+
+			// Set the local anchor of body B ( list with x and y )
+			systemData.constraint.localAnchorB = [x, y];
+
+			///////////////////////////////// END TODO /////////////////////////////////
+
+			world.addConstraint(systemData.constraint);
+		}
+	}
+}
+
+export class PhysicsDebugInteractionCP extends Component {
+
+	public currentBody: p2.Body;
+	public nullBody: p2.Body;
+	public constraint: p2.DistanceConstraint;
+	public doClick: boolean;
+	public doDebugRendering: boolean;
+
+	/**
+	 * Create a new Physics Debug Interaction Component.
+	 * @param {boolean} doDebugRender Whether the system will do debug rendering.
+	 */
+	public constructor(doDebugRendering: boolean = false) {
+		super();
+		this.doDebugRendering = doDebugRendering;
+	}
+
+	getType(): string {
+		return 'Polar:PhysicsDebugInteraction';
 	}
 }

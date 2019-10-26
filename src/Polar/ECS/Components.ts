@@ -41,10 +41,14 @@ export class TransformCP extends Component {
 export class Texture2DCP extends Component {
 
 	public texture: Texture2D;
+	public width: number;
+	public height: number;
 
-	public constructor(texture: Texture2D) {
+	public constructor(texture: Texture2D, width: number = 1, height: number = 1) {
 		super();
 		this.texture = texture;
+		this.width = width;
+		this.height = height;
 	}
 
 	public getType(): string { return 'Polar:Texture2D'; }
@@ -56,37 +60,3 @@ export class CameraCP extends Component {
 	public getType(): string { return 'Polar:Camera'; }
 }
 
-export class CameraControllerCP extends Component {
-	public aspectRatio: number;
-	public zoomLevel: number;
-
-	public doRotation: boolean;
-
-	// The camera's position in world space.
-	public cameraPosition: vec3;
-	// The camera's current rotation.
-	public cameraRotation: number;
-	// How fast the camera rotates in degrees per second.
-	public cameraRotationSpeed: number;
-
-	/**
-	 * Create a new camera controller component.
-	 * @param {number} [aspectRatio=1] The aspect ratio of the camera.
-	 * @param {number} [zoomLevel=1] The initial zoom of the camera.
-	 * @param {boolean} [doRotation=false] Allows the camera to be rotated using the Q and E keys.
-	 * @param {vec3} [cameraPosition=vec3.create()] The initial position of the camera.
-	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
-	 * @param {number} [cameraRotationSpeed=90.0] The rotation speed of the camera in degrees per second.
-	 */
-	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition = vec3.create(), cameraRotation = 0.0, cameraRotationSpeed = 90.0) {
-		super();
-		this.aspectRatio = aspectRatio;
-		this.zoomLevel = zoomLevel;
-		this.doRotation = doRotation;
-		this.cameraPosition = cameraPosition;
-		this.cameraRotation = cameraRotation;
-		this.cameraRotationSpeed = cameraRotationSpeed;
-	}
-
-	public getType(): string { return 'Polar:CameraController'; }
-}

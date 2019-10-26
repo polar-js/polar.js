@@ -61,15 +61,20 @@ export class Surface {
 		this.font = this.fontCanvas.getContext('2d');
 
 		window.addEventListener('resize', (ev: UIEvent) => {
+			if (settings.displayMode == 'fill') {
+				this.canvas.width = this.canvas.parentElement.offsetWidth;
+				this.canvas.height = this.canvas.parentElement.offsetHeight;
+			}
+
 			this.fontCanvas.style.left =  this.canvas.offsetLeft.toString() + 'px';
 			this.fontCanvas.style.top = this.canvas.offsetTop.toString() + 'px';
-			this.fontCanvas.width = this.canvas.clientWidth;
-			this.fontCanvas.height = this.canvas.clientHeight;
+			this.fontCanvas.width = this.canvas.width;
+			this.fontCanvas.height = this.canvas.height;
 
 			this.ui.style.left =  this.canvas.offsetLeft.toString() + 'px';
 			this.ui.style.top = this.canvas.offsetTop.toString() + 'px';
-			this.ui.style.width = this.canvas.clientWidth.toString() + 'px';
-			this.ui.style.height = this.canvas.clientHeight.toString() + 'px';
+			this.ui.style.width = this.canvas.width.toString() + 'px';
+			this.ui.style.height = this.canvas.height.toString() + 'px';
 
 			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});

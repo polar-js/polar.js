@@ -1,8 +1,9 @@
-import { System, Entity } from 'Polar/ECS/ECS';
-import { CameraCP, CameraControllerCP } from 'Polar/ECS/Components';
+import { System, Entity, Component } from 'Polar/ECS/ECS';
+import { CameraCP } from 'Polar/ECS/Components';
 import { OrthographicCamera } from 'Polar/Renderer/Camera';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
+import { vec3 } from 'gl-matrix';
 
 /** A simple camera movement controller. */
 export  class CameraControllerSystem extends System {
@@ -88,4 +89,39 @@ export  class CameraControllerSystem extends System {
 	private cameraTranslationSpeed(zoom: number): number {
 		return 20 / (1 + 30 * Math.pow(Math.E, -0.4 * zoom));
 	}
+}
+
+export class CameraControllerCP extends Component {
+	public aspectRatio: number;
+	public zoomLevel: number;
+
+	public doRotation: boolean;
+
+	// The camera's position in world space.
+	public cameraPosition: vec3;
+	// The camera's current rotation.
+	public cameraRotation: number;
+	// How fast the camera rotates in degrees per second.
+	public cameraRotationSpeed: number;
+
+	/**
+	 * Create a new camera controller component.
+	 * @param {number} [aspectRatio=1] The aspect ratio of the camera.
+	 * @param {number} [zoomLevel=1] The initial zoom of the camera.
+	 * @param {boolean} [doRotation=false] Allows the camera to be rotated using the Q and E keys.
+	 * @param {vec3} [cameraPosition=vec3.create()] The initial position of the camera.
+	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
+	 * @param {number} [cameraRotationSpeed=90.0] The rotation speed of the camera in degrees per second.
+	 */
+	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition = vec3.create(), cameraRotation = 0.0, cameraRotationSpeed = 90.0) {
+		super();
+		this.aspectRatio = aspectRatio;
+		this.zoomLevel = zoomLevel;
+		this.doRotation = doRotation;
+		this.cameraPosition = cameraPosition;
+		this.cameraRotation = cameraRotation;
+		this.cameraRotationSpeed = cameraRotationSpeed;
+	}
+
+	public getType(): string { return 'Polar:CameraController'; }
 }

@@ -39,3 +39,4 @@ export * from 'Polar/ECS/RenderSystem';
 export * from 'Polar/ECS/Physics';
 export * from 'Polar/Util/Timer';
 export * from 'Polar/Util/OrthographicCameraController';
+export * from 'Polar/Util/Math';

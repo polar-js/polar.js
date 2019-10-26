@@ -97,7 +97,7 @@ export class VertexBuffer {
 	}
 
 	public unbind(): void {
-		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, 0);
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, null);
 	}
 
 	public getLayout(): BufferLayout {
@@ -125,7 +125,7 @@ export class IndexBuffer {
 	}
 
 	public unbind(): void {
-		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, 0);
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, null);
 	}
 
 	public getCount(): number {

@@ -3,20 +3,32 @@ import { Surface } from 'Polar/Renderer/Surface';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 
 export class RenderCommand {
-	public static init(): void {
+	public static init() {
 		Surface.gl.enable(Surface.gl.BLEND);
 		Surface.gl.blendFunc(Surface.gl.SRC_ALPHA, Surface.gl.ONE_MINUS_SRC_ALPHA);
 	}
 
-	public static setClearColor(color: glMatrix.vec4): void {
+	public static setClearColor(color: glMatrix.vec4) {
 		Surface.gl.clearColor(color[0], color[1], color[2], color[3]);
 	}
 
-	public static clear(): void {
+	public static clear() {
 		Surface.gl.clear(Surface.gl.COLOR_BUFFER_BIT | Surface.gl.DEPTH_BUFFER_BIT);
 	}
 
-	public static drawIndexed(vertexArray: VertexArray): void {
+	public static drawIndexed(vertexArray: VertexArray) {
 		Surface.gl.drawElements(Surface.gl.TRIANGLES, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
+	}
+
+	public static drawIndexedLines(vertexArray: VertexArray) {
+		Surface.gl.drawElements(Surface.gl.LINES, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
+	}
+
+	public static drawIndexedLineStrip(vertexArray: VertexArray) {
+		Surface.gl.drawElements(Surface.gl.LINE_STRIP, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
+	}
+
+	public static drawIndexedLineLoop(vertexArray: VertexArray) {
+		Surface.gl.drawElements(Surface.gl.LINE_LOOP, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
 	}
 }

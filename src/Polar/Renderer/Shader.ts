@@ -125,7 +125,7 @@ export  class Shader {
 
 	/** Unbinds the shader. */
 	public unbind(): void {
-		Surface.gl.useProgram(0);
+		Surface.gl.useProgram(null);
 	}
 
 	/**

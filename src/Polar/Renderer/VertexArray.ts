@@ -35,7 +35,7 @@ export  class VertexArray {
 	}
 
 	public unbind(): void {
-		Surface.gl.bindVertexArray(0);
+		Surface.gl.bindVertexArray(null);
 	}
 
 	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
