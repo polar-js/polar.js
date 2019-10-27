@@ -220,23 +220,37 @@ export class PhysicsDebugInteractionSystem extends System {
 			systemData.constraint.setRelaxation(10);
 			systemData.constraint.setStiffness(50 * systemData.currentBody.mass);
 
-			///////////////////////////////// TODO: JAKE - Task 1 ///////////////////////////////
-			// Useful variables:
-			// systemData.currentBody.position[0] --> x position of body.
-			// systemData.currentBody.position[1] --> y position of body.
-			// systemData.currentBody.angle --> angle in radians.
-			// position[0] --> x position of mouse within the world.
-			// position[1] --> y position of mouse within the world.
+			////
+			////Useful variables:
+			//systemData.currentBody.position[0] //--> x position of body.
+			//systemData.currentBody.position[1] //--> y position of body.
+			//systemData.currentBody.angle //--> angle in radians.
+			//position[0] //--> x position of mouse within the world.
+			//position[1] //--> y position of mouse within the world.
 
 			// Calculate x and y
-			const x = 0;
-			const y = 0;
+			// let x;
+			// let y;
+			// if (position[0] > systemData.currentBody.position[0]) {
+			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// }
+			// else {
+			// 	x = -Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// }
+			// if (position[1] > systemData.currentBody.position[1]) {
+			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// }
+			// else {
+			// 	y = -Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// }
+			const x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			const y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
 
-			// Set the local anchor of body B ( list with x and y )
-			systemData.constraint.localAnchorB = [x, y];
+			//Set the local anchor of body B ( list with x and y )
+			systemData.constraint.localAnchorB = [x, y]
 
-			///////////////////////////////// END TODO /////////////////////////////////
-
+			////
+			////
 			world.addConstraint(systemData.constraint);
 		}
 	}
