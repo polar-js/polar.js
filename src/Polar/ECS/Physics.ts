@@ -216,43 +216,20 @@ export class PhysicsDebugInteractionSystem extends System {
 			}
 		}
 		if (systemData.currentBody) {
-			systemData.constraint = new p2.LockConstraint(systemData.nullBody, systemData.currentBody, null);
+			systemData.constraint = new p2.RevoluteConstraint(systemData.nullBody, systemData.currentBody, { worldPivot: [position[0], position[1]], collideConnected: false });
 			systemData.constraint.setRelaxation(10);
 			systemData.constraint.setStiffness(50 * systemData.currentBody.mass);
 
-			////
-			////Useful variables:
-			//systemData.currentBody.position[0] //--> x position of body.
-			//systemData.currentBody.position[1] //--> y position of body.
-			//systemData.currentBody.angle //--> angle in radians.
-			//position[0] //--> x position of mouse within the world.
-			//position[1] //--> y position of mouse within the world.
-
-			// Calculate x and y
-			// let x;
-			// let y;
-			// if (position[0] > systemData.currentBody.position[0]) {
-			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// }
-			// else {
-			// 	x = -Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// }
-			// if (position[1] > systemData.currentBody.position[1]) {
-			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// }
-			// else {
-			// 	y = -Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// }
-			// let x = 0;
-			// let y = 0;
-			// if (position[1]-systemData.currentBody.position[1] > 0) {
-			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			// }
-			// else {
-			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
-			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
-			// }
+			let x = 0;
+			let y = 0;
+			if (position[1]-systemData.currentBody.position[1] > 0) {
+				x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+				y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			}
+			else {
+				x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
+				y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
+			}
 			//Set the local anchor of body B ( list with x and y )
 			//systemData.constraint.localAnchorB = [x, y];
 
@@ -267,7 +244,7 @@ export class PhysicsDebugInteractionCP extends Component {
 
 	public currentBody: p2.Body;
 	public nullBody: p2.Body;
-	public constraint: p2.LockConstraint;
+	public constraint: p2.RevoluteConstraint;
 	public doClick: boolean;
 	public doDebugRendering: boolean;
 
