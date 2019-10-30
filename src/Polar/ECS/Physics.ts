@@ -154,6 +154,38 @@ export class PhysicsDebugInteractionSystem extends System {
 
 	public beginUpdate(dt: number) {}
 
+	public checkQuadrant() {
+		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+		let x: number;
+		let y: number;
+		let quadrant: number;
+		if ((systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.cos(systemData.currentBody.angle)+(systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.sin(systemData.currentBody.angle) >= 0) {
+			x = 1;
+		}
+		else {
+			x = -1; 
+		}
+		if ((systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.cos(systemData.currentBody.angle)-(systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.sin(systemData.currentBody.angle) >= 0) {
+			y = 1;
+		}
+		else {
+			y = -1; 
+		}
+		if (x == 1 && y == 1) {
+			quadrant = 1;
+		}
+		else if (x == -1 && y == 1) {
+			quadrant = 2;
+		}
+		else if (x == -1 && y == -1) {
+			quadrant = 3;
+		}
+		else {
+			quadrant = 4;
+		}
+		return quadrant
+	}
+
 	public endUpdate(dt: number) {
 		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
 		if (systemData.doClick) 
@@ -161,7 +193,8 @@ export class PhysicsDebugInteractionSystem extends System {
 
 		// RENDER DEBUG LINES //
 		if (systemData.doDebugRendering && Input.isMouseButtonPressed(0) && systemData.nullBody && systemData.currentBody) {
-
+			console.log(this.checkQuadrant());
+			const quadrant = this.checkQuadrant();
 			/////////////////////////////// TODO: JAKE - Task 2 ///////////////////////////////
 			// Render the line at the correct coordinate.
 			// Function Renderer.submitLine(x0, y0, x1, y1, color, zIndex);
