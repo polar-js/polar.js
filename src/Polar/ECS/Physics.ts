@@ -193,8 +193,23 @@ export class PhysicsDebugInteractionSystem extends System {
 
 		// RENDER DEBUG LINES //
 		if (systemData.doDebugRendering && Input.isMouseButtonPressed(0) && systemData.nullBody && systemData.currentBody) {
-			console.log(this.checkQuadrant());
 			const quadrant = this.checkQuadrant();
+			console.log(quadrant)
+			let angle;
+			if (quadrant == 1) {
+				angle = Math.PI/2-systemData.currentBody.angle-Math.atan((systemData.nullBody.position[0]-systemData.currentBody.position[0])/(systemData.nullBody.position[1]-systemData.currentBody.position[1]));
+			}
+			else if (quadrant == 2) {
+				angle = Math.PI+systemData.currentBody.angle+Math.atan((systemData.nullBody.position[1]-systemData.currentBody.position[1])/(systemData.nullBody.position[0]-systemData.currentBody.position[0]));
+			}
+			else if (quadrant == 3) {
+				angle = 3*Math.PI/2-systemData.currentBody.angle-Math.atan((systemData.nullBody.position[0]-systemData.currentBody.position[0])/(systemData.nullBody.position[1]-systemData.currentBody.position[1]));
+			}
+			else {
+				angle = 2*Math.PI+systemData.currentBody.angle+Math.atan((systemData.nullBody.position[1]-systemData.currentBody.position[1])/(systemData.nullBody.position[0]-systemData.currentBody.position[0]));
+			}
+			console.log(angle/Math.PI);
+			const magnitude = Math.sqrt(Math.pow(systemData.nullBody.position[0]-systemData.currentBody.position[0], 2)+Math.pow(systemData.nullBody.position[1]-systemData.currentBody.position[1], 2));
 			/////////////////////////////// TODO: JAKE - Task 2 ///////////////////////////////
 			// Render the line at the correct coordinate.
 			// Function Renderer.submitLine(x0, y0, x1, y1, color, zIndex);
