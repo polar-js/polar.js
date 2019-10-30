@@ -222,8 +222,6 @@ export  class Renderer {
 	/** Begin the rendering of a scene. */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
-		const shader = this.shaderLibrary.get('TextureShader');
-		shader.bind();
 	}
 
 	/** End the rendering of a scene. */

@@ -5,6 +5,7 @@ import { VertexArray } from 'Polar/Renderer/VertexArray';
 export class RenderCommand {
 	public static init() {
 		Surface.gl.enable(Surface.gl.BLEND);
+		Surface.gl.enable(Surface.gl.DEPTH_TEST);
 		Surface.gl.blendFunc(Surface.gl.SRC_ALPHA, Surface.gl.ONE_MINUS_SRC_ALPHA);
 	}
 
