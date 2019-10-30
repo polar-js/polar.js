@@ -154,7 +154,7 @@ export class PhysicsDebugInteractionSystem extends System {
 
 	public beginUpdate(dt: number) {}
 
-	public checkQuadrant() {
+	private checkQuadrant() {
 		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
 		let quadrant: number;
 		if ((systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.cos(systemData.currentBody.angle)+(systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.sin(systemData.currentBody.angle) >= 0) {
@@ -167,16 +167,16 @@ export class PhysicsDebugInteractionSystem extends System {
 		}
 		else {
 			if ((systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.cos(systemData.currentBody.angle)-(systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.sin(systemData.currentBody.angle) >= 0) {
-				quadrant = 2
+				quadrant = 2;
 			}
 			else {
 				quadrant = 3;
 			}
 		} 
-		return quadrant
+		return quadrant;
 	}
-	public calculateAngle() {
-		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+
+	private calculateAngle(systemData: PhysicsDebugInteractionCP) {
 		const quadrant = this.checkQuadrant();
 		console.log(quadrant);
 		let angle: number;
@@ -195,6 +195,7 @@ export class PhysicsDebugInteractionSystem extends System {
 		console.log(angle/Math.PI);
 		return angle;
 	}
+
 	public endUpdate(dt: number) {
 		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
 		if (systemData.doClick) 
@@ -203,7 +204,7 @@ export class PhysicsDebugInteractionSystem extends System {
 		// RENDER DEBUG LINES //
 		if (systemData.doDebugRendering && Input.isMouseButtonPressed(0) && systemData.nullBody && systemData.currentBody) {
 			const magnitude = Math.sqrt(Math.pow(systemData.nullBody.position[0]-systemData.currentBody.position[0], 2)+Math.pow(systemData.nullBody.position[1]-systemData.currentBody.position[1], 2));
-			const angle = this.calculateAngle();
+			
 			/////////////////////////////// TODO: JAKE - Task 2 ///////////////////////////////
 			// Render the line at the correct coordinate.
 			// Function Renderer.submitLine(x0, y0, x1, y1, color, zIndex);
@@ -216,7 +217,7 @@ export class PhysicsDebugInteractionSystem extends System {
 			// systemData.constraint.localAnchorB[1] --> y position of anchor within body (rotated axis).
 			Renderer.submitLine(systemData.nullBody.position[0], systemData.nullBody.position[1], 
 				// Set x1 and y1 to the position of the point within the body
-				systemData.currentBody.position[0]+0*magnitude*Math.cos(angle+systemData.currentBody.angle), systemData.currentBody.position[1]+0*magnitude*Math.sin(angle+systemData.currentBody.angle),
+				systemData.currentBody.position[0]+magnitude*Math.cos(systemData.lineAngle+systemData.currentBody.angle), systemData.currentBody.position[1]+magnitude*Math.sin(systemData.lineAngle+systemData.currentBody.angle),
 				/////////////////////////////// END TODO ///////////////////////////////
 				vec4.fromValues(0.9, 0.9, 0.9, 0.9), 0);
 
@@ -254,18 +255,19 @@ export class PhysicsDebugInteractionSystem extends System {
 			systemData.constraint.setRelaxation(10);
 			systemData.constraint.setStiffness(50 * systemData.currentBody.mass);
 
-			let x = 0;
-			let y = 0;
-			if (position[1]-systemData.currentBody.position[1] > 0) {
-				x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-				y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
-			}
-			else {
-				x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
-				y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
-			}
-			//Set the local anchor of body B ( list with x and y )
-			//systemData.constraint.localAnchorB = [x, y];
+			// let x = 0;
+			// let y = 0;
+			// if (position[1]-systemData.currentBody.position[1] > 0) {
+			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])));
+			// }
+			// else {
+			// 	x = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.cos((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
+			// 	y = Math.sqrt(Math.pow((position[0]-systemData.currentBody.position[0]), 2)+Math.pow((position[1]-systemData.currentBody.position[1]), 2))*Math.sin((Math.PI/2)-systemData.currentBody.angle-Math.atan((position[0]-systemData.currentBody.position[0])/(position[1]-systemData.currentBody.position[1])) + Math.PI);
+			// }
+
+			////////////////////////////// LOOK JAKE IM SAVING THE ANGLE ///////////////////////////////////
+			systemData.lineAngle = this.calculateAngle(systemData);
 
 			world.addConstraint(systemData.constraint);
 		}
@@ -287,6 +289,7 @@ export class PhysicsDebugInteractionCP extends Component {
 	public constraint: p2.RevoluteConstraint;
 	public doClick: boolean;
 	public doDebugRendering: boolean;
+	public lineAngle: number = 0;
 
 	/**
 	 * Create a new Physics Debug Interaction Component.
