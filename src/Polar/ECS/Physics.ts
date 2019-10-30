@@ -216,7 +216,7 @@ export class PhysicsDebugInteractionSystem extends System {
 			// systemData.constraint.localAnchorB[1] --> y position of anchor within body (rotated axis).
 			Renderer.submitLine(systemData.nullBody.position[0], systemData.nullBody.position[1], 
 				// Set x1 and y1 to the position of the point within the body
-				systemData.currentBody.position[0]+0*magnitude*Math.cos(angle+systemData.currentBody.angle), systemData.currentBody.position[1]+0*magnitude*Math.sin(angle+systemData.currentBody.angle),
+				systemData.currentBody.position[0]+magnitude*Math.cos(angle+systemData.currentBody.angle), systemData.currentBody.position[1]+magnitude*Math.sin(angle+systemData.currentBody.angle),
 				/////////////////////////////// END TODO ///////////////////////////////
 				vec4.fromValues(0.9, 0.9, 0.9, 0.9), 0);
 
