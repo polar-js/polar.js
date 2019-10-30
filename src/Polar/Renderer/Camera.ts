@@ -37,6 +37,8 @@ export  class OrthographicCamera {
 
 		mat4.invert(this.viewMatrix, transform);
 		mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
+		const event = new CustomEvent('Polar:CameraTransform');
+		window.dispatchEvent(event);
 	}
 
 	/**
@@ -109,5 +111,7 @@ export  class OrthographicCamera {
 		this.viewProjectionMatrix = mat4.create();
 		mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
 		mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
+		const event = new CustomEvent('Polar:CameraTransform');
+		window.dispatchEvent(event);
 	}
 }
