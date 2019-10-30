@@ -7,15 +7,14 @@ import { Input } from 'Polar/Core/Input';
 
 export class PhysicsSystem extends System {
 
-	public onAttach() {
-
-	}
+	public onAttach() {}
 
 	public onDetach() {}
 
 	public beginUpdate(dt: number) {
-		if (dt < 0.2)
-			(<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world.step(dt, null, 3);
+		const systemData = <PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld');
+		if (dt < 0.2) 
+			systemData.world.step(dt, null, 3);
 	}
 
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
@@ -24,13 +23,9 @@ export class PhysicsSystem extends System {
 
 	public endUpdate(dt: number) {}
 
-	public getComponentTuples(): string[][] {
-		return [];
-	}
+	public getComponentTuples(): string[][] { return []; }
 
-	public getName(): string {
-		return 'Polar:PhysicsSystem';
-	}
+	public getName(): string { return 'Polar:PhysicsSystem'; }
 }
 
 export class PhysicsBodyCP extends Component {
@@ -80,17 +75,15 @@ export class PhysicsDebugRenderSystem extends System {
 		const body = (<PhysicsBodyCP>entity.getComponent('Polar:PhysicsBody')).body;
 		// Render shapes...
 		for (const shape of body.shapes) {
-			//console.log('Rendering shape ' + shape.type);
-			
 			if (shape.type == p2.Shape.BOX || shape.type == p2.Shape.CONVEX) {
 				const box = <p2.Box>shape;
 				Renderer.submitColoredOutline(vec4.fromValues(0.9, 0.1, 0.9, 1.0), 
 					createTransform(body.position[0] + box.position[0], body.position[1] + box.position[1], 
-						box.width, box.height, (body.angle + box.angle) * 180 / Math.PI));
+						box.width, box.height, (body.angle + box.angle) * 180 / Math.PI, 0));
 				Renderer.submitLine(body.position[0] + box.position[0], body.position[1] + box.position[1],
 					body.position[0] + box.position[0] + box.width / 2 * Math.cos(body.angle + box.angle), 
 					body.position[1] + box.position[1] + box.width / 2 * Math.sin(body.angle + box.angle), 
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 			else if (shape.type == p2.Shape.CIRCLE) {
 				const circle = <p2.Circle>shape;
@@ -98,14 +91,14 @@ export class PhysicsDebugRenderSystem extends System {
 				Renderer.submitLine(body.position[0] + circle.position[0], body.position[1] + circle.position[1], 
 					body.position[0] + circle.position[0] + circle.radius * Math.cos(body.angle + circle.angle), 
 					body.position[1] + circle.position[1] + circle.radius * Math.sin(body.angle + circle.angle),
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 			else if (shape.type == p2.Shape.LINE) {
 				const line = <p2.Line>shape;
 				Renderer.submitLine(line.position[0], line.position[1], 
 					line.position[0] + line.length * Math.cos(body.angle + line.angle), 
 					line.position[1] + line.length * Math.sin(body.angle + line.angle), 
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 		}
 	}
@@ -137,11 +130,11 @@ export class PhysicsDebugInteractionSystem extends System {
 		});
 
 		window.addEventListener('mousemove', (ev: MouseEvent) => {
-			if (Input.isMouseButtonPressed(0)) {
-				const position = Renderer.screenToWorldPosition(vec2.fromValues(ev.x, ev.y));
-				const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
-				info.nullBody.position = [position[0], position[1]];
-			}
+			this.updatePosition();
+		});
+
+		window.addEventListener('Polar:CameraTransform', (ev: CustomEvent) => {
+			this.updatePosition();
 		});
 
 		window.addEventListener('mouseup', (ev: MouseEvent) => {
@@ -198,7 +191,6 @@ export class PhysicsDebugInteractionSystem extends System {
 	}
 
 	private startClick() {
-		console.log('Start click');
 		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).doClick = false;
 
 		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
@@ -233,9 +225,15 @@ export class PhysicsDebugInteractionSystem extends System {
 			//Set the local anchor of body B ( list with x and y )
 			//systemData.constraint.localAnchorB = [x, y];
 
-			////
-			////
 			world.addConstraint(systemData.constraint);
+		}
+	}
+
+	private updatePosition() {
+		if (Input.isMouseButtonPressed(0)) {
+			const position = Renderer.screenToWorldPosition(Input.getMousePosition());
+			const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+			info.nullBody.position = [position[0], position[1]];
 		}
 	}
 }
