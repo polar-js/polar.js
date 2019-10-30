@@ -52,7 +52,7 @@ export class Input {
 
 	/**
 	 * Get the mouse position within the page.
-	 * @returns {vec2} The position of the mouse within the page.
+	 * @returns {glm.vec2} The position of the mouse within the page.
 	 */
 	public static getMousePosition(): vec2 {
 		return this.mousePosition;

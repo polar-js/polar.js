@@ -248,7 +248,7 @@ export  class Renderer {
 
 	/** Submit a texture for rendering.
 	 * @param {Texture2D} texture The texture.
-	 * @param {mat4} transform The transform to be applied to the texture.
+	 * @param {glm.mat4} transform The transform to be applied to the texture.
 	 */
 	public static submitTextured(texture: Texture2D, transform: mat4) {
 		const shader = this.shaderLibrary.get('TextureShader');
@@ -302,8 +302,8 @@ export  class Renderer {
 	/**
 	 * Draw a colored outline of a shape.
 	 * @param {VertexArray} loopVA The loop's vertices.
-	 * @param {vec4} color The color of the square.
-	 * @param {mat4} transform The transformation matrix.
+	 * @param {glm.vec4} color The color of the square.
+	 * @param {glm.mat4} transform The transformation matrix.
 	 */
 	public static submitLoop(loopVA: VertexArray, color: vec4, transform: mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');

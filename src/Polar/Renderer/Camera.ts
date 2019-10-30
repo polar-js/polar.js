@@ -15,7 +15,7 @@ export  class OrthographicCamera {
 	 * @param {number} right The right bound of the camera.
 	 * @param {number} bottom The bottom bound of the camera.
 	 * @param {number} top The top bound of the camera.
-	 * @param {vec3} [position] The initial position of the camera.
+	 * @param {glm.vec3} [position] The initial position of the camera.
 	 * @param {number} [rotation] The initial rotation of the camera in degrees.
 	 */
 	public constructor(left: number, right: number, bottom: number, top: number, position: vec3 = vec3.create(), rotation: number = 0) {
@@ -41,7 +41,7 @@ export  class OrthographicCamera {
 
 	/**
 	 * Get position of camera.
-	 * @returns {vec3} The camera's position in world space.
+	 * @returns {glm.vec3} The camera's position in world space.
 	 */
 	public getPosition(): vec3 {
 		return this.position;
@@ -49,7 +49,7 @@ export  class OrthographicCamera {
 	
 	/**
 	 * Set position of camera.
-	 * @param {vec3} position The new world space position for the camera.
+	 * @param {glm.vec3} position The new world space position for the camera.
 	 */
 	public setPosition(position: vec3): void {
 		this.position = position;
@@ -83,7 +83,7 @@ export  class OrthographicCamera {
 
 	/**
 	 * Get camera's view matrix.
-	 * @returns {mat4} The camera's view matrix.
+	 * @returns {glm.mat4} The camera's view matrix.
 	 */
 	public getViewMatrix(): mat4 {
 		return this.viewMatrix;
@@ -91,7 +91,7 @@ export  class OrthographicCamera {
 
 	/**
 	 * Get camera's view projection matrix.
-	 * @returns {mat4} The camera's view projection matrix.
+	 * @returns {glm.mat4} The camera's view projection matrix.
 	 */
 	public getViewProjectionMatrix(): mat4 {
 		return this.viewProjectionMatrix;

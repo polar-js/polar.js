@@ -109,7 +109,7 @@ export class CameraControllerCP extends Component {
 	 * @param {number} [aspectRatio=1] The aspect ratio of the camera.
 	 * @param {number} [zoomLevel=1] The initial zoom of the camera.
 	 * @param {boolean} [doRotation=false] Allows the camera to be rotated using the Q and E keys.
-	 * @param {vec3} [cameraPosition=vec3.create()] The initial position of the camera.
+	 * @param {glm.vec3} [cameraPosition=vec3.create()] The initial position of the camera.
 	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
 	 * @param {number} [cameraRotationSpeed=90.0] The rotation speed of the camera in degrees per second.
 	 */

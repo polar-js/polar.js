@@ -8,7 +8,7 @@ import { vec3, mat4 } from 'gl-matrix';
  * @param {number} height The height to scale by.
  * @param {number} rotation The rotation.
  * @param {number} zIndex The z index of the object.
- * @returns {mat4} The transformation matrix.
+ * @returns {glm.mat4} The transformation matrix.
  */
 export function createTransform(x: number = 0, y: number = 0, width: number = 1, height: number = 1, rotation: number = 0, zIndex: number = 0): mat4 {
 	let transform = mat4.create();

@@ -14,7 +14,7 @@ export  class Sprite {
 	/**
 	 * Create a new sprite.
 	 * @param {Texture2D} [texture] The sprite's texture.
-	 * @param {vec2} [position] The sprite's position.
+	 * @param {glm.vec2} [position] The sprite's position.
 	 * @param {number} [rotation=0] The sprite's rotation in degrees.
 	 * @param {number} [scale=1] The sprite's scale.
 	 * @param {number} [opacity=1] The sprite's opacity (0 - 1).

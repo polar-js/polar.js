@@ -182,7 +182,7 @@ export  class Shader {
 	/**
 	 * Set a vector 2 uniform's value.
 	 * @param {string} name The name of the uniform variable.
-	 * @param {vec2} value The value which the uniform is set to.
+	 * @param {glm.vec2} value The value which the uniform is set to.
 	 */
 	public uploadUniformFloat2(name: string, value: vec2) {
 		Surface.gl.uniform2f(this.getUniformLocation(name), value[0], value[1]);
@@ -191,7 +191,7 @@ export  class Shader {
 	/**
 	 * Set a vector 3 uniform's value.
 	 * @param {string} name The name of the uniform variable.
-	 * @param {vec3} value The value which the uniform is set to.
+	 * @param {glm.vec3} value The value which the uniform is set to.
 	 */
 	public uploadUniformFloat3(name: string, value: vec3) {
 		Surface.gl.uniform3f(this.getUniformLocation(name), value[0], value[1], value[2]);
@@ -200,7 +200,7 @@ export  class Shader {
 	/**
 	 * Set a vector 4 uniform's value.
 	 * @param {string} name The name of the uniform variable.
-	 * @param {vec4} value The value which the uniform is set to.
+	 * @param {glm.vec4} value The value which the uniform is set to.
 	 */
 	public uploadUniformFloat4(name: string, value: vec4) {
 		Surface.gl.uniform4f(this.getUniformLocation(name), value[0], value[1], value[2], value[3]);
@@ -209,7 +209,7 @@ export  class Shader {
 	/**
 	 * Set a 3x3 matrix uniform's value.
 	 * @param {string} name The name of the uniform variable.
-	 * @param {mat3} value The value which the uniform is set to.
+	 * @param {glm.mat3} value The value which the uniform is set to.
 	 */
 	public uploadUniformMat3(name: string, value: mat3) {
 		Surface.gl.uniformMatrix3fv(this.getUniformLocation(name), false, value);
@@ -218,7 +218,7 @@ export  class Shader {
 	/**
 	 * Set a 4x4 matrix uniform's value.
 	 * @param {string} name The name of the uniform variable.
-	 * @param {mat4} value The value which the uniform is set to.
+	 * @param {glm.mat4} value The value which the uniform is set to.
 	 */
 	public uploadUniformMat4(name: string, value: mat4) {
 		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
