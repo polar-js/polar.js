@@ -24,7 +24,8 @@ class ExampleParticleLayer extends Polar.Layer {
 		// entity.addComponent(new Polar.Texture2DCP(checkerboard));
 		// this.manager.addEntitySubscriptions(entity.id);
 
-		this.emitter = new Polar.ParticleEmitter(Polar.glm.vec2.create(), 10000, 10000, 0.5, 1, -Math.PI / 5, Math.PI / 5, 1, 2, Polar.glm.vec2.fromValues(0, -9.8));
+		this.emitter = new Polar.ParticleEmitter(Polar.glm.vec2.create(), 1000, 1000, 0.5, 1, 0, Math.PI / 2, 1, 2, Polar.glm.vec2.fromValues(0, -9.8));
+		this.emitter2 = new Polar.ParticleEmitter(Polar.glm.vec2.fromValues(-1, 1), 1000, 1000, 0.5, 1, Math.PI, Math.PI / 2, 1, 2, Polar.glm.vec2.fromValues(0, -9.8));
 	}
 
 	onUpdate(deltaTime) {
@@ -32,6 +33,7 @@ class ExampleParticleLayer extends Polar.Layer {
 
 		Polar.ParticleRenderer.beginParticleScene(this.manager.getSingleton('Polar:Camera').camera);
 		Polar.ParticleRenderer.renderParticleEmitter(this.emitter, deltaTime, 0);
+		Polar.ParticleRenderer.renderParticleEmitter(this.emitter2, deltaTime, 0);
 		Polar.ParticleRenderer.endParticleScene();
 	}
 }

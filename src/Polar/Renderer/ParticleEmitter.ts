@@ -17,28 +17,25 @@ export class ParticleEmitter {
 	public bornParticles: number = 0;
 	public gravity: glm.vec2;
 	public position: glm.vec2;
-	public minAngle: number;
-	public maxAngle: number;
+	public angle: number;
+	public spread: number;
 	public minSpeed: number;
 	public maxSpeed: number;
 
 	public constructor(position: glm.vec2 = glm.vec2.create(), numParticles: number = 100, spawnRate: number = 100, minLife: number = 1, maxLife: number = 2, 
-		minAngle: number = -Math.PI / 4, maxAngle: number = Math.PI / 4, minSpeed: number = 1, maxSpeed: number = 2, gravity: glm.vec2 = glm.vec2.create()) {
+		angle: number = 0, spread: number = Math.PI / 2, minSpeed: number = 1, maxSpeed: number = 2, gravity: glm.vec2 = glm.vec2.create()) {
 		this.numParticles = numParticles;
 		this.spawnRate = spawnRate;
 		this.gravity = gravity;
 		this.position = position;
-		this.minAngle = minAngle;
-		this.maxAngle = maxAngle;
+		this.angle = angle;
+		this.spread = spread;
 		this.minSpeed = minSpeed;
 		this.maxSpeed = maxSpeed;
 		
 		// VALIDATE INPUT //
 		if (maxLife < minLife) 
 			console.error('Maximum life cannot be less than minimum life.');
-		
-		if (maxAngle < minAngle || minAngle < -Math.PI || maxAngle > Math.PI)
-			console.error('Invalid angle range.');
 		
 		if (maxSpeed < minSpeed)
 			console.error('Maximum speed cannot be less than minimum speed');
