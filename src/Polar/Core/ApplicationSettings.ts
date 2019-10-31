@@ -1,5 +1,5 @@
 
-export  interface Settings {
+export interface ApplicationSettings {
 	canvasID: string;
 	displayMode: string;
 	width: number;

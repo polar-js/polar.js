@@ -1,7 +1,7 @@
-import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { Input } from 'Polar/Core/Input';
 import { Surface } from 'Polar/Renderer/Surface';
-import { vec3 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
 export  class OrthographicCameraController {
@@ -12,7 +12,7 @@ export  class OrthographicCameraController {
 	private doRotation: boolean;
 
 	// The camera's position in world space.
-	private cameraPosition: vec3 = vec3.create();
+	private cameraPosition: glm.vec3 = glm.vec3.create();
 	// The camera's current rotation.
 	private cameraRotation = 0.0;
 	// How fast the camera rotates in degrees per second.

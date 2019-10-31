@@ -1,19 +1,20 @@
-import { mat4, vec2, vec3, vec4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 import { Shader } from 'Polar/Renderer/Shader';
 import { RenderCommand } from 'Polar/Renderer/RenderCommand';
-import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
 import { Sprite } from 'Polar/Renderer/Sprite';
 import { Texture2D } from 'Polar/Renderer/Texture';
-import { TextureAtlas } from 'Polar/Renderer/TextureAtlas';
-import { TransformCP } from 'Polar/ECS/Components';
 import { Surface } from 'Polar/Renderer/Surface';
+import { TextureShaderSource } from 'Polar/Renderer/ShaderSource/TextureShaderSource';
+import { ColorShaderSource } from 'Polar/Renderer/ShaderSource/ColorShaderSource';
+
 import { createTransform } from 'Polar/Util/Math';
 
 export  class Renderer {
-	private static viewProjectionMatrix: mat4;
+	private static viewProjectionMatrix: glm.mat4;
 	private static shaderLibrary: ShaderLibrary;
 
 	private static textureQuadVA: VertexArray;
@@ -32,59 +33,10 @@ export  class Renderer {
 
 	private static initShaders() {
 		this.shaderLibrary = new ShaderLibrary();
-		const textureShader = new Shader('TextureShader', 
-			`#version 300 es
-			precision highp float;
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-			
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec2 v_TexCoord;
-			
-			void main() {
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}`, 
-			`#version 300 es
-			precision mediump float;
-			
-			out vec4 color;
-			in vec2 v_TexCoord;
-			
-			uniform sampler2D u_Texture;
-			
-			void main() {
-				color = texture(u_Texture, v_TexCoord);
-			}`);
+		const textureShader = new Shader('TextureShader', TextureShaderSource.getVertexSource(), TextureShaderSource.getFragmentSource());
 		this.shaderLibrary.add(textureShader);
 
-		const colorShader = new Shader('ColorShader',
-			// VERTEX SHADER //
-			`#version 300 es
-			precision highp float;
-			
-			layout(location = 0) in vec3 a_Position;
-			
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-			
-			void main() {
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}`, 
-			// FRAGMENT SHADER //
-			`#version 300 es
-			precision mediump float;
-			
-			out vec4 color;
-			
-			uniform vec4 u_Color;
-			
-			void main() {
-				color = u_Color;
-		}`);
+		const colorShader = new Shader('ColorShader', ColorShaderSource.getVertexSource(), ColorShaderSource.getFragmentSource());
 		this.shaderLibrary.add(colorShader);
 	}
 
@@ -248,7 +200,7 @@ export  class Renderer {
 	 * @param {Texture2D} texture The texture.
 	 * @param {glm.mat4} transform The transform to be applied to the texture.
 	 */
-	public static submitTextured(texture: Texture2D, transform: mat4) {
+	public static submitTextured(texture: Texture2D, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('TextureShader');
 		texture.bind();
 
@@ -261,7 +213,7 @@ export  class Renderer {
 		RenderCommand.drawIndexed(this.textureQuadVA);
 	}
 
-	public static submitColored(color: vec4, transform: mat4) {
+	public static submitColored(color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -273,7 +225,7 @@ export  class Renderer {
 		RenderCommand.drawIndexed(this.textureQuadVA);
 	}
 
-	public static submitLines(linesVA: VertexArray, color: vec4, transform: mat4) {
+	public static submitLines(linesVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -285,7 +237,7 @@ export  class Renderer {
 		RenderCommand.drawIndexedLines(linesVA);
 	}
 
-	public static submitLineStrip(stripVA: VertexArray, color: vec4, transform: mat4) {
+	public static submitLineStrip(stripVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -303,7 +255,7 @@ export  class Renderer {
 	 * @param {glm.vec4} color The color of the square.
 	 * @param {glm.mat4} transform The transformation matrix.
 	 */
-	public static submitLoop(loopVA: VertexArray, color: vec4, transform: mat4) {
+	public static submitLoop(loopVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -315,7 +267,7 @@ export  class Renderer {
 		RenderCommand.drawIndexedLineLoop(loopVA);
 	}
 
-	public static submitColoredOutline(color: vec4, transform: mat4) {
+	public static submitColoredOutline(color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -327,7 +279,7 @@ export  class Renderer {
 		RenderCommand.drawIndexedLineLoop(this.outlineQuadVA);
 	}
 
-	public static submitLine(x0: number, y0: number, x1: number, y1: number, color: vec4, zIndex: number = 0) {
+	public static submitLine(x0: number, y0: number, x1: number, y1: number, color: glm.vec4, zIndex: number = 0) {
 		const shader = this.shaderLibrary.get('ColorShader');
 		const dx = x1 - x0;
 		const dy = y1 - y0;
@@ -348,7 +300,7 @@ export  class Renderer {
 		RenderCommand.drawIndexedLineLoop(this.lineVA);
 	}
 
-	public static submitCircle(x: number, y: number, radius: number, color: vec4, zIndex: number = 0) {
+	public static submitCircle(x: number, y: number, radius: number, color: glm.vec4, zIndex: number = 0) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -360,14 +312,14 @@ export  class Renderer {
 		RenderCommand.drawIndexedLineLoop(this.circleVA);
 	}
 
-	public static screenToWorldPosition(position: vec2): vec2 {
+	public static screenToWorldPosition(position: glm.vec2): glm.vec2 {
 		const nx = position[0] / Surface.get().width * 2 - 1;
 		const ny = -(position[1] / Surface.get().height * 2 - 1);
-		let inverse = mat4.create();
-		inverse = mat4.invert(inverse, this.viewProjectionMatrix);
-		let out = vec4.create();
-		out = vec4.transformMat4(out, vec4.fromValues(nx, ny, 1, 1), inverse);
+		let inverse = glm.mat4.create();
+		inverse = glm.mat4.invert(inverse, this.viewProjectionMatrix);
+		let out = glm.vec4.create();
+		out = glm.vec4.transformMat4(out, glm.vec4.fromValues(nx, ny, 1, 1), inverse);
 		
-		return vec2.fromValues(out[0], out[1]);
+		return glm.vec2.fromValues(out[0], out[1]);
 	}
 }

@@ -1,7 +1,7 @@
+import * as glm from 'gl-matrix';
 import { System, Component, Entity } from 'Polar/ECS/ECS';
 import { Timer } from 'Polar/Util/Timer';
 import { Surface } from 'Polar/Renderer/Surface';
-import { vec2 } from 'gl-matrix';
 
 export class FPSDebugSystem extends System {
 
@@ -40,7 +40,7 @@ export class FPSDebugSystem extends System {
 /** Singleton component class used to store data about an FPS debug system. */
 export class FPSDebugCP extends Component {
 
-	public position: vec2;
+	public position: glm.vec2;
 	public font: string;
 	public fillStyle: string;
 
@@ -54,7 +54,7 @@ export class FPSDebugCP extends Component {
 	 * @param {string} [font='20px Arial'] The font.
 	 * @param {string} [fillStyle='red'] The fill style.
 	 */
-	public constructor(position: vec2 = vec2.fromValues(10, 30), font: string = '20px Arial', fillStyle: string = 'red') {
+	public constructor(position: glm.vec2 = glm.vec2.fromValues(10, 30), font: string = '20px Arial', fillStyle: string = 'red') {
 		super();
 		this.position = position;
 		this.font = font;

@@ -1,5 +1,4 @@
 
-
 export class Timer {
 
 	// Delay the timer will wait before returning true.

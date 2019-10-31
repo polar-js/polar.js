@@ -1,14 +1,14 @@
-import { vec2 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 export class Input {
 	private static keyStates: {[id: string]: boolean};
 	private static mouseButtonStates: {[id: number]: boolean};
-	private static mousePosition: vec2;
+	private static mousePosition: glm.vec2;
 	
 	public static init() {
 		this.keyStates = {};
 		this.mouseButtonStates = {};
-		this.mousePosition = vec2.create();
+		this.mousePosition = glm.vec2.create();
 		
 		window.addEventListener('keydown', (ev: KeyboardEvent) => {
 			this.keyStates[ev.key] = true;
@@ -54,7 +54,7 @@ export class Input {
 	 * Get the mouse position within the page.
 	 * @returns {glm.vec2} The position of the mouse within the page.
 	 */
-	public static getMousePosition(): vec2 {
+	public static getMousePosition(): glm.vec2 {
 		return this.mousePosition;
 	}
 }

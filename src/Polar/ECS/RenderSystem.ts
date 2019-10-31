@@ -3,16 +3,10 @@ import { Renderer } from 'Polar/Renderer/Renderer';
 import { Texture2DCP, TransformCP, CameraCP } from 'Polar/ECS/Components';
 import { PhysicsBodyCP } from 'Polar/ECS/Physics';
 import { createTransform } from 'Polar/Util/Math';
-import { vec3, mat4 } from 'gl-matrix';
 
 export class RenderSystem extends System {
 
-	public onAttach(): void {
-	}
-
-	public onDetach(): void {
-		super.onDetach();
-	}
+	public onAttach(): void {}
 
 	public getComponentTuples(): string[][] {
 		return [['Polar:Transform', 'Polar:Texture2D'], ['Polar:PhysicsBody', 'Polar:Texture2D']];

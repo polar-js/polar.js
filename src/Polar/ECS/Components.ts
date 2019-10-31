@@ -1,7 +1,7 @@
 import { Component } from 'Polar/ECS/ECS';
 import { Texture2D } from 'Polar/Renderer/Texture';
-import { vec2, vec3, mat4 } from 'gl-matrix';
-import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import * as glm from 'gl-matrix';
+import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 
 /** Polar component which stores information about an entity's transform (position, rotation, scale). */
 export class TransformCP extends Component {
@@ -11,7 +11,7 @@ export class TransformCP extends Component {
 	public rotation: number;
 	public scale: number;
 
-	public transform: mat4;
+	public transform: glm.mat4;
 
 	/** Create a new transform component. */
 	public constructor(x: number = 0, y: number = 0, rotation: number = 0, scale: number = 1) {
@@ -31,10 +31,10 @@ export class TransformCP extends Component {
 	 * To be called after editing position, rotation or scale.
 	 */
 	public recalculate() {
-		this.transform = mat4.create();
-		this.transform = mat4.translate(this.transform, this.transform, vec3.fromValues(this.x, this.y, 0));
-		this.transform = mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, vec3.fromValues(0, 0, 1));
-		this.transform = mat4.scale(this.transform, this.transform, vec3.fromValues(this.scale, this.scale, this.scale));
+		this.transform = glm.mat4.create();
+		this.transform = glm.mat4.translate(this.transform, this.transform, glm.vec3.fromValues(this.x, this.y, 0));
+		this.transform = glm.mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, glm.vec3.fromValues(0, 0, 1));
+		this.transform = glm.mat4.scale(this.transform, this.transform, glm.vec3.fromValues(this.scale, this.scale, this.scale));
 	}
 }
 

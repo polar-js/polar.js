@@ -6,7 +6,7 @@ import { RenderCommand } from '../Renderer/RenderCommand';
 import { Renderer } from '../Renderer/Renderer';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
-import { Settings } from 'Polar/Core/Settings';
+import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
 
 /** Represents a Polar Application to be attached to the engine. */
 export abstract class Application {
@@ -14,7 +14,11 @@ export abstract class Application {
 	private layerStack: LayerStack;
 	private frameID: number;
 
-	public constructor(settings: Settings) {
+	/**
+	 * Create a new application.
+	 * @param {ApplicationSettings} settings The settings.
+	 */
+	public constructor(settings: ApplicationSettings) {
 		this.layerStack = new LayerStack();
 
 		Surface.init(settings);
@@ -23,7 +27,7 @@ export abstract class Application {
 	}
 
 	/** Starts the update loop of the application. */
-	public start(): void {
+	public start() {
 		// Start the update loop.
 		const update = (_: DOMHighResTimeStamp) => {
 			const time = performance.now();
@@ -49,14 +53,18 @@ export abstract class Application {
 		window.cancelAnimationFrame(this.frameID);
 	}
 
-	/** Adds a new layer to the top of the current layers (Below overlays). */
-	public pushLayer(layer: Layer): void {
+	/** Add a new layer to the top of the current layers (Below overlays).
+	 * @param {Layer} layer The layer.
+	 */
+	public pushLayer(layer: Layer) {
 		this.layerStack.pushLayer(layer);
 		layer.onAttach();
 	}
 
-	/** Adds a new layer to the top of the current overlays (Above everything).*/
-	public pushOverlay(layer: Layer): void {
+	/** Add a new overlay layer to the top of the current overlays (Above everything).
+	 * @param {Layer} layer The overlay layer.
+	 */
+	public pushOverlay(layer: Layer) {
 		this.layerStack.pushOverlay(layer);
 		layer.onAttach();
 	}

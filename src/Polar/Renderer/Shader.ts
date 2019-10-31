@@ -1,5 +1,5 @@
 import { Surface } from './Surface';
-import { vec2, vec3, vec4, mat3, mat4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 function shaderTypeFromString(type: string): number {
 	if (type == 'vertex')
@@ -25,14 +25,14 @@ export  class Shader {
 
 	/**
 	 * Loads a shader from a file path.
-	 * @param {string} filepath The filepath of the shader source code.
+	 * @param {string} path The file path of the shader source code.
 	 * @param {string} [name] The name of the shader (Optional). If null, will use the filename.
 	 * @returns {Shader} The shader that was loaded from the path.
 	 * @static
 	 */
-	public static async loadFromFetch(filepath: string, name: string = null): Promise<Shader> {
-		if (!name) name = filepath.substr(filepath.lastIndexOf('/') + 1);
-		const response = await fetch(filepath);
+	public static async loadFromFetch(path: string, name: string = null): Promise<Shader> {
+		if (!name) name = path.substr(path.lastIndexOf('/') + 1);
+		const response = await fetch(path);
 		const source = await response.text();
 		const shaderSources = this.preProcess(source);
 		return new Shader(name, shaderSources[shaderTypeFromString('vertex')], shaderSources[shaderTypeFromString('fragment')]);
@@ -184,7 +184,7 @@ export  class Shader {
 	 * @param {string} name The name of the uniform variable.
 	 * @param {glm.vec2} value The value which the uniform is set to.
 	 */
-	public uploadUniformFloat2(name: string, value: vec2) {
+	public uploadUniformFloat2(name: string, value: glm.vec2) {
 		Surface.gl.uniform2f(this.getUniformLocation(name), value[0], value[1]);
 	}
 
@@ -193,7 +193,7 @@ export  class Shader {
 	 * @param {string} name The name of the uniform variable.
 	 * @param {glm.vec3} value The value which the uniform is set to.
 	 */
-	public uploadUniformFloat3(name: string, value: vec3) {
+	public uploadUniformFloat3(name: string, value: glm.vec3) {
 		Surface.gl.uniform3f(this.getUniformLocation(name), value[0], value[1], value[2]);
 	}
 
@@ -202,7 +202,7 @@ export  class Shader {
 	 * @param {string} name The name of the uniform variable.
 	 * @param {glm.vec4} value The value which the uniform is set to.
 	 */
-	public uploadUniformFloat4(name: string, value: vec4) {
+	public uploadUniformFloat4(name: string, value: glm.vec4) {
 		Surface.gl.uniform4f(this.getUniformLocation(name), value[0], value[1], value[2], value[3]);
 	}
 
@@ -211,7 +211,7 @@ export  class Shader {
 	 * @param {string} name The name of the uniform variable.
 	 * @param {glm.mat3} value The value which the uniform is set to.
 	 */
-	public uploadUniformMat3(name: string, value: mat3) {
+	public uploadUniformMat3(name: string, value: glm.mat3) {
 		Surface.gl.uniformMatrix3fv(this.getUniformLocation(name), false, value);
 	}
 
@@ -220,7 +220,7 @@ export  class Shader {
 	 * @param {string} name The name of the uniform variable.
 	 * @param {glm.mat4} value The value which the uniform is set to.
 	 */
-	public uploadUniformMat4(name: string, value: mat4) {
+	public uploadUniformMat4(name: string, value: glm.mat4) {
 		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
 	}
 }

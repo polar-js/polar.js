@@ -1,15 +1,15 @@
-import { vec2, vec3, mat4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 import { Texture2D } from 'Polar/Renderer/Texture';
 
 /** Represents a texture within world-space. */
 export  class Sprite {
-	private position: vec2;
+	private position: glm.vec2;
 	private rotation: number;
 	private scale: number;
 	private opacity: number;
 	private texture: Texture2D;
 
-	private transform: mat4;
+	private transform: glm.mat4;
 
 	/**
 	 * Create a new sprite.
@@ -19,7 +19,7 @@ export  class Sprite {
 	 * @param {number} [scale=1] The sprite's scale.
 	 * @param {number} [opacity=1] The sprite's opacity (0 - 1).
 	 */
-	public constructor(texture: Texture2D = null, position: vec2 = vec2.create(), rotation: number = 0, scale: number = 1, opacity: number = 255) {
+	public constructor(texture: Texture2D = null, position: glm.vec2 = glm.vec2.create(), rotation: number = 0, scale: number = 1, opacity: number = 255) {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
@@ -36,17 +36,17 @@ export  class Sprite {
 		this.recalculateTransform();
 	}
 
-	public getPosition(): vec2 {
+	public getPosition(): glm.vec2 {
 		return this.position;
 	}
 
-	public setPosition(position: vec2) {
+	public setPosition(position: glm.vec2) {
 		this.position = position;
 		this.recalculateTransform();
 	}
 
-	public translateBy(deltaPosition: vec2) {
-		vec2.add(this.position, this.position, deltaPosition);
+	public translateBy(deltaPosition: glm.vec2) {
+		glm.vec2.add(this.position, this.position, deltaPosition);
 		this.recalculateTransform();
 	}
 
@@ -95,13 +95,13 @@ export  class Sprite {
 	}
 
 	private recalculateTransform() {
-		this.transform = mat4.create();
-		this.transform = mat4.translate(this.transform, this.transform, vec3.fromValues(this.position[0], this.position[1], 0));
-		this.transform = mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, vec3.fromValues(0, 0, 1));
-		this.transform = mat4.scale(this.transform, this.transform, vec3.fromValues(this.scale, this.scale, this.scale));
+		this.transform = glm.mat4.create();
+		this.transform = glm.mat4.translate(this.transform, this.transform, glm.vec3.fromValues(this.position[0], this.position[1], 0));
+		this.transform = glm.mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, glm.vec3.fromValues(0, 0, 1));
+		this.transform = glm.mat4.scale(this.transform, this.transform, glm.vec3.fromValues(this.scale, this.scale, this.scale));
 	}
 
-	public getTransform(): mat4 {
+	public getTransform(): glm.mat4 {
 		return this.transform;
 	}
 }

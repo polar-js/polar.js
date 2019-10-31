@@ -1,4 +1,4 @@
-import { vec3, mat4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 /**
  * Generate a transformation matrix.
@@ -10,10 +10,10 @@ import { vec3, mat4 } from 'gl-matrix';
  * @param {number} zIndex The z index of the object.
  * @returns {glm.mat4} The transformation matrix.
  */
-export function createTransform(x: number = 0, y: number = 0, width: number = 1, height: number = 1, rotation: number = 0, zIndex: number = 0): mat4 {
-	let transform = mat4.create();
-	transform = mat4.translate(transform, transform, vec3.fromValues(x, y, zIndex));
-	transform = mat4.rotate(transform, transform, rotation * Math.PI / 180, vec3.fromValues(0, 0, 1));
-	transform = mat4.scale(transform, transform, vec3.fromValues(width, height, 1));
+export function createTransform(x: number = 0, y: number = 0, width: number = 1, height: number = 1, rotation: number = 0, zIndex: number = 0): glm.mat4 {
+	let transform = glm.mat4.create();
+	transform = glm.mat4.translate(transform, transform, glm.vec3.fromValues(x, y, zIndex));
+	transform = glm.mat4.rotate(transform, transform, rotation * Math.PI / 180, glm.vec3.fromValues(0, 0, 1));
+	transform = glm.mat4.scale(transform, transform, glm.vec3.fromValues(width, height, 1));
 	return transform;
 }

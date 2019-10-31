@@ -1,4 +1,4 @@
-import { Surface as c } from './Surface';
+import { Surface as s } from './Surface';
 
 /** Represents a 2D OpenGL Texture */
 export  class Texture2D {
@@ -16,13 +16,13 @@ export  class Texture2D {
 	public constructor() {
 		this.loaded = false;
 
-		this.texture = c.gl.createTexture();
-		c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
+		this.texture = s.gl.createTexture();
+		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 		// Fill texture with a 1x1 sample pixel.
-		c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, 1, 1, 0, c.gl.RGBA, c.gl.UNSIGNED_BYTE, new Uint8Array([25, 25, 25, 255]));
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, 1, 1, 0, s.gl.RGBA, s.gl.UNSIGNED_BYTE, new Uint8Array([25, 25, 25, 255]));
 		// Set texture parameters.
-		c.gl.texParameteri(c.gl.TEXTURE_2D, c.gl.TEXTURE_MIN_FILTER, c.gl.LINEAR);
-		c.gl.texParameteri(c.gl.TEXTURE_2D, c.gl.TEXTURE_MAG_FILTER, c.gl.NEAREST);
+		s.gl.texParameteri(s.gl.TEXTURE_2D, s.gl.TEXTURE_MIN_FILTER, s.gl.LINEAR);
+		s.gl.texParameteri(s.gl.TEXTURE_2D, s.gl.TEXTURE_MAG_FILTER, s.gl.NEAREST);
 	}
 
 	public loadFromPath(path: string) {
@@ -32,9 +32,9 @@ export  class Texture2D {
 			const image = new Image();
 			image.src = this.path;
 			image.addEventListener('load', () => {
-				c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
-				c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, c.gl.RGBA, c.gl.UNSIGNED_BYTE, image);
-				c.gl.generateMipmap(c.gl.TEXTURE_2D);
+				s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
+				s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, s.gl.RGBA, s.gl.UNSIGNED_BYTE, image);
+				s.gl.generateMipmap(s.gl.TEXTURE_2D);
 				this.loaded = true;
 				this.width = image.clientWidth;
 				this.height = image.clientHeight;
@@ -43,8 +43,8 @@ export  class Texture2D {
 	}
 
 	public loadFromArray(pixels: Uint8Array, width: number, height: number) {
-		c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
-		c.gl.texImage2D(c.gl.TEXTURE_2D, 0, c.gl.RGBA, width, height, 0, c.gl.RGBA, c.gl.UNSIGNED_BYTE, pixels);
+		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, width, height, 0, s.gl.RGBA, s.gl.UNSIGNED_BYTE, pixels);
 
 		this.loaded = true;
 	}
@@ -67,7 +67,7 @@ export  class Texture2D {
 
 	/** Bind the texture */
 	public bind() {
-		c.gl.bindTexture(c.gl.TEXTURE_2D, this.texture);
+		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 	}
 
 	/**

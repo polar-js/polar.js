@@ -1,4 +1,4 @@
-import { Settings } from 'Polar/Core/Settings';
+import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
 
 export class Surface {
 	private static canvas: HTMLCanvasElement;
@@ -26,7 +26,7 @@ export class Surface {
 	 * Initialize the canvas.
 	 * @param {settings} settings The engine settings.
 	 */
-	public static init(settings: Settings) {
+	public static init(settings: ApplicationSettings) {
 
 		// CREATE WEBGL CANVAS //
 		if (settings.canvasID) {

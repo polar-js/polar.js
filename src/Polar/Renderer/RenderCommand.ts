@@ -1,4 +1,4 @@
-import * as glMatrix from 'gl-matrix';
+import * as glm from 'gl-matrix';
 import { Surface } from 'Polar/Renderer/Surface';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 
@@ -9,7 +9,7 @@ export class RenderCommand {
 		Surface.gl.blendFunc(Surface.gl.SRC_ALPHA, Surface.gl.ONE_MINUS_SRC_ALPHA);
 	}
 
-	public static setClearColor(color: glMatrix.vec4) {
+	public static setClearColor(color: glm.vec4) {
 		Surface.gl.clearColor(color[0], color[1], color[2], color[3]);
 	}
 

@@ -1,10 +1,13 @@
+import * as glm from 'gl-matrix';
 import * as p2 from 'p2';
 import { System, Component, Entity } from 'Polar/ECS/ECS';
 import { Renderer } from 'Polar/Renderer/Renderer';
-import { vec2, vec4, mat4, vec3 } from 'gl-matrix';
 import { createTransform } from 'Polar/Util/Math';
 import { Input } from 'Polar/Core/Input';
 
+/** A system which manages a p2 physics world.
+ * @extends System
+ */
 export class PhysicsSystem extends System {
 
 	public onAttach() {}
@@ -17,9 +20,7 @@ export class PhysicsSystem extends System {
 			systemData.world.step(dt, null, 3);
 	}
 
-	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
-
-	}
+	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {}
 
 	public endUpdate(dt: number) {}
 
@@ -28,6 +29,9 @@ export class PhysicsSystem extends System {
 	public getName(): string { return 'Polar:PhysicsSystem'; }
 }
 
+/** A component which stores information about an entity's physics body.
+ * @extends Component
+ */
 export class PhysicsBodyCP extends Component {
 
 	public body: p2.Body;
@@ -49,7 +53,9 @@ export class PhysicsBodyCP extends Component {
 	}
 }
 
-/** A singleton component which represents a p2 physics world. */
+/** A singleton component which represents a p2 physics world.
+ * @extends Component
+ */
 export class PhysicsWorldCP extends Component {
 
 	public world: p2.World;
@@ -68,6 +74,9 @@ export class PhysicsWorldCP extends Component {
 	}
 }
 
+/** A system which renders debug outlines of physics bodies within the world. 
+ * @extends System
+ */
 export class PhysicsDebugRenderSystem extends System {
 	public onAttach(): void {}
 
@@ -77,28 +86,28 @@ export class PhysicsDebugRenderSystem extends System {
 		for (const shape of body.shapes) {
 			if (shape.type == p2.Shape.BOX || shape.type == p2.Shape.CONVEX) {
 				const box = <p2.Box>shape;
-				Renderer.submitColoredOutline(vec4.fromValues(0.9, 0.1, 0.9, 1.0), 
+				Renderer.submitColoredOutline(glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0), 
 					createTransform(body.position[0] + box.position[0], body.position[1] + box.position[1], 
 						box.width, box.height, (body.angle + box.angle) * 180 / Math.PI, 0));
 				Renderer.submitLine(body.position[0] + box.position[0], body.position[1] + box.position[1],
 					body.position[0] + box.position[0] + box.width / 2 * Math.cos(body.angle + box.angle), 
 					body.position[1] + box.position[1] + box.width / 2 * Math.sin(body.angle + box.angle), 
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
+					glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 			else if (shape.type == p2.Shape.CIRCLE) {
 				const circle = <p2.Circle>shape;
-				Renderer.submitCircle(body.position[0] + circle.position[0], body.position[1] + circle.position[1], circle.radius, vec4.fromValues(0.9, 0.1, 0.9, 1.0));
+				Renderer.submitCircle(body.position[0] + circle.position[0], body.position[1] + circle.position[1], circle.radius, glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0));
 				Renderer.submitLine(body.position[0] + circle.position[0], body.position[1] + circle.position[1], 
 					body.position[0] + circle.position[0] + circle.radius * Math.cos(body.angle + circle.angle), 
 					body.position[1] + circle.position[1] + circle.radius * Math.sin(body.angle + circle.angle),
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
+					glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 			else if (shape.type == p2.Shape.LINE) {
 				const line = <p2.Line>shape;
 				Renderer.submitLine(line.position[0], line.position[1], 
 					line.position[0] + line.length * Math.cos(body.angle + line.angle), 
 					line.position[1] + line.length * Math.sin(body.angle + line.angle), 
-					vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
+					glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0), 9);
 			}
 		}
 	}
@@ -116,6 +125,9 @@ export class PhysicsDebugRenderSystem extends System {
 	}
 }
 
+/** A system which allows the user to click and drag physics bodies around the world.
+ * @extends System
+ */
 export class PhysicsDebugInteractionSystem extends System {
 
 	public onAttach(): void {
@@ -219,9 +231,7 @@ export class PhysicsDebugInteractionSystem extends System {
 				// Set x1 and y1 to the position of the point within the body
 				systemData.currentBody.position[0]+magnitude*Math.cos(systemData.lineAngle+systemData.currentBody.angle), systemData.currentBody.position[1]+magnitude*Math.sin(systemData.lineAngle+systemData.currentBody.angle),
 				/////////////////////////////// END TODO ///////////////////////////////
-				vec4.fromValues(0.9, 0.9, 0.9, 0.9), 0);
-
-			
+				glm.vec4.fromValues(0.9, 0.9, 0.9, 0.9), 0);
 		}
 	}
 
@@ -282,6 +292,9 @@ export class PhysicsDebugInteractionSystem extends System {
 	}
 }
 
+/** A singleton component which stores information for a PhysicsDebugInteractionSystem 
+ * @extends Component
+*/
 export class PhysicsDebugInteractionCP extends Component {
 
 	public currentBody: p2.Body;

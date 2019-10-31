@@ -1,9 +1,9 @@
+import * as glm from 'gl-matrix';
 import { System, Entity, Component } from 'Polar/ECS/ECS';
 import { CameraCP } from 'Polar/ECS/Components';
-import { OrthographicCamera } from 'Polar/Renderer/Camera';
+import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
-import { vec3 } from 'gl-matrix';
 
 /** A simple camera movement controller. */
 export  class CameraControllerSystem extends System {
@@ -98,7 +98,7 @@ export class CameraControllerCP extends Component {
 	public doRotation: boolean;
 
 	// The camera's position in world space.
-	public cameraPosition: vec3;
+	public cameraPosition: glm.vec3;
 	// The camera's current rotation.
 	public cameraRotation: number;
 	// How fast the camera rotates in degrees per second.
@@ -113,7 +113,7 @@ export class CameraControllerCP extends Component {
 	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
 	 * @param {number} [cameraRotationSpeed=90.0] The rotation speed of the camera in degrees per second.
 	 */
-	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition = vec3.create(), cameraRotation = 0.0, cameraRotationSpeed = 90.0) {
+	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition: glm.vec3 = glm.vec3.create(), cameraRotation: number = 0.0, cameraRotationSpeed: number = 90.0) {
 		super();
 		this.aspectRatio = aspectRatio;
 		this.zoomLevel = zoomLevel;

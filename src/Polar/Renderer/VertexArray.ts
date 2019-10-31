@@ -1,4 +1,4 @@
-import { ShaderDataType, BufferElement, BufferLayout, VertexBuffer, IndexBuffer } from './Buffer';
+import { ShaderDataType, BufferLayout, VertexBuffer, IndexBuffer } from './Buffer';
 import { Surface } from './Surface';
 import { Shader }  from './Shader';
 

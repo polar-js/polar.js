@@ -1,13 +1,12 @@
-import { Texture2D } from 'Polar/Renderer/Texture';
 import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
-import { vec4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 export class AtlasEntry extends Rectangle {
 	public path: string;
 	public image: HTMLImageElement;
 	public loaded: boolean = false;
 
-	public uv: vec4;
+	public uv: glm.vec4;
 
 	constructor(path: string) {
 		super();
@@ -67,7 +66,7 @@ export class TextureAtlas {
 		this.entries.clear();
 		for (const rect of bin.rects) {
 			const entry = rect as AtlasEntry;
-			entry.uv = vec4.create();
+			entry.uv = glm.vec4.create();
 			entry.uv.set([entry.x / bin.maxWidth, (entry.x + entry.width) / bin.maxWidth,
 				(entry.y + entry.height) / bin.maxHeight, entry.y / bin.maxHeight]);
 
@@ -82,7 +81,7 @@ export class TextureAtlas {
 		return this.image;
 	}
 
-	public getUV(path: string): vec4 {
+	public getUV(path: string): glm.vec4 {
 		return this.entries.get(path).uv;
 	}
 }

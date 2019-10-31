@@ -5,25 +5,43 @@ export class Entity {
 	
 	public readonly components: Map<string, Component>;
 
-	//public subscribers: number[] = [];
-
+	/** Create a new entity. */
 	public constructor(id: number) {
 		this.id = id;
 		this.components = new Map<string, Component>();
 	}
 
+	/**
+	 * Test if an entity has a component.
+	 * Note: Often it is better to use the 'subIndex' parameter within system.onEntityUpdate( ... ) { ... }.
+	 * @param {string} type The component type.
+	 * @returns {boolean} Whether the entity has the component.
+	 */
 	public hasComponent(type: string): boolean {
 		return this.components.has(type);
 	}
 
+	/**
+	 * Get a component from an entity.
+	 * @param {string} type The component type.
+	 * @returns {Component} The component.
+	 */
 	public getComponent(type: string): Component {
 		return this.components.get(type);
 	}
 
-	public addComponent(c: Component) {
-		this.components.set(c.getType(), c);
+	/**
+	 * Add a component to an entity.
+	 * @param {Component} component The component to add.
+	 */
+	public addComponent(component: Component) {
+		this.components.set(component.getType(), component);
 	}
 
+	/**
+	 * Remove a component from an entity.
+	 * @param {string} type The component type to remove.
+	 */
 	public removeComponent(type: string) {
 		this.components.delete(type);
 	}
@@ -51,9 +69,12 @@ export abstract class Component {
  * @abstract
  */
 export abstract class System {
+	/** The system's ECS world manager. */
 	public manager: WorldManager;
+	/** The system's subscribed entities. Format: [Entity ID: string, Subscriber Index: string] */
 	public subscribers: Map<number, number>;
 
+	/** Create a new system. */
 	public constructor() {
 		this.subscribers = new Map<number, number>();
 	}
@@ -81,7 +102,7 @@ export abstract class System {
 
 	/**
 	 * Called by the world manager at the end of an update cycle.
-	 * @param dt Time elapsed since last update in seconds.
+	 * @param {number} dt Time elapsed since last update in seconds.
 	 * @abstract
 	 */
 	public abstract endUpdate(dt: number): void;
@@ -101,14 +122,6 @@ export abstract class System {
 	 * @abstract
 	 */
 	public abstract getName(): string;
-
-	/**
-	 * Called every update.
-	 * @param {number} dt The elapsed time since the last frame in seconds.
-	 * @param {Array<Entity>} entities The entities which are subscribed to the system.
-	 * @abstract
-	 * @deprecated
-	 */
 }
 
 /** Controls and manages the entity component system of a world. */
@@ -120,6 +133,7 @@ export abstract class WorldManager {
 
 	private singletons: Entity;
 
+	/** Create a new world manager. */
 	public constructor() {
 		this.systems = new Array<System>();
 		this.entities = new Map<number, Entity>();
@@ -240,7 +254,7 @@ export abstract class WorldManager {
 	/**
 	 * Recalculates all entity subscribers.
 	 * High performance cost - use sparingly.
-	 * To be used after a new system is added after the entities.
+	 * To be used if a new system is added after the entities, or for debug.
 	 */
 	public recalculateAllSubscribers() {
 		// Clear all current subscribers.
@@ -252,10 +266,19 @@ export abstract class WorldManager {
 			this.addEntitySubscriptions(eid);
 	}
 
+	/**
+	 * Get a singleton component from the manager.
+	 * @param {string} componentId The component's id, eg 'Polar:CameraController'.
+	 * @returns {Component} The singleton component.
+	 */
 	public getSingleton(componentId: string): Component {
 		return this.singletons.getComponent(componentId);
 	}
 
+	/**
+	 * Add a singleton component to the ECS manager.
+	 * @param {Component} component The component to add.
+	 */
 	public addSingleton(component: Component) {
 		this.singletons.addComponent(component);
 	}

@@ -1,12 +1,12 @@
-import { vec3, mat4 } from 'gl-matrix';
+import * as glm from 'gl-matrix';
 
 /** Class representing an orthographic camera for use in a Polar scene. */
 export  class OrthographicCamera {
-	private projectionMatrix: mat4;
-	private viewMatrix: mat4;
-	private viewProjectionMatrix: mat4;
+	private projectionMatrix: glm.mat4;
+	private viewMatrix: glm.mat4;
+	private viewProjectionMatrix: glm.mat4;
 
-	private position: vec3;
+	private position: glm.vec3;
 	private rotation: number;
 
 	/**
@@ -18,11 +18,11 @@ export  class OrthographicCamera {
 	 * @param {glm.vec3} [position] The initial position of the camera.
 	 * @param {number} [rotation] The initial rotation of the camera in degrees.
 	 */
-	public constructor(left: number, right: number, bottom: number, top: number, position: vec3 = vec3.create(), rotation: number = 0) {
-		this.viewMatrix = mat4.create();
-		this.projectionMatrix = mat4.create();
-		this.viewProjectionMatrix = mat4.create();
-		mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
+	public constructor(left: number, right: number, bottom: number, top: number, position: glm.vec3 = glm.vec3.create(), rotation: number = 0) {
+		this.viewMatrix = glm.mat4.create();
+		this.projectionMatrix = glm.mat4.create();
+		this.viewProjectionMatrix = glm.mat4.create();
+		glm.mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
 		this.position = position;
 		this.rotation = rotation;
 
@@ -31,12 +31,12 @@ export  class OrthographicCamera {
 
 	/** Recalculates the camera's view projection matrix. */
 	private recalculateViewMatrix() {
-		let transform = mat4.create();
-		mat4.translate(transform, transform, this.position);
-		mat4.rotate(transform, transform, this.rotation * Math.PI / 180.0, [0, 0, 1]);
+		let transform = glm.mat4.create();
+		glm.mat4.translate(transform, transform, this.position);
+		glm.mat4.rotate(transform, transform, this.rotation * Math.PI / 180.0, [0, 0, 1]);
 
-		mat4.invert(this.viewMatrix, transform);
-		mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
+		glm.mat4.invert(this.viewMatrix, transform);
+		glm.mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
 		const event = new CustomEvent('Polar:CameraTransform');
 		window.dispatchEvent(event);
 	}
@@ -45,7 +45,7 @@ export  class OrthographicCamera {
 	 * Get position of camera.
 	 * @returns {glm.vec3} The camera's position in world space.
 	 */
-	public getPosition(): vec3 {
+	public getPosition(): glm.vec3 {
 		return this.position;
 	}
 	
@@ -53,7 +53,7 @@ export  class OrthographicCamera {
 	 * Set position of camera.
 	 * @param {glm.vec3} position The new world space position for the camera.
 	 */
-	public setPosition(position: vec3): void {
+	public setPosition(position: glm.vec3): void {
 		this.position = position;
 		this.recalculateViewMatrix();
 	}
@@ -79,7 +79,7 @@ export  class OrthographicCamera {
 	 * Get camera's projection matrix.
 	 * @returns The camera's projection matrix.
 	 */
-	public getProjectionMatrix(): mat4 {
+	public getProjectionMatrix(): glm.mat4 {
 		return this.projectionMatrix;
 	}
 
@@ -87,7 +87,7 @@ export  class OrthographicCamera {
 	 * Get camera's view matrix.
 	 * @returns {glm.mat4} The camera's view matrix.
 	 */
-	public getViewMatrix(): mat4 {
+	public getViewMatrix(): glm.mat4 {
 		return this.viewMatrix;
 	}
 
@@ -95,7 +95,7 @@ export  class OrthographicCamera {
 	 * Get camera's view projection matrix.
 	 * @returns {glm.mat4} The camera's view projection matrix.
 	 */
-	public getViewProjectionMatrix(): mat4 {
+	public getViewProjectionMatrix(): glm.mat4 {
 		return this.viewProjectionMatrix;
 	}
 
@@ -107,10 +107,10 @@ export  class OrthographicCamera {
 	 * @param {number} top The top bound of the camera.
 	 */
 	public setProjection(left: number, right: number, bottom: number, top: number): void {
-		this.projectionMatrix = mat4.create();
-		this.viewProjectionMatrix = mat4.create();
-		mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
-		mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
+		this.projectionMatrix = glm.mat4.create();
+		this.viewProjectionMatrix = glm.mat4.create();
+		glm.mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
+		glm.mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
 		const event = new CustomEvent('Polar:CameraTransform');
 		window.dispatchEvent(event);
 	}
