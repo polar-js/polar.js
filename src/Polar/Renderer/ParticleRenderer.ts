@@ -55,8 +55,8 @@ export class ParticleRenderer {
 		// Upload total time?
 		this.updateShader.uploadUniformFloat2('u_Gravity', emitter.gravity);
 		this.updateShader.uploadUniformFloat2('u_Origin', emitter.position);
-		this.updateShader.uploadUniformFloat('u_MinAngle', emitter.minAngle);
-		this.updateShader.uploadUniformFloat('u_MaxAngle', emitter.maxAngle);
+		this.updateShader.uploadUniformFloat('u_Angle', emitter.angle);
+		this.updateShader.uploadUniformFloat('u_Spread', emitter.spread);
 		this.updateShader.uploadUniformFloat('u_MinSpeed', emitter.minSpeed);
 		this.updateShader.uploadUniformFloat('u_MaxSpeed', emitter.maxSpeed);
 		

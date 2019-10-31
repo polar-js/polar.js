@@ -7,8 +7,8 @@ export function getVertexSource(): string {
 			uniform vec2 u_Gravity;
 			uniform vec2 u_Origin;
 
-			uniform float u_MinAngle;
-			uniform float u_MaxAngle;
+			uniform float u_Angle;
+			uniform float u_Spread;
 
 			uniform float u_MinSpeed;
 			uniform float u_MaxSpeed;
@@ -30,10 +30,10 @@ export function getVertexSource(): string {
 					ivec2 noise_coord = ivec2(gl_VertexID % 512, gl_VertexID / 512);
 					vec2 rand = texelFetch(u_RandNoise, noise_coord, 0).rg;
 
-					float angle = u_MinAngle + rand.r * (u_MaxAngle - u_MinAngle);
+					float angle = (rand.r - 0.5) * u_Spread + u_Angle;
 
 					vec2 direction = vec2(cos(angle), sin(angle));
-					
+
 					v_Position = u_Origin;
 					v_Age = 0.0;
 					v_Life = i_Life;
