@@ -40,4 +40,4 @@ To make my life easier:
 - Include a brief explanation of why you changed it.
 
 ## Credits 
-Created by Alex Brown and Harry Ickeringill
+Created by Alex Brown, Harry Ickeringill and Jake Palandri.
