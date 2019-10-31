@@ -129,7 +129,6 @@ export class PhysicsDebugRenderSystem extends System {
  * @extends System
  */
 export class PhysicsDebugInteractionSystem extends System {
-
 	public onAttach(): void {
 		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody = new p2.Body({mass: 0});
 		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody.collisionResponse = false;
@@ -160,9 +159,7 @@ export class PhysicsDebugInteractionSystem extends System {
 		});
 	}
 
-	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {
-
-	}
+	public onEntityUpdate(dt: number, entity: Entity, subIndex: number) {}
 
 	public beginUpdate(dt: number) {}
 
@@ -294,6 +291,7 @@ export class PhysicsDebugInteractionSystem extends System {
 				break;
 			}
 		}
+		
 		if (systemData.currentBody) {
 			systemData.constraint = new p2.RevoluteConstraint(systemData.nullBody, systemData.currentBody, { worldPivot: [position[0], position[1]], collideConnected: false });
 			systemData.constraint.setRelaxation(10);
@@ -318,6 +316,7 @@ export class PhysicsDebugInteractionSystem extends System {
 /** A singleton component which stores information for a PhysicsDebugInteractionSystem 
  * @extends Component
 */
+
 export class PhysicsDebugInteractionCP extends Component {
 
 	public currentBody: p2.Body;
