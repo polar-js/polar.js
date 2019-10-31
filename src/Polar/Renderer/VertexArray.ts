@@ -21,17 +21,17 @@ function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 }
 
 export  class VertexArray {
-	private rendererID: WebGLVertexArrayObject;
+	private vertexArray: WebGLVertexArrayObject;
 	private vertexBuffers: VertexBuffer[];
 	private indexBuffer: IndexBuffer;
 
 	public constructor () {
-		this.rendererID = Surface.gl.createVertexArray();
+		this.vertexArray = Surface.gl.createVertexArray();
 		this.vertexBuffers = [];
 	}
 
 	public bind(): void {
-		Surface.gl.bindVertexArray(this.rendererID);
+		Surface.gl.bindVertexArray(this.vertexArray);
 	}
 
 	public unbind(): void {
@@ -41,12 +41,16 @@ export  class VertexArray {
 	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
 		console.assert(vertexBuffer.getLayout().getElements().length != 0, 'Vertex Buffer has no layout!');
 
-		Surface.gl.bindVertexArray(this.rendererID);
+		Surface.gl.bindVertexArray(this.vertexArray);
 		vertexBuffer.bind();
 
 		const layout: BufferLayout = vertexBuffer.getLayout();
-		for (let element of layout.getElements()) {
+		for (const element of layout.getElements()) {
 			const location = shader.getAttribLocation(element.name);
+			if (location < 0){
+				console.error(`Attribute '${element.name}' not found in shader '${shader.getName()}'.`);
+			}
+			
 			Surface.gl.enableVertexAttribArray(location);
 			Surface.gl.vertexAttribPointer(location, 
 				element.getComponentCount(), 
@@ -55,13 +59,12 @@ export  class VertexArray {
 				layout.getStride(),
 				element.offset);
 		}
-		
 
 		this.vertexBuffers.push(vertexBuffer);
 	}
 
 	public setIndexBuffer(indexBuffer: IndexBuffer) {
-		Surface.gl.bindVertexArray(this.rendererID);
+		Surface.gl.bindVertexArray(this.vertexArray);
 		indexBuffer.bind();
 
 		this.indexBuffer = indexBuffer;

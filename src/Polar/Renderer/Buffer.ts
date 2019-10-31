@@ -82,21 +82,20 @@ export class BufferLayout {
 }
 
 export class VertexBuffer {
-	private rendererID: WebGLBuffer;
-	// TODO: Store layout
+	private buffer: WebGLBuffer;
 	private layout: BufferLayout;
 
-	public constructor (vertices: Float32Array) {
-		this.rendererID = Surface.gl.createBuffer();
-		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.rendererID);
-		Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, Surface.gl.STATIC_DRAW);
+	public constructor (vertices: Float32Array, usage?: number) {
+		this.buffer = Surface.gl.createBuffer();
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.buffer);
+		Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, usage || Surface.gl.STATIC_DRAW);
 	}
 
-	public bind(): void {
-		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.rendererID);
+	public bind() {
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.buffer);
 	}
 
-	public unbind(): void {
+	public unbind() {
 		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, null);
 	}
 
@@ -104,31 +103,39 @@ export class VertexBuffer {
 		return this.layout;
 	}
 
-	public setLayout(layout: BufferLayout): void {
+	public setLayout(layout: BufferLayout) {
 		this.layout = layout;
+	}
+
+	public bindBufferBase(target?: number, index: number = 0) {
+		Surface.gl.bindBufferBase(target || Surface.gl.TRANSFORM_FEEDBACK_BUFFER, index, this.buffer);
+	}
+
+	public unbindBufferBase(target?: number, index: number = 0) {
+		Surface.gl.bindBufferBase(target || Surface.gl.TRANSFORM_FEEDBACK_BUFFER, index, null);
 	}
 }
 
 export class IndexBuffer {
-	private rendererID: WebGLBuffer;
+	private buffer: WebGLBuffer;
 	private count: number;
 
 	public constructor (indices: Uint16Array) {
-		this.rendererID = Surface.gl.createBuffer();
+		this.buffer = Surface.gl.createBuffer();
 		this.count = indices.length;
-		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.buffer);
 		Surface.gl.bufferData(Surface.gl.ELEMENT_ARRAY_BUFFER, indices, Surface.gl.STATIC_DRAW);
 	}
 
-	public bind(): void {
-		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.rendererID);
+	public bind() {
+		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, this.buffer);
 	}
 
-	public unbind(): void {
+	public unbind() {
 		Surface.gl.bindBuffer(Surface.gl.ELEMENT_ARRAY_BUFFER, null);
 	}
 
-	public getCount(): number {
+	public getCount() {
 		return this.count;
 	}
 }

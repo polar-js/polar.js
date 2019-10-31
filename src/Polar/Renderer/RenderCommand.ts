@@ -32,4 +32,8 @@ export class RenderCommand {
 	public static drawIndexedLineLoop(vertexArray: VertexArray) {
 		Surface.gl.drawElements(Surface.gl.LINE_LOOP, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
 	}
+
+	public static drawArrays(count: number, mode: number = Surface.gl.POINTS) {
+		Surface.gl.drawArrays(mode, 0, count);
+	}
 }

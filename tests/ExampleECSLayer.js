@@ -51,9 +51,9 @@ class ExampleECSLayer extends Polar.Layer {
 		this.world.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
 
 		// Add systems.
-		this.world.addSystem(new Polar.RenderSystem());
-		this.world.addSystem(new Polar.CameraControllerSystem());
 		this.world.addSystem(new TestSystem());
+		this.world.addSystem(new Polar.CameraControllerSystem());
+		this.world.addSystem(new Polar.RenderSystem());
 
 		// Add entities.
 		const entity = this.world.createEntity();
@@ -66,8 +66,6 @@ class ExampleECSLayer extends Polar.Layer {
 		this.fpsTimer = new Polar.Timer(1, false, true);
 		this.deltaNum = 0;
 		this.currentFPS = 0;
-
-		//const atlas = new Polar.TextureAtlas(['textures/1.png', 'textures/2.png', 'textures/3.png', 'textures/4.png', 'textures/5.png', 'textures/6.png']);
 
 		const testButton = document.createElement('button');
 		testButton.innerHTML = 'Test Button';

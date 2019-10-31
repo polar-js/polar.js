@@ -8,8 +8,8 @@ import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer 
 import { Sprite } from 'Polar/Renderer/Sprite';
 import { Texture2D } from 'Polar/Renderer/Texture';
 import { Surface } from 'Polar/Renderer/Surface';
-import { TextureShaderSource } from 'Polar/Renderer/ShaderSource/TextureShaderSource';
-import { ColorShaderSource } from 'Polar/Renderer/ShaderSource/ColorShaderSource';
+import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
+import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
 
 import { createTransform } from 'Polar/Util/Math';
 

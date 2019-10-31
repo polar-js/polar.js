@@ -1,7 +1,7 @@
 import { System, Entity } from 'Polar/ECS/ECS';
 import { Renderer } from 'Polar/Renderer/Renderer';
 import { Texture2DCP, TransformCP, CameraCP } from 'Polar/ECS/Components';
-import { PhysicsBodyCP } from 'Polar/ECS/Physics';
+import { PhysicsBodyCP } from 'Polar/ECS/Systems/Physics';
 import { createTransform } from 'Polar/Util/Math';
 
 export class RenderSystem extends System {

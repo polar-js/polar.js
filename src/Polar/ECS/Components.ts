@@ -1,6 +1,6 @@
+import * as glm from 'gl-matrix';
 import { Component } from 'Polar/ECS/ECS';
 import { Texture2D } from 'Polar/Renderer/Texture';
-import * as glm from 'gl-matrix';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 
 /** Polar component which stores information about an entity's transform (position, rotation, scale). */
@@ -59,4 +59,3 @@ export class CameraCP extends Component {
 
 	public getType(): string { return 'Polar:Camera'; }
 }
-

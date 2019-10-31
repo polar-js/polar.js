@@ -12,15 +12,15 @@ function shaderTypeFromString(type: string): number {
 
 /** Represents an OpenGL shader. */
 export  class Shader {
-	private rendererID: WebGLProgram;
+	private program: WebGLProgram;
 	private name: string;
 	private locations: { [id: string]: WebGLUniformLocation };
 
-	public constructor(name: string, vertexSrc: string, fragmentSrc: string) {
+	public constructor(name: string, vertexSrc: string, fragmentSrc: string, transformFeedbackVaryings?: string[]) {
 		this.name = name;
 		this.locations = {};
 
-		this.compile({[shaderTypeFromString('vertex')]: vertexSrc, [shaderTypeFromString('fragment')]: fragmentSrc});
+		this.compile({[shaderTypeFromString('vertex')]: vertexSrc, [shaderTypeFromString('fragment')]: fragmentSrc}, transformFeedbackVaryings);
 	}
 
 	/**
@@ -75,9 +75,9 @@ export  class Shader {
 	 * @param {{[id: number]: string}} shaderSources A dictionary containing each shader type and source code.
 	 * @private
 	 */
-	private compile(shaderSources: {[id: number]: string}) {
+	private compile(shaderSources: {[id: number]: string}, transformFeedbackVaryings?: string[]) {
 		let program: WebGLProgram = Surface.gl.createProgram();
-		let shaderIDs: WebGLShader[] = [];
+		let shaders: WebGLShader[] = [];
 		for (let type in shaderSources) {
 			const source = shaderSources[type];
 
@@ -94,17 +94,23 @@ export  class Shader {
 			}
 
 			Surface.gl.attachShader(program, shader);
-			shaderIDs.push(shader);
+			shaders.push(shader);
+		}
+
+		// SUBMIT TRANSFORM FEEDBACK 
+		if (transformFeedbackVaryings) {
+			Surface.gl.transformFeedbackVaryings(program, transformFeedbackVaryings, Surface.gl.INTERLEAVED_ATTRIBS);
 		}
 
 		Surface.gl.linkProgram(program);
 
+		// LOG ERRORS //
 		const log = Surface.gl.getProgramInfoLog(program);
 		if (log != '' && log != null) {
 			Surface.gl.deleteProgram(program);
 
-			for (const id of shaderIDs) {
-				Surface.gl.deleteShader(id);
+			for (const shader of shaders) {
+				Surface.gl.deleteShader(shader);
 			}
 
 			console.log(log);
@@ -112,15 +118,18 @@ export  class Shader {
 			return;
 		}
 
-		for (const id of shaderIDs) 
+		// DETACH AND DELETE SHADERS //
+		for (const id of shaders) {
 			Surface.gl.detachShader(program, id);
+			Surface.gl.deleteShader(id);
+		}
 		
-		this.rendererID = program;
+		this.program = program;
 	}
 
 	/** Binds the shader. */
 	public bind(): void {
-		Surface.gl.useProgram(this.rendererID);
+		Surface.gl.useProgram(this.program);
 	}
 
 	/** Unbinds the shader. */
@@ -142,7 +151,7 @@ export  class Shader {
 	 * @returns {number} The location of the attribute.
 	 */
 	public getAttribLocation(name: string): number {
-		return Surface.gl.getAttribLocation(this.rendererID, name);
+		return Surface.gl.getAttribLocation(this.program, name);
 	}
 
 	/**
@@ -155,7 +164,7 @@ export  class Shader {
 			return this.locations[name];
 		}
 		else {
-			const location = Surface.gl.getUniformLocation(this.rendererID, name);
+			const location = Surface.gl.getUniformLocation(this.program, name);
 			this.locations[name] = location;
 			return location;
 		}

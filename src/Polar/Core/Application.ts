@@ -7,6 +7,7 @@ import { Renderer } from '../Renderer/Renderer';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
 import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
+import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 
 /** Represents a Polar Application to be attached to the engine. */
 export abstract class Application {
@@ -24,6 +25,7 @@ export abstract class Application {
 		Surface.init(settings);
 		Input.init();
 		Renderer.init();
+		ParticleRenderer.init();
 	}
 
 	/** Starts the update loop of the application. */

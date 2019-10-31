@@ -34,10 +34,13 @@ export * from 'Polar/Renderer/Sprite';
 export * from 'Polar/Renderer/TextureAtlas';
 export * from 'Polar/ECS/ECS';
 export * from 'Polar/ECS/Components';
-export * from 'Polar/ECS/CameraControllerSystem';
-export * from 'Polar/ECS/RenderSystem';
-export * from 'Polar/ECS/Physics';
+export * from 'Polar/ECS/Systems/CameraControllerSystem';
+export * from 'Polar/ECS/Systems/RenderSystem';
+export * from 'Polar/ECS/Systems/Physics';
 export * from 'Polar/Util/Timer';
 export * from 'Polar/Util/OrthographicCameraController';
 export * from 'Polar/Util/Math';
-export * from 'Polar/ECS/FPSDebugSystem';
+export * from 'Polar/ECS/Systems/FPSDebugSystem';
+
+export * from 'Polar/Renderer/ParticleEmitter';
+export * from 'Polar/Renderer/ParticleRenderer';

@@ -42,9 +42,9 @@ export  class Texture2D {
 		}
 	}
 
-	public loadFromArray(pixels: Uint8Array, width: number, height: number) {
+	public loadFromArray(pixels: Uint8Array, width: number, height: number, internalFormat?: number, format?: number) {
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
-		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, width, height, 0, s.gl.RGBA, s.gl.UNSIGNED_BYTE, pixels);
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat || s.gl.RGBA, width, height, 0, format || s.gl.RGBA, s.gl.UNSIGNED_BYTE, pixels);
 
 		this.loaded = true;
 	}
@@ -67,7 +67,12 @@ export  class Texture2D {
 
 	/** Bind the texture */
 	public bind() {
+		s.gl.activeTexture(s.gl.TEXTURE0);
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
+	}
+
+	public unbind() {
+		s.gl.bindTexture(s.gl.TEXTURE_2D, null);
 	}
 
 	/**
