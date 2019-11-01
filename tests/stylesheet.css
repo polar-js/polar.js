@@ -1,3 +1,55 @@
-a {
-	display: block;
+html * {
+    font-family: 'Share Tech Mono', monospace;
+}
+
+body {
+    background: #f0f0f0;
+    border: 0;
+    font-size: 100%;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.main {
+	padding: 6% 10%;
+	margin: 10% 15% 0%;
+	background-color: white;
+	text-align: center;
+}
+
+h {
+	font-size: 30pt;
+}
+
+li {
+	list-style: none;
+	padding: 10px, 5px;
+}
+
+li a:hover, .links a:hover {
+    background-color: #f2f2f2;
+}
+
+li a {
+	color: black;
+    display: block;
+    font-size: 16pt;
+    padding: 14px 16px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.links a {
+	color: black;
+    font-size: 14pt;
+    padding: 14px 16px;
+    text-decoration: none;
+	text-align: center;
+	font-style: italic;
+}
+
+.links {
+	margin-top: 50px;
 }
