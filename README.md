@@ -7,7 +7,7 @@
 #### [documentation](https://polar.js.org) | [npm](http://npmjs.org/package/polar.js) | [github](https://github.com/JellyAlex/polar.js)
 
 
-Polar.js is a quick, intuitive and easy 2D game engine developed in TypeScript for use on the web. It uses WebGL at a low level to deliver performance and an entity component system to ensure scalability and ease of development.
+Polar.js is a quick, intuitive and easy 2D game engine developed in TypeScript for use on the web. It uses WebGL2 to deliver competitive performance and an entity component system to ensure scalability and ease of development.
 
 ## Getting Started
 ```js
