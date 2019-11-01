@@ -316,7 +316,6 @@ export class PhysicsDebugInteractionSystem extends System {
 /** A singleton component which stores information for a PhysicsDebugInteractionSystem 
  * @extends Component
 */
-
 export class PhysicsDebugInteractionCP extends Component {
 
 	public currentBody: p2.Body;

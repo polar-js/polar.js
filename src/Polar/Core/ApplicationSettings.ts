@@ -4,4 +4,5 @@ export interface ApplicationSettings {
 	displayMode: string;
 	width: number;
 	height: number;
+	clearColor: number[];
 }

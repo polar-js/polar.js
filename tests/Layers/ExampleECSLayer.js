@@ -75,7 +75,7 @@ class ExampleECSLayer extends Polar.Layer {
 		testButton.onclick = () => {
 			console.log('Adding entity...');
 			const testEntity = this.world.createEntity();
-			testEntity.addComponent(new Polar.TransformCP(0, 0, 0, 0.5));
+			testEntity.addComponent(new Polar.TransformCP(0, 1, 0, 0.5));
 			const texture = new Polar.Texture2D();
 			texture.loadFromPath('textures/1.png');
 			testEntity.addComponent(new Polar.Texture2DCP(texture));

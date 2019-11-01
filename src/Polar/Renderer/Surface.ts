@@ -1,4 +1,6 @@
+import * as glm from 'gl-matrix';
 import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
+import { RenderCommand } from './RenderCommand';
 
 export class Surface {
 	private static canvas: HTMLCanvasElement;
@@ -88,6 +90,10 @@ export class Surface {
 		this.ui.style.width = this.canvas.clientWidth.toString() + 'px';
 		this.ui.style.height = this.canvas.clientHeight.toString() + 'px';
 		
+		if (settings.clearColor && settings.clearColor.length >= 3)
+			RenderCommand.setClearColor(glm.vec4.fromValues(settings.clearColor[0], settings.clearColor[1], settings.clearColor[2], 1.0));
+		else
+			RenderCommand.setClearColor(glm.vec4.fromValues(0.1, 0.1, 0.1, 1.0));
 	}
 
 	/**

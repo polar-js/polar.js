@@ -38,7 +38,6 @@ export abstract class Application {
 
 			const color = vec4.create();
 			color.set([0.0, 0.0, 0.0, 1.0]);
-			RenderCommand.setClearColor(color);
 			RenderCommand.clear();
 			Surface.font.clearRect(0, 0, Surface.get().width, Surface.get().height);
 

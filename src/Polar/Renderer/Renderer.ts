@@ -188,6 +188,7 @@ export  class Renderer {
 		const shader = this.shaderLibrary.get('TextureShader');
 		sprite.getTexture().bind();
 
+		shader.bind();
 		shader.uploadUniformInt('u_Texture', 0);
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
 		shader.uploadUniformMat4('u_Transform', sprite.getTransform());
