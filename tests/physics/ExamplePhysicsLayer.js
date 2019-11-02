@@ -22,9 +22,9 @@ class ExamplePhysicsLayer extends Polar.Layer {
 
 		// Load texture
 		const checkerboard = new Polar.Texture2D();
-		checkerboard.loadFromPath('textures/checkerboard.png');
+		checkerboard.loadFromPath('/textures/checkerboard.png');
 		const circle = new Polar.Texture2D();
-		circle.loadFromPath('textures/circle.png');
+		circle.loadFromPath('/textures/circle.png');
 
 		// Add entities.
 		{
