@@ -3,7 +3,7 @@ class ExampleLayer extends Polar.Layer {
 		super('example');
 
 		const checkerboard = new Polar.Texture2D();
-		checkerboard.loadFromPath('textures/checkerboard.png');
+		checkerboard.loadFromPath('/textures/checkerboard.png');
 		this.checkerboardSprite = new Polar.Sprite(checkerboard);
 		
 		this.timeElapsed = 0;

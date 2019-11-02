@@ -59,7 +59,7 @@ class ExampleECSLayer extends Polar.Layer {
 		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.TransformCP());
 		const checkerboard = new Polar.Texture2D();
-		checkerboard.loadFromPath('textures/checkerboard.png');
+		checkerboard.loadFromPath('/textures/checkerboard.png');
 		entity.addComponent(new Polar.Texture2DCP(checkerboard));
 		this.manager.addEntitySubscriptions(entity.id);
 
@@ -77,7 +77,7 @@ class ExampleECSLayer extends Polar.Layer {
 			const testEntity = this.manager.createEntity();
 			testEntity.addComponent(new Polar.TransformCP(0, 1, 0, 0.5));
 			const texture = new Polar.Texture2D();
-			texture.loadFromPath('textures/1.png');
+			texture.loadFromPath('/textures/1.png');
 			testEntity.addComponent(new Polar.Texture2DCP(texture));
 			testEntity.addComponent(new TestCP());
 			this.manager.addEntitySubscriptions(testEntity.id);
@@ -101,7 +101,7 @@ class ExampleECSLayer extends Polar.Layer {
 			const entity = this.manager.createEntity();
 			entity.addComponent(new Polar.TransformCP(0, -1, 45, 0.2));
 			const texture = new Polar.Texture2D();
-			texture.loadFromPath('textures/2.png');
+			texture.loadFromPath('/textures/2.png');
 			entity.addComponent(new Polar.Texture2DCP(texture));
 			entity.addComponent(new TestCP());
 			this.manager.addEntitySubscriptions(entity.id);
