@@ -25,6 +25,18 @@ export  class Texture2D {
 		s.gl.texParameteri(s.gl.TEXTURE_2D, s.gl.TEXTURE_MAG_FILTER, s.gl.NEAREST);
 	}
 
+	public loadFromImage(image: HTMLImageElement) {
+		this.path = image.src;
+		if (image.complete) {
+			this.createTexture(image);
+		}
+		else {
+			image.addEventListener('load', () => {
+				this.createTexture(image);
+			});
+		}
+	}
+
 	public loadFromPath(path: string) {
 		this.path = path;
 		
@@ -32,12 +44,7 @@ export  class Texture2D {
 			const image = new Image();
 			image.src = this.path;
 			image.addEventListener('load', () => {
-				s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
-				s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, s.gl.RGBA, s.gl.UNSIGNED_BYTE, image);
-				s.gl.generateMipmap(s.gl.TEXTURE_2D);
-				this.loaded = true;
-				this.width = image.clientWidth;
-				this.height = image.clientHeight;
+				this.createTexture(image);
 			});
 		}
 	}
@@ -83,4 +90,12 @@ export  class Texture2D {
 		return this.loaded;
 	}
 
+	private createTexture(image: HTMLImageElement) {
+		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, s.gl.RGBA, s.gl.UNSIGNED_BYTE, image);
+		s.gl.generateMipmap(s.gl.TEXTURE_2D);
+		this.loaded = true;
+		this.width = image.clientWidth;
+		this.height = image.clientHeight;
+	}
 }

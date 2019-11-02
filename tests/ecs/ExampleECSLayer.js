@@ -25,7 +25,6 @@ class TestSystem extends Polar.System {
 		transform.x += 0.5 * dt;
 		transform.y += 0.1 * dt;
 		transform.recalculate();
-		
 	}
 
 	endUpdate(dt) {}
@@ -43,6 +42,11 @@ class ExampleECSLayer extends Polar.Layer {
 	constructor() {
 		super('example');
 
+		this.images = new Polar.ImageLibrary();
+		this.images.loadPath('checkerboard', '/textures/checkerboard.png');
+		this.images.loadPath('test1', '/textures/1.png');
+		this.images.loadPath('test2', '/textures/2.png');
+
 		// Create world manager.
 		this.manager = new Polar.WorldManager();
 
@@ -59,7 +63,7 @@ class ExampleECSLayer extends Polar.Layer {
 		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.TransformCP());
 		const checkerboard = new Polar.Texture2D();
-		checkerboard.loadFromPath('/textures/checkerboard.png');
+		checkerboard.loadFromImage(this.images.get('checkerboard'));
 		entity.addComponent(new Polar.Texture2DCP(checkerboard));
 		this.manager.addEntitySubscriptions(entity.id);
 
@@ -77,7 +81,7 @@ class ExampleECSLayer extends Polar.Layer {
 			const testEntity = this.manager.createEntity();
 			testEntity.addComponent(new Polar.TransformCP(0, 1, 0, 0.5));
 			const texture = new Polar.Texture2D();
-			texture.loadFromPath('/textures/1.png');
+			texture.loadFromImage(this.images.get('test1'));
 			testEntity.addComponent(new Polar.Texture2DCP(texture));
 			testEntity.addComponent(new TestCP());
 			this.manager.addEntitySubscriptions(testEntity.id);
@@ -101,7 +105,7 @@ class ExampleECSLayer extends Polar.Layer {
 			const entity = this.manager.createEntity();
 			entity.addComponent(new Polar.TransformCP(0, -1, 45, 0.2));
 			const texture = new Polar.Texture2D();
-			texture.loadFromPath('/textures/2.png');
+			texture.loadFromImage(this.images.get('test2'));
 			entity.addComponent(new Polar.Texture2DCP(texture));
 			entity.addComponent(new TestCP());
 			this.manager.addEntitySubscriptions(entity.id);

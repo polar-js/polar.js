@@ -34,6 +34,7 @@ export * from 'Polar/Renderer/Sprite';
 export * from 'Polar/Renderer/TextureAtlas';
 export * from 'Polar/Renderer/ParticleEmitter';
 export * from 'Polar/Renderer/ParticleRenderer';
+export * from 'Polar/Renderer/ImageLibrary';
 export * from 'Polar/ECS/ECS';
 export * from 'Polar/ECS/Components';
 export * from 'Polar/ECS/Systems/CameraControllerSystem';
