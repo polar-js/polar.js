@@ -9,6 +9,7 @@
     "scripts": {
         "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
         "watch": "node build.js watch",
+        "tests": "npx http-server tests -c-1",
         "build": "npx typescript && node build prod",
         "clean": "rm -r docs umd dist && rm tests/polar.min.js || true"
     },
