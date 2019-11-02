@@ -41,6 +41,7 @@ export  class VertexArray {
 	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
 		console.assert(vertexBuffer.getLayout().getElements().length != 0, 'Vertex Buffer has no layout!');
 
+		shader.bind();
 		Surface.gl.bindVertexArray(this.vertexArray);
 		vertexBuffer.bind();
 
@@ -58,8 +59,12 @@ export  class VertexArray {
 				element.normalized, 
 				layout.getStride(),
 				element.offset);
-		}
 
+			if (element.divisor >= 0) {
+				Surface.gl.vertexAttribDivisor(location, element.divisor);
+			}
+		}
+		shader.unbind();
 		this.vertexBuffers.push(vertexBuffer);
 	}
 

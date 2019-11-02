@@ -1,12 +1,15 @@
 import * as glm from 'gl-matrix';
 import { Shader } from 'Polar/Renderer/Shader';
 import { Surface } from 'Polar/Renderer/Surface';
-import { ParticleEmitter } from './ParticleEmitter';
-import { Texture2D } from './Texture';
-import { RenderCommand } from './RenderCommand';
+import { ParticleEmitter } from 'Polar/Renderer/ParticleEmitter';
+import { Texture2D } from 'Polar/Renderer/Texture';
+import { RenderCommand } from 'Polar/Renderer/RenderCommand';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import * as ParticleUpdateShaderSource from 'Polar/Renderer/ShaderSource/ParticleUpdateShaderSource';
-import * as ParticleRenderShaderSource from 'Polar/Renderer/ShaderSource/ParticleRenderShaderSource';
+import * as ParticlePointShaderSource from 'Polar/Renderer/ShaderSource/ParticlePointShaderSource';
+import * as ParticleTextureShaderSource from 'Polar/Renderer/ShaderSource/ParticleTextureShaderSource';
+import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement, ShaderDataType } from 'Polar/Renderer/Buffer';
+import { VertexArray } from 'Polar/Renderer/VertexArray';
 
 export class ParticleRenderer {
 
@@ -14,25 +17,36 @@ export class ParticleRenderer {
 	private static readonly RAND_HEIGHT = 512;
 
 	private static updateShader: Shader;
-	private static renderShader: Shader;
+	private static renderPointShader: Shader;
+	private static renderTextureShader: Shader;
 	private static randTexture: Texture2D;
+	
 
 	private static viewProjectionMatrix: glm.mat4;
 
 	public static init() {
-		this.updateShader = new Shader('ParticleUpdateShader', ParticleUpdateShaderSource.getVertexSource(), ParticleUpdateShaderSource.getFragmentSource(), 
-			['v_Position', 'v_Age', 'v_Life', 'v_Velocity']);
-		this.renderShader = new Shader('ParticleRenderShader', ParticleRenderShaderSource.getVertexSource(), ParticleRenderShaderSource.getFragmentSource());
+		// SETUP SHADERS //
+		this.updateShader = new Shader('ParticleUpdateShader', ParticleUpdateShaderSource.getVertexSource(), ParticleUpdateShaderSource.getFragmentSource(), ['v_Position', 'v_Age', 'v_Life', 'v_Velocity']);
+		this.renderPointShader = new Shader('ParticlePointShader', ParticlePointShaderSource.getVertexSource(), ParticlePointShaderSource.getFragmentSource());
+		this.renderTextureShader = new Shader('ParticleTextureShader', ParticleTextureShaderSource.getVertexSource(), ParticleTextureShaderSource.getFragmentSource());
+
+		// SETUP RANDOM TEXTURE //
 		this.randTexture = new Texture2D();
 		this.randTexture.loadFromArray(this.randomRGData(this.RAND_WIDTH, this.RAND_HEIGHT), this.RAND_WIDTH, this.RAND_HEIGHT, Surface.gl.RG8, Surface.gl.RG);
+
+		
 	}
 
 	public static getUpdateShader(): Shader {
 		return this.updateShader;
 	}
 
-	public static getRenderShader(): Shader {
-		return this.renderShader;
+	public static getRenderPointShader(): Shader {
+		return this.renderPointShader;
+	}
+
+	public static getRenderTextureShader(): Shader {
+		return this.renderTextureShader;
 	}
 
 	/** Begin the rendering of a scene. */
@@ -76,11 +90,27 @@ export class ParticleRenderer {
 
 		// RENDER EMITTER //
 		emitter.vertexArrays[emitter.read + 2].bind();
-		this.renderShader.bind();
-		this.renderShader.uploadUniformFloat('u_zIndex', emitter.zIndex);
-		this.renderShader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
-		this.renderShader.uploadUniformFloat('u_FadeTime', emitter.fadeTime);
-		RenderCommand.drawArrays(Math.floor(emitter.bornParticles), Surface.gl.POINTS);
+		if (emitter.mode === 'TEXTURE') {
+			this.renderTextureShader.bind();
+			this.renderTextureShader.uploadUniformFloat('u_zIndex', emitter.zIndex);
+			this.renderTextureShader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
+			this.renderTextureShader.uploadUniformFloat('u_FadeTime', emitter.fadeTime);
+			this.renderTextureShader.uploadUniformFloat('u_Scale', emitter.scale);
+			this.renderTextureShader.uploadUniformFloat('u_ShrinkTime', emitter.shrinkTime);
+			this.renderTextureShader.uploadUniformInt('u_Texture', 0);
+			emitter.texture.bind();
+			RenderCommand.drawArraysInstanced(6, Math.floor(emitter.bornParticles));
+		}
+		else {
+			this.renderPointShader.bind();
+			this.renderPointShader.uploadUniformFloat('u_zIndex', emitter.zIndex);
+			this.renderPointShader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
+			this.renderPointShader.uploadUniformFloat('u_FadeTime', emitter.fadeTime);
+			RenderCommand.drawArrays(Math.floor(emitter.bornParticles), Surface.gl.POINTS);
+		}
+		
+		
+		
 
 		// SWAP BUFFERS //
 		let tmp = emitter.read;

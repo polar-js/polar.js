@@ -4,7 +4,7 @@ export enum ShaderDataType {
 	None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
 }
 
-export function shaderDatTypeSizes(type: ShaderDataType): number {
+export function shaderDataTypeSizes(type: ShaderDataType): number {
 	switch (type) {
 	case ShaderDataType.Float:  return 4;
 	case ShaderDataType.Float2: return 4 * 2;
@@ -27,13 +27,15 @@ export class BufferElement
 	public size: number;
 	public offset: number;
 	public normalized: boolean;
+	public divisor: number;
 
-	public constructor(type: ShaderDataType, name: string, normalized: boolean = false) {
+	public constructor(type: ShaderDataType, name: string, normalized: boolean = false, divisor: number = -1) {
 		this.type = type;
 		this.name = name;
-		this.size = shaderDatTypeSizes(type);
+		this.size = shaderDataTypeSizes(type);
 		this.offset = 0;
 		this.normalized = normalized;
+		this.divisor = divisor;
 	}
 
 	public getComponentCount(): number {

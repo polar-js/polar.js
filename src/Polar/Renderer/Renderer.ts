@@ -17,7 +17,7 @@ export  class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
 	private static shaderLibrary: ShaderLibrary;
 
-	private static textureQuadVA: VertexArray;
+	public static textureQuadVA: VertexArray;
 	private static colorQuadVA: VertexArray;
 	private static outlineQuadVA: VertexArray;
 	private static lineVA: VertexArray;
@@ -195,7 +195,7 @@ export  class Renderer {
 		shader.uploadUniformMat4('u_Transform', sprite.getTransform());
 
 		this.textureQuadVA.bind();
-		RenderCommand.drawIndexed(this.textureQuadVA);
+		RenderCommand.drawElements(this.textureQuadVA);
 	}
 
 	/** Submit a texture for rendering.
@@ -212,7 +212,7 @@ export  class Renderer {
 		shader.uploadUniformMat4('u_Transform', transform);
 
 		this.textureQuadVA.bind();
-		RenderCommand.drawIndexed(this.textureQuadVA);
+		RenderCommand.drawElements(this.textureQuadVA);
 	}
 
 	public static submitColored(color: glm.vec4, transform: glm.mat4) {
@@ -224,7 +224,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.textureQuadVA.bind();
-		RenderCommand.drawIndexed(this.textureQuadVA);
+		RenderCommand.drawElements(this.textureQuadVA);
 	}
 
 	public static submitLines(linesVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
@@ -236,7 +236,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		linesVA.bind();
-		RenderCommand.drawIndexedLines(linesVA);
+		RenderCommand.drawElements(linesVA, Surface.gl.LINES);
 	}
 
 	public static submitLineStrip(stripVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
@@ -248,7 +248,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		stripVA.bind();
-		RenderCommand.drawIndexedLineStrip(stripVA);
+		RenderCommand.drawElements(stripVA, Surface.gl.LINE_STRIP);
 	}
 
 	/**
@@ -266,7 +266,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		loopVA.bind();
-		RenderCommand.drawIndexedLineLoop(loopVA);
+		RenderCommand.drawElements(loopVA, Surface.gl.LINE_LOOP);
 	}
 
 	public static submitColoredOutline(color: glm.vec4, transform: glm.mat4) {
@@ -278,7 +278,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.outlineQuadVA.bind();
-		RenderCommand.drawIndexedLineLoop(this.outlineQuadVA);
+		RenderCommand.drawElements(this.outlineQuadVA, Surface.gl.LINE_LOOP);
 	}
 
 	public static submitLine(x0: number, y0: number, x1: number, y1: number, color: glm.vec4, zIndex: number = 0) {
@@ -299,7 +299,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.lineVA.bind();
-		RenderCommand.drawIndexedLineLoop(this.lineVA);
+		RenderCommand.drawElements(this.lineVA, Surface.gl.LINE_LOOP);
 	}
 
 	public static submitCircle(x: number, y: number, radius: number, color: glm.vec4, zIndex: number = 0) {
@@ -311,7 +311,7 @@ export  class Renderer {
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.circleVA.bind();
-		RenderCommand.drawIndexedLineLoop(this.circleVA);
+		RenderCommand.drawElements(this.circleVA, Surface.gl.LINE_LOOP);;
 	}
 
 	public static screenToWorldPosition(position: glm.vec2): glm.vec2 {

@@ -18,6 +18,16 @@ class ExampleParticleLayer extends Polar.Layer {
 		this.manager.addSystem(new Polar.RenderSystem());
 		this.manager.addSystem(new Polar.ParticleSystem());
 
+		const e = this.manager.createEntity();
+		e.addComponent(new Polar.TransformCP());
+		const checkerboard = new Polar.Texture2D();
+		checkerboard.loadFromPath('/textures/alphatest.png');
+		e.addComponent(new Polar.Texture2DCP(checkerboard));
+		this.manager.addEntitySubscriptions(e.id);
+
+		const texture = new Polar.Texture2D();
+		texture.loadFromPath('/textures/fire.png');
+
 		const emitter = new Polar.ParticleEmitter({
 			origin: [0, 0.5],
 			angle: Math.PI / 2,
@@ -29,8 +39,13 @@ class ExampleParticleLayer extends Polar.Layer {
 			maxSpeed: 0.6,
 			minLife: 1,
 			maxLife: 3,
-			fadeTime: 2,
-			gravity: [0, -1]
+			fadeTime: 0.5,
+			gravity: [0, -1],
+			mode: 'TEXTURE',
+			texture: texture,
+			scale: 0.01,
+			shrinkTime: 0
+			
 		});
 
 		const entity = this.manager.createEntity();

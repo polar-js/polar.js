@@ -1,9 +1,10 @@
 import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType } from 'Polar/Renderer/Buffer';
+import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
 import { Surface } from './Surface';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { Texture2D } from './Texture';
+import { Renderer } from './Renderer';
 
 export class ParticleEmitterSettings {
 	public numParticles: number = 100;
@@ -18,9 +19,15 @@ export class ParticleEmitterSettings {
 	public maxLife: number = 2;
 	public fadeTime: number = 0;
 	public zIndex: number = 0;
+	public mode: string = 'POINTS';
+	public texture: Texture2D;
+	public scale: number = 1.0;
+	public shrinkTime: number = 0.0;
 }
 
 export class ParticleEmitter {
+	
+	public mode: string;
 
 	public buffers: VertexBuffer[];
 	public vertexArrays: VertexArray[];
@@ -40,10 +47,12 @@ export class ParticleEmitter {
 	public maxLife: number;
 	public fadeTime: number;
 	public zIndex: number;
+	public texture: Texture2D;
+	public scale: number;
+	public shrinkTime: number;
 
-	//position: glm.vec2 = glm.vec2.create(), numParticles: number = 100, spawnRate: number = 100, minLife: number = 1, maxLife: number = 2, 
-	//angle: number = 0, spread: number = Math.PI / 2, minSpeed: number = 1, maxSpeed: number = 2, gravity: glm.vec2 = glm.vec2.create(), zIndex: number = 0
 	public constructor(settings: ParticleEmitterSettings) {
+		this.mode = settings.mode.toUpperCase();
 		this.numParticles = settings.numParticles;
 		this.spawnRate = settings.spawnRate;
 		this.gravity = settings.gravity;
@@ -56,7 +65,11 @@ export class ParticleEmitter {
 		this.maxLife = settings.maxLife;
 		this.fadeTime = settings.fadeTime;
 		this.zIndex = settings.zIndex;
-		
+		this.texture = settings.texture;
+		console.log('setting scale to ' + settings.scale);
+		this.scale = settings.scale || 1.0;
+		this.shrinkTime = settings.shrinkTime;
+
 		// VALIDATE INPUT //
 		if (this.maxLife < this.minLife) 
 			console.error('Maximum life cannot be less than minimum life.');
@@ -71,20 +84,69 @@ export class ParticleEmitter {
 		];
 
 		this.vertexArrays = [new VertexArray(), new VertexArray(), new VertexArray(), new VertexArray()];
-		const layout = new BufferLayout([
-			new BufferElement(ShaderDataType.Float2, 'i_Position'),
-			new BufferElement(ShaderDataType.Float, 'i_Age'),
-			new BufferElement(ShaderDataType.Float, 'i_Life'),
-			new BufferElement(ShaderDataType.Float2, 'i_Velocity')
+		let layout;
+		// if (this.mode === 'TEXTURE') {
+		// 	layout = new BufferLayout([
+		// 		new BufferElement(ShaderDataType.Float2, 'i_Position', false, 1),
+		// 		new BufferElement(ShaderDataType.Float, 'i_Age', false, 1),
+		// 		new BufferElement(ShaderDataType.Float, 'i_Life', false, 1),
+		// 		new BufferElement(ShaderDataType.Float2, 'i_Velocity', false, 1)
+		// 	]);
+		// }
+		// else {
+		layout = new BufferLayout([
+			new BufferElement(ShaderDataType.Float2, 'i_Position', false, 0),
+			new BufferElement(ShaderDataType.Float, 'i_Age', false, 0),
+			new BufferElement(ShaderDataType.Float, 'i_Life', false, 0),
+			new BufferElement(ShaderDataType.Float2, 'i_Velocity', false, 0)
 		]);
+		//}
 		
 		this.buffers[0].setLayout(layout);
 		this.buffers[1].setLayout(layout);
 
 		this.vertexArrays[0].addVertexBuffer(this.buffers[0], ParticleRenderer.getUpdateShader());
 		this.vertexArrays[1].addVertexBuffer(this.buffers[1], ParticleRenderer.getUpdateShader());
-		this.vertexArrays[2].addVertexBuffer(this.buffers[0], ParticleRenderer.getRenderShader());
-		this.vertexArrays[3].addVertexBuffer(this.buffers[1], ParticleRenderer.getRenderShader());
+		
+
+		if (this.mode === 'TEXTURE') {
+			layout = new BufferLayout([
+				new BufferElement(ShaderDataType.Float2, 'i_Position', false, 1),
+				new BufferElement(ShaderDataType.Float, 'i_Age', false, 1),
+				new BufferElement(ShaderDataType.Float, 'i_Life', false, 1),
+				new BufferElement(ShaderDataType.Float2, 'i_Velocity', false, 1)
+			]);
+			this.buffers[0].setLayout(layout);
+			this.buffers[1].setLayout(layout);
+			this.vertexArrays[2].addVertexBuffer(this.buffers[0], ParticleRenderer.getRenderTextureShader());
+			this.vertexArrays[3].addVertexBuffer(this.buffers[1], ParticleRenderer.getRenderTextureShader());
+			
+			// SETUP TEXTURE RENDERING BUFFERS //
+
+			const quadVertices = [
+				-0.5, -0.5, 0.0, 1.0,
+				0.5, -0.5, 1.0, 1.0,
+				0.5,  0.5, 1.0, 0.0,
+				-0.5, -0.5, 0.0, 1.0,
+				0.5,  0.5, 1.0, 0.0,
+				-0.5,  0.5, 0.0, 0.0
+			];
+			const quadVB = new VertexBuffer(new Float32Array(quadVertices));
+
+			const quadLayout = new BufferLayout([
+				new BufferElement(ShaderDataType.Float2, 'i_Coord', false, 0),
+				new BufferElement(ShaderDataType.Float2, 'i_TexCoord', false, 0)
+			]);
+
+			quadVB.setLayout(quadLayout);
+			this.vertexArrays[2].addVertexBuffer(quadVB, ParticleRenderer.getRenderTextureShader());
+			this.vertexArrays[3].addVertexBuffer(quadVB, ParticleRenderer.getRenderTextureShader());
+
+		}
+		else {
+			this.vertexArrays[2].addVertexBuffer(this.buffers[0], ParticleRenderer.getRenderPointShader());
+			this.vertexArrays[3].addVertexBuffer(this.buffers[1], ParticleRenderer.getRenderPointShader());
+		}
 	}
 }
 

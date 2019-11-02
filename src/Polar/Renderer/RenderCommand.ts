@@ -17,23 +17,19 @@ export class RenderCommand {
 		Surface.gl.clear(Surface.gl.COLOR_BUFFER_BIT | Surface.gl.DEPTH_BUFFER_BIT);
 	}
 
-	public static drawIndexed(vertexArray: VertexArray) {
-		Surface.gl.drawElements(Surface.gl.TRIANGLES, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
+	public static drawElements(vertexArray: VertexArray, mode: number = Surface.gl.TRIANGLES) {
+		Surface.gl.drawElements(mode, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
 	}
 
-	public static drawIndexedLines(vertexArray: VertexArray) {
-		Surface.gl.drawElements(Surface.gl.LINES, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
-	}
-
-	public static drawIndexedLineStrip(vertexArray: VertexArray) {
-		Surface.gl.drawElements(Surface.gl.LINE_STRIP, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
-	}
-
-	public static drawIndexedLineLoop(vertexArray: VertexArray) {
-		Surface.gl.drawElements(Surface.gl.LINE_LOOP, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, 0);
+	public static drawElementsInstanced(vertexArray: VertexArray, instanceCount: number, mode: number = Surface.gl.TRIANGLES, offset: number = 0) {
+		Surface.gl.drawElementsInstanced(mode, vertexArray.getIndexBuffer().getCount(), Surface.gl.UNSIGNED_SHORT, offset, instanceCount);
 	}
 
 	public static drawArrays(count: number, mode: number = Surface.gl.POINTS) {
 		Surface.gl.drawArrays(mode, 0, count);
+	}
+
+	public static drawArraysInstanced(count: number, instanceCount: number, mode: number = Surface.gl.TRIANGLES) {
+		Surface.gl.drawArraysInstanced(mode, 0, count, instanceCount);
 	}
 }
