@@ -8,7 +8,7 @@ class ExamplePhysicsLayer extends Polar.Layer {
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
 		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight, 1, true));
-		this.manager.addSingleton(new Polar.PhysicsWorldCP({ gravity: [0, 0] }));
+		this.manager.addSingleton(new Polar.PhysicsWorldCP({ gravity: [0, -3] }));
 		this.manager.addSingleton(new Polar.PhysicsDebugInteractionCP(true));
 		this.manager.addSingleton(new Polar.FPSDebugCP());
 
