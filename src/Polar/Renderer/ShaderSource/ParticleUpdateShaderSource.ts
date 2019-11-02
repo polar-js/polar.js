@@ -18,10 +18,10 @@ export function getVertexSource(): string {
 			layout(location = 2) in float i_Life;
 			layout(location = 3) in vec2 i_Velocity;
 
-			/*layout(location = 0)*/ out vec2 v_Position;
-			/*layout(location = 1)*/ out float v_Age;
-			/*layout(location = 2)*/ out float v_Life;
-			/*layout(location = 3)*/ out vec2 v_Velocity;
+			out vec2 v_Position;
+			out float v_Age;
+			out float v_Life;
+			out vec2 v_Velocity;
 
 			void main() {
 				if (i_Age >= i_Life) {
