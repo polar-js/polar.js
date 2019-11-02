@@ -8,10 +8,10 @@ import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer 
 import { Sprite } from 'Polar/Renderer/Sprite';
 import { Texture2D } from 'Polar/Renderer/Texture';
 import { Surface } from 'Polar/Renderer/Surface';
+import { createTransform } from 'Polar/Util/Math';
+import { ParticleRenderer } from './ParticleRenderer';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
-
-import { createTransform } from 'Polar/Util/Math';
 
 export  class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
@@ -26,6 +26,7 @@ export  class Renderer {
 	/** Initialize the renderer. */
 	public static init() {
 		RenderCommand.init();
+		ParticleRenderer.init();
 
 		this.initShaders();
 		this.initBuffers();

@@ -44,24 +44,24 @@ class ExampleECSLayer extends Polar.Layer {
 		super('example');
 
 		// Create world manager.
-		this.world = new Polar.WorldManager();
+		this.manager = new Polar.WorldManager();
 
 		// Initialize singletons.
-		this.world.addSingleton(new Polar.CameraCP());
-		this.world.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
+		this.manager.addSingleton(new Polar.CameraCP());
+		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
 
 		// Add systems.
-		this.world.addSystem(new TestSystem());
-		this.world.addSystem(new Polar.CameraControllerSystem());
-		this.world.addSystem(new Polar.RenderSystem());
+		this.manager.addSystem(new TestSystem());
+		this.manager.addSystem(new Polar.CameraControllerSystem());
+		this.manager.addSystem(new Polar.RenderSystem());
 
 		// Add entities.
-		const entity = this.world.createEntity();
+		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.TransformCP());
 		const checkerboard = new Polar.Texture2D();
 		checkerboard.loadFromPath('/textures/checkerboard.png');
 		entity.addComponent(new Polar.Texture2DCP(checkerboard));
-		this.world.addEntitySubscriptions(entity.id);
+		this.manager.addEntitySubscriptions(entity.id);
 
 		this.fpsTimer = new Polar.Timer(1, false, true);
 		this.deltaNum = 0;
@@ -74,13 +74,13 @@ class ExampleECSLayer extends Polar.Layer {
 
 		testButton.onclick = () => {
 			console.log('Adding entity...');
-			const testEntity = this.world.createEntity();
+			const testEntity = this.manager.createEntity();
 			testEntity.addComponent(new Polar.TransformCP(0, 1, 0, 0.5));
 			const texture = new Polar.Texture2D();
 			texture.loadFromPath('/textures/1.png');
 			testEntity.addComponent(new Polar.Texture2DCP(texture));
 			testEntity.addComponent(new TestCP());
-			this.world.addEntitySubscriptions(testEntity.id);
+			this.manager.addEntitySubscriptions(testEntity.id);
 		};
 
 		this.entityTimer = new Polar.Timer(0.5, false, true);
@@ -98,15 +98,15 @@ class ExampleECSLayer extends Polar.Layer {
 		Polar.Surface.font.fillText(`FPS: ${this.currentFPS}`, 10, 30);
 
 		if (this.entityTimer.update(deltaTime)) {
-			const entity = this.world.createEntity();
+			const entity = this.manager.createEntity();
 			entity.addComponent(new Polar.TransformCP(0, -1, 45, 0.2));
 			const texture = new Polar.Texture2D();
 			texture.loadFromPath('/textures/2.png');
 			entity.addComponent(new Polar.Texture2DCP(texture));
 			entity.addComponent(new TestCP());
-			this.world.addEntitySubscriptions(entity.id);
+			this.manager.addEntitySubscriptions(entity.id);
 		}
 		
-		this.world.onUpdate(deltaTime);
+		this.manager.onUpdate(deltaTime);
 	}
 }

@@ -15,25 +15,29 @@ class ExampleParticleLayer extends Polar.Layer {
 		this.manager.addSystem(new Polar.CameraControllerSystem());
 		this.manager.addSystem(new Polar.FPSDebugSystem());
 		this.manager.addSystem(new Polar.RenderSystem());
+		this.manager.addSystem(new Polar.ParticleSystem());
 
-		// Add entities.
-		// const entity = this.manager.createEntity();
-		// entity.addComponent(new Polar.TransformCP());
-		// const checkerboard = new Polar.Texture2D();
-		// checkerboard.loadFromPath('textures/checkerboard.png');
-		// entity.addComponent(new Polar.Texture2DCP(checkerboard));
-		// this.manager.addEntitySubscriptions(entity.id);
+		const emitter = new Polar.ParticleEmitter({
+			origin: [0, 0.5],
+			angle: Math.PI / 12,
+			spread: Math.PI / 5,
+			numParticles: 20,
+			spawnRate: 10,
+			zIndex: 1,
+			minSpeed: 0.3,
+			maxSpeed: 0.6,
+			minLife: 1,
+			maxLife: 3,
+			fadeTime: 2,
+			gravity: [0, -1]
+		});
 
-		this.emitter = new Polar.ParticleEmitter(Polar.glm.vec2.create(), 1000, 1000, 0.5, 1, 0, Math.PI / 2, 1, 2, Polar.glm.vec2.fromValues(0, -9.8));
-		this.emitter2 = new Polar.ParticleEmitter(Polar.glm.vec2.fromValues(-1, 1), 1000, 1000, 0.5, 1, Math.PI, Math.PI / 2, 1, 2, Polar.glm.vec2.fromValues(0, -9.8));
+		const entity = this.manager.createEntity();
+		entity.addComponent(new Polar.ParticleEmitterCP(emitter));
+		this.manager.addEntitySubscriptions(entity.id);
 	}
 
 	onUpdate(deltaTime) {
 		this.manager.onUpdate(deltaTime);
-
-		Polar.ParticleRenderer.beginParticleScene(this.manager.getSingleton('Polar:Camera').camera);
-		Polar.ParticleRenderer.renderParticleEmitter(this.emitter, deltaTime, 0);
-		Polar.ParticleRenderer.renderParticleEmitter(this.emitter2, deltaTime, 0);
-		Polar.ParticleRenderer.endParticleScene();
 	}
 }

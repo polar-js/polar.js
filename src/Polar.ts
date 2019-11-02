@@ -32,15 +32,15 @@ export * from 'Polar/Renderer/Texture';
 export * from 'Polar/Renderer/ShaderLibrary';
 export * from 'Polar/Renderer/Sprite';
 export * from 'Polar/Renderer/TextureAtlas';
+export * from 'Polar/Renderer/ParticleEmitter';
+export * from 'Polar/Renderer/ParticleRenderer';
 export * from 'Polar/ECS/ECS';
 export * from 'Polar/ECS/Components';
 export * from 'Polar/ECS/Systems/CameraControllerSystem';
 export * from 'Polar/ECS/Systems/RenderSystem';
 export * from 'Polar/ECS/Systems/Physics';
+export * from 'Polar/ECS/Systems/ParticleSystem';
 export * from 'Polar/Util/Timer';
 export * from 'Polar/Util/OrthographicCameraController';
 export * from 'Polar/Util/Math';
 export * from 'Polar/ECS/Systems/FPSDebugSystem';
-
-export * from 'Polar/Renderer/ParticleEmitter';
-export * from 'Polar/Renderer/ParticleRenderer';

@@ -1,12 +1,12 @@
 import * as glm from 'gl-matrix';
 import { Shader } from 'Polar/Renderer/Shader';
 import { Surface } from 'Polar/Renderer/Surface';
-import * as ParticleUpdateShaderSource from 'Polar/Renderer/ShaderSource/ParticleUpdateShaderSource';
-import * as ParticleRenderShaderSource from 'Polar/Renderer/ShaderSource/ParticleRenderShaderSource';
 import { ParticleEmitter } from './ParticleEmitter';
 import { Texture2D } from './Texture';
 import { RenderCommand } from './RenderCommand';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
+import * as ParticleUpdateShaderSource from 'Polar/Renderer/ShaderSource/ParticleUpdateShaderSource';
+import * as ParticleRenderShaderSource from 'Polar/Renderer/ShaderSource/ParticleRenderShaderSource';
 
 export class ParticleRenderer {
 
@@ -21,7 +21,7 @@ export class ParticleRenderer {
 
 	public static init() {
 		this.updateShader = new Shader('ParticleUpdateShader', ParticleUpdateShaderSource.getVertexSource(), ParticleUpdateShaderSource.getFragmentSource(), 
-			['v_Position', 'v_Age', 'v_Life', 'v_Velocity',]);
+			['v_Position', 'v_Age', 'v_Life', 'v_Velocity']);
 		this.renderShader = new Shader('ParticleRenderShader', ParticleRenderShaderSource.getVertexSource(), ParticleRenderShaderSource.getFragmentSource());
 		this.randTexture = new Texture2D();
 		this.randTexture.loadFromArray(this.randomRGData(this.RAND_WIDTH, this.RAND_HEIGHT), this.RAND_WIDTH, this.RAND_HEIGHT, Surface.gl.RG8, Surface.gl.RG);
@@ -41,20 +41,18 @@ export class ParticleRenderer {
 	}
 
 	/** End the rendering of a scene. */
-	public static endParticleScene() {
+	public static endParticleScene() {}
 
-	}
-
-	public static renderParticleEmitter(emitter: ParticleEmitter, dt: number, zIndex = 0) {
+	public static renderParticleEmitter(emitter: ParticleEmitter, dt: number) {
 		if (emitter.bornParticles < emitter.numParticles) {
-			emitter.bornParticles = Math.min(emitter.numParticles, Math.floor(emitter.bornParticles + emitter.spawnRate * dt));
+			emitter.bornParticles = Math.min(emitter.numParticles, emitter.bornParticles + emitter.spawnRate * dt);
 		}
 
+		// UPDATE EMITTER //
 		this.updateShader.bind();
 		this.updateShader.uploadUniformFloat('u_DeltaTime', dt);
-		// Upload total time?
 		this.updateShader.uploadUniformFloat2('u_Gravity', emitter.gravity);
-		this.updateShader.uploadUniformFloat2('u_Origin', emitter.position);
+		this.updateShader.uploadUniformFloat2('u_Origin', emitter.origin);
 		this.updateShader.uploadUniformFloat('u_Angle', emitter.angle);
 		this.updateShader.uploadUniformFloat('u_Spread', emitter.spread);
 		this.updateShader.uploadUniformFloat('u_MinSpeed', emitter.minSpeed);
@@ -62,7 +60,6 @@ export class ParticleRenderer {
 		
 		this.randTexture.bind();
 		this.updateShader.uploadUniformInt('u_RandNoise', 0);
-		//this.randTexture.unbind();
 
 		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, null);
 
@@ -71,18 +68,19 @@ export class ParticleRenderer {
 		Surface.gl.enable(Surface.gl.RASTERIZER_DISCARD);
 
 		Surface.gl.beginTransformFeedback(Surface.gl.POINTS);
-		RenderCommand.drawArrays(emitter.bornParticles, Surface.gl.POINTS);
+		RenderCommand.drawArrays(Math.floor(emitter.bornParticles), Surface.gl.POINTS);
 		Surface.gl.endTransformFeedback();
 
 		Surface.gl.disable(Surface.gl.RASTERIZER_DISCARD);
 		emitter.buffers[emitter.write].unbindBufferBase(Surface.gl.TRANSFORM_FEEDBACK_BUFFER, 0);
 
-		// RENDER //
+		// RENDER EMITTER //
 		emitter.vertexArrays[emitter.read + 2].bind();
 		this.renderShader.bind();
-		this.renderShader.uploadUniformFloat('u_zIndex', zIndex);
+		this.renderShader.uploadUniformFloat('u_zIndex', emitter.zIndex);
 		this.renderShader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
-		RenderCommand.drawArrays(emitter.bornParticles, Surface.gl.POINTS);
+		this.renderShader.uploadUniformFloat('u_FadeTime', emitter.fadeTime);
+		RenderCommand.drawArrays(Math.floor(emitter.bornParticles), Surface.gl.POINTS);
 
 		// SWAP BUFFERS //
 		let tmp = emitter.read;
