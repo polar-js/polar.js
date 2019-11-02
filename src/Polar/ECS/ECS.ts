@@ -147,9 +147,13 @@ export abstract class WorldManager {
 	public onUpdate(dt: number) {
 		for (const system of this.systems) {
 			system.beginUpdate(dt);
+		}
+		for (const system of this.systems) {
 			for (const [eid, subIndex] of system.subscribers) {
 				system.onEntityUpdate(dt, this.entities.get(eid), subIndex);
 			}
+		}
+		for (const system of this.systems) {
 			system.endUpdate(dt);
 		}
 	}

@@ -5,19 +5,19 @@ import { Surface } from './Surface';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { Texture2D } from './Texture';
 
-export interface ParticleEmitterSettings {
-	numParticles: number;
-	spawnRate: number;
-	gravity: glm.vec2;
-	origin: glm.vec2;
-	angle: number;
-	spread: number;
-	minSpeed: number;
-	maxSpeed: number;
-	minLife: number;
-	maxLife: number;
-	fadeTime: number;
-	zIndex: number;
+export class ParticleEmitterSettings {
+	public numParticles: number = 100;
+	public spawnRate: number = 100;
+	public gravity: glm.vec2 = glm.vec2.create();
+	public origin: glm.vec2 = glm.vec2.create();
+	public angle: number = 0;
+	public spread: number = Math.PI / 2;
+	public minSpeed: number = 1;
+	public maxSpeed: number = 2;
+	public minLife: number = 1;
+	public maxLife: number = 2;
+	public fadeTime: number = 0;
+	public zIndex: number = 0;
 }
 
 export class ParticleEmitter {
@@ -44,18 +44,18 @@ export class ParticleEmitter {
 	//position: glm.vec2 = glm.vec2.create(), numParticles: number = 100, spawnRate: number = 100, minLife: number = 1, maxLife: number = 2, 
 	//angle: number = 0, spread: number = Math.PI / 2, minSpeed: number = 1, maxSpeed: number = 2, gravity: glm.vec2 = glm.vec2.create(), zIndex: number = 0
 	public constructor(settings: ParticleEmitterSettings) {
-		this.numParticles = settings.numParticles || 100;
-		this.spawnRate = settings.spawnRate || 100;
-		this.gravity = settings.gravity || glm.vec2.create();
-		this.origin = settings.origin || glm.vec2.create();
-		this.angle = settings.angle || 0;
-		this.spread = settings.spread || Math.PI / 2;
-		this.minSpeed = settings.minSpeed || 1;
-		this.maxSpeed = settings.maxSpeed || 2;
-		this.minLife = settings.minLife || 1;
-		this.maxLife = settings.maxLife || 2;
-		this.fadeTime = settings.fadeTime || 0;
-		this.zIndex = settings.zIndex || 0;
+		this.numParticles = settings.numParticles;
+		this.spawnRate = settings.spawnRate;
+		this.gravity = settings.gravity;
+		this.origin = settings.origin;
+		this.angle = settings.angle;
+		this.spread = settings.spread;
+		this.minSpeed = settings.minSpeed;
+		this.maxSpeed = settings.maxSpeed;
+		this.minLife = settings.minLife;
+		this.maxLife = settings.maxLife;
+		this.fadeTime = settings.fadeTime;
+		this.zIndex = settings.zIndex;
 		
 		// VALIDATE INPUT //
 		if (this.maxLife < this.minLife) 
