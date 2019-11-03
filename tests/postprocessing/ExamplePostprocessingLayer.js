@@ -45,10 +45,30 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.ParticleEmitterCP(emitter));
 		this.manager.addEntitySubscriptions(entity.id);
-		
+
 		// SETUP POST PROCESSING //
-		Polar.Renderer.enablePostprocessing();
-		Polar.Renderer.setPostprocessingShader(new Polar.Shader('ScreenShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource()));
+		const invertShader = new Polar.Shader('InvertShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource());
+		const grayscaleShader = new Polar.Shader('GrayscaleShader', Polar.GrayscaleShaderSource.getVertexSource(), Polar.GrayscaleShaderSource.getFragmentSource());
+
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Invert', invertShader, false));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Grayscale', grayscaleShader, false));
+
+		document.getElementById('invert-colors-checkbox').addEventListener('change', (event) => {
+			if (event.target.checked) {
+				Polar.Renderer.enablePostprocessingStage('Invert');
+			}
+			else {
+				Polar.Renderer.disablePostprocessingStage('Invert');
+			}
+		});
+		document.getElementById('grayscale-checkbox').addEventListener('change', (event) => {
+			if (event.target.checked) {
+				Polar.Renderer.enablePostprocessingStage('Grayscale');
+			}
+			else {
+				Polar.Renderer.disablePostprocessingStage('Grayscale');
+			}
+		});
 	}
 
 	onUpdate(deltaTime) {

@@ -68,7 +68,6 @@ export class ParticleEmitter {
 		this.fadeTime = settings.fadeTime;
 		this.zIndex = settings.zIndex;
 		this.texture = settings.texture;
-		console.log('setting scale to ' + settings.scale);
 		this.scale = settings.scale || 1.0;
 		this.shrinkTime = settings.shrinkTime;
 

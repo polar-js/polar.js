@@ -20,8 +20,9 @@ import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderS
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
 import * as ScreenShaderSource from 'Polar/Renderer/ShaderSource/PassthroughShaderSource';
 import * as InvertShaderSource from 'Polar/Renderer/ShaderSource/InvertShaderSource';
+import * as GrayscaleShaderSource from 'Polar/Renderer/ShaderSource/GrayscaleShaderSource';
 
-export { Application, glm, p2, TextureShaderSource, ColorShaderSource, ScreenShaderSource, InvertShaderSource };
+export { Application, glm, p2, TextureShaderSource, ColorShaderSource, ScreenShaderSource, InvertShaderSource, GrayscaleShaderSource };
 
 export * from 'Polar/Core/Layer';
 export * from 'Polar/Core/Input';
@@ -33,6 +34,7 @@ export * from 'Polar/Renderer/ImageLibrary';
 export * from 'Polar/Renderer/OrthographicCamera';
 export * from 'Polar/Renderer/ParticleEmitter';
 export * from 'Polar/Renderer/ParticleRenderer';
+export * from 'Polar/Renderer/PostprocessingStage';
 export * from 'Polar/Renderer/RenderBuffer';
 export * from 'Polar/Renderer/Renderer';
 export * from 'Polar/Renderer/Shader';
@@ -52,4 +54,3 @@ export * from 'Polar/Util/Timer';
 export * from 'Polar/Util/OrthographicCameraController';
 export * from 'Polar/Util/Math';
 export * from 'Polar/ECS/Systems/FPSDebugSystem';
-

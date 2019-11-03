@@ -9,9 +9,8 @@ import { Sprite } from 'Polar/Renderer/Sprite';
 import { Texture2D } from 'Polar/Renderer/Texture';
 import { Surface } from 'Polar/Renderer/Surface';
 import { createTransform } from 'Polar/Util/Math';
-import { ParticleRenderer } from './ParticleRenderer';
-import { FrameBuffer } from 'Polar/Renderer/FrameBuffer';
-import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
+import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
+import { PostprocessingStage } from 'Polar/Renderer/PostprocessingStage';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
 import * as ScreenShaderSource from 'Polar/Renderer/ShaderSource/PassthroughShaderSource';
@@ -27,18 +26,17 @@ export  class Renderer {
 	private static circleVA: VertexArray;
 	
 	// POST PROCESSING //
-	private static doPostProcessing: boolean = false;
-	private static fbo: FrameBuffer;
-	private static screenVA: VertexArray;
+	private static postprocessingStages: PostprocessingStage[];
 
 	/** Initialize the renderer. */
 	public static init() {
 		RenderCommand.init();
 		ParticleRenderer.init();
 
+		this.postprocessingStages = [];
+
 		this.initShaders();
 		this.initBuffers();
-		this.initPostprocessing();
 	}
 
 	private static initShaders() {
@@ -183,77 +181,41 @@ export  class Renderer {
 		}
 	}
 
-	private static initPostprocessing() {
-		// SETUP FRAME BUFFER //
-		this.fbo = new FrameBuffer();
-		this.fbo.bind();
-
-		// ATTACH TEXTURE //
-		const texture = new Texture2D();
-		texture.loadEmpty(Surface.getWidth(), Surface.getHeight(), Surface.gl.RGBA);
-		texture.bind();
-		this.fbo.attachTexture(texture, Surface.gl.COLOR_ATTACHMENT0);
-		
-		// ATTACH RENDER BUFFER //
-		const rbo = new RenderBuffer();
-		rbo.storage(Surface.getWidth(), Surface.getHeight(), Surface.gl.DEPTH24_STENCIL8);
-		this.fbo.attachRenderbuffer(rbo);
-
-		if (!this.fbo.isComplete())
-			console.error('Framebuffer not complete!');
-		
-		
-		
-		this.screenVA = new VertexArray();
-
-		const quadVertices = [
-			-1, -1, 0.0, 0.0, 0,
-			1, -1, 0.0, 1.0, 0,
-			1,  1, 0.0, 1.0, 1.0,
-			-1,  1, 0.0, 0.0, 1.0
-		];
-
-		const quadVB = new VertexBuffer(new Float32Array(quadVertices));
-
-		const quadIndices = [0, 1, 2, 0, 2, 3];
-		const quadIB = new IndexBuffer(new Uint16Array(quadIndices));
-		this.screenVA.setIndexBuffer(quadIB);
-
-		const quadLayout = new BufferLayout([
-			new BufferElement(ShaderDataType.Float3, 'a_Position'),
-			new BufferElement(ShaderDataType.Float2, 'a_TexCoord')
-		]);
-
-		quadVB.setLayout(quadLayout);
-		this.screenVA.addVertexBuffer(quadVB, this.shaderLibrary.get('ScreenShader'));
-
-		this.fbo.unbind();
-		texture.unbind();
-		this.screenVA.unbind();
-	}
-
 	/** Begin the rendering of a scene. */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		
 		RenderCommand.clear();
-		if (this.doPostProcessing) {
-			this.fbo.bind();
+		for (const stage of this.postprocessingStages) {
+			stage.bind();
 			RenderCommand.clear();
+			stage.unbind();
+		}
+		if (this.postprocessingStages.length >= 1) {
+			const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
+				return stage.isEnabled();
+			});
+			if (next)  {
+				next.bind();
+			}
 		}
 	}
 
 	/** End the rendering of a scene. */
 	public static endScene() {
-		if (this.doPostProcessing) {
-			this.fbo.unbind();
-			this.screenVA.bind();
-			this.fbo.getTexture().bind();
-			const shader = this.shaderLibrary.get('ScreenShader');
-			shader.bind();
-			shader.uploadUniformInt('u_Texture', 0);
-			RenderCommand.drawElements(this.screenVA);
-		}
+		for (let i = 0; i < this.postprocessingStages.length; i++) {
+			const next = this.postprocessingStages.slice(i + 1).find((stage: PostprocessingStage) => {
+				return stage.isEnabled();
+			});
+			if (next) {
+				next.bind();
+			}
+			else {
+				this.postprocessingStages[i].unbind();
+			}
+			if (this.postprocessingStages[i].isEnabled())
+				this.postprocessingStages[i].render();
+		} 
 	}
 
 	/** Submit a sprite for rendering.
@@ -423,22 +385,43 @@ export  class Renderer {
 		return glm.vec2.fromValues(out[0], out[1]);
 	}
 
-	/** Enable postprocessing. */
-	public static enablePostprocessing() {
-		console.log('Enabling post processing...');
-		this.doPostProcessing = true;
-	}
-
-	/** Disable postprocessing. */
-	public static disablePostprocessing() {
-		this.doPostProcessing =  false;
-	}
-
-	/** Set the postprocessing shader.
-	 * @param {Shader} shader The shader.
+	/** 
+	 * Adds a postprocessing stage to the end of the list.
+	 * The order of the list is the order they will be applied.
+	 * @param {PostprocessingStage} stage The stage.
 	 */
-	public static setPostprocessingShader(shader: Shader) {
-		this.shaderLibrary.set(shader, 'ScreenShader');
-		this.initPostprocessing();
+	public static addPostprocessingStage(stage: PostprocessingStage) {
+		this.postprocessingStages.push(stage);
+	}
+
+	/** 
+	 * Adds a postprocessing stage to the end of the list.
+	 * The order of the list is the order they will be applied.
+	 * @param {string} name The name of the stage.
+	 */
+	public static removePostprocessingStage(name: string) {
+		this.postprocessingStages.filter((value: PostprocessingStage, index: number, array: PostprocessingStage[]) => {
+			return value.getName() !== name;
+		});
+	}
+
+	/**
+	 * Enable a postprocessing stage.
+	 * @param {string} name The name of the stage.
+	 */
+	public static enablePostprocessingStage(name: string) {
+		this.postprocessingStages.find((value: PostprocessingStage, index: number, array: PostprocessingStage[]) => {
+			return value.getName() === name;
+		}).enable();
+	}
+
+	/**
+	 * Disable a postprocessing stage.
+	 * @param {string} name The name of the stage.
+	 */
+	public static disablePostprocessingStage(name: string) {
+		this.postprocessingStages.find((value: PostprocessingStage, index: number, array: PostprocessingStage[]) => {
+			return value.getName() === name;
+		}).disable();
 	}
 }

@@ -2,11 +2,24 @@
     <head>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/stylesheet.css">
 
         <title>Particle Rendering Example</title>
     </head>
     <body style="margin: 0">
-        <canvas id="test-canvas"></canvas>
+        <div>
+            <canvas id="test-canvas"></canvas>
+            <div class="game-overlay">
+                <label class="container">Invert Colors
+                    <input type="checkbox" id="invert-colors-checkbox"/>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">Grayscale
+                    <input type="checkbox" id="grayscale-checkbox"/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
 
         <script src="/polar.min.js"></script>
         <script src="ExamplePostprocessingLayer.js"></script>

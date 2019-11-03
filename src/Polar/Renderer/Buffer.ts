@@ -28,14 +28,16 @@ export class BufferElement
 	public offset: number;
 	public normalized: boolean;
 	public divisor: number;
+	public location: number;
 
-	public constructor(type: ShaderDataType, name: string, normalized: boolean = false, divisor: number = -1) {
+	public constructor(type: ShaderDataType, name: string, normalized: boolean = false, divisor: number = -1, location: number = -1) {
 		this.type = type;
 		this.name = name;
 		this.size = shaderDataTypeSizes(type);
 		this.offset = 0;
 		this.normalized = normalized;
 		this.divisor = divisor;
+		this.location = location;
 	}
 
 	public getComponentCount(): number {

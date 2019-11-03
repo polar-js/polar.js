@@ -18,12 +18,6 @@ export class Surface {
 	 */
 	public static font: CanvasRenderingContext2D;
 
-	/**
-	 * A HTML div used to display UI elements
-	 * @static
-	 */
-	public static ui: HTMLDivElement;
-
 	/** 
 	 * Initialize the canvas.
 	 * @param {settings} settings The engine settings.
@@ -53,7 +47,12 @@ export class Surface {
 
 		// CREATE FONT CANVAS //
 		this.fontCanvas = document.createElement('canvas');
-		this.canvas.parentElement.appendChild(this.fontCanvas);
+		if (this.canvas.nextSibling) {
+			this.canvas.parentNode.insertBefore(this.fontCanvas, this.canvas.nextSibling);
+		  }
+		  else {
+			this.canvas.parentNode.appendChild(this.fontCanvas);
+		  }
 		this.fontCanvas.style.position = 'absolute';
 		this.fontCanvas.style.left =  this.canvas.offsetLeft.toString() + 'px';
 		this.fontCanvas.style.top = this.canvas.offsetTop.toString() + 'px';
@@ -73,22 +72,8 @@ export class Surface {
 			this.fontCanvas.width = this.canvas.width;
 			this.fontCanvas.height = this.canvas.height;
 
-			this.ui.style.left =  this.canvas.offsetLeft.toString() + 'px';
-			this.ui.style.top = this.canvas.offsetTop.toString() + 'px';
-			this.ui.style.width = this.canvas.width.toString() + 'px';
-			this.ui.style.height = this.canvas.height.toString() + 'px';
-
 			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});
-
-		// CREATE HTML DIV //
-		this.ui = document.createElement('div');
-		this.canvas.parentElement.appendChild(this.ui);
-		this.ui.style.position = 'absolute';
-		this.ui.style.left =  this.canvas.offsetLeft.toString() + 'px';
-		this.ui.style.top = this.canvas.offsetTop.toString() + 'px';
-		this.ui.style.width = this.canvas.clientWidth.toString() + 'px';
-		this.ui.style.height = this.canvas.clientHeight.toString() + 'px';
 		
 		if (settings.clearColor && settings.clearColor.length >= 3)
 			RenderCommand.setClearColor(glm.vec4.fromValues(settings.clearColor[0], settings.clearColor[1], settings.clearColor[2], 1.0));
@@ -118,8 +103,6 @@ export class Surface {
 		this.canvas.height = height;
 		this.fontCanvas.width = width;
 		this.fontCanvas.height = height;
-		this.ui.style.width = width.toString() + 'px';
-		this.ui.style.height = height.toString() + 'px';
 	}
 
 	public static getWidth(): number {

@@ -47,9 +47,15 @@ export  class VertexArray {
 
 		const layout: BufferLayout = vertexBuffer.getLayout();
 		for (const element of layout.getElements()) {
-			const location = shader.getAttribLocation(element.name);
-			if (location < 0){
-				console.error(`Attribute '${element.name}' not found in shader '${shader.getName()}'.`);
+			let location;
+			if (element.location < 0) {
+				location = shader.getAttribLocation(element.name);
+				if (location < 0){
+					console.error(`Attribute '${element.name}' not found in shader '${shader.getName()}'.`);
+				}
+			}
+			else {
+				location = element.location;
 			}
 			
 			Surface.gl.enableVertexAttribArray(location);
