@@ -23,6 +23,6 @@ export function getFragmentSource(): string {
 	uniform sampler2D u_Texture;
 
 	void main() {
-		color = texture(u_Texture, v_TexCoord);
+		color = vec4(vec3(texture(u_Texture, v_TexCoord)) * (1.0 - distance(vec2(0.5, 0.5), v_TexCoord) / 1.414214), 1.0);
 	}`;
 }

@@ -1,3 +1,4 @@
+import * as glm from 'gl-matrix';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Shader } from 'Polar/Renderer/Shader';
 import { FrameBuffer } from 'Polar/Renderer/FrameBuffer';
@@ -15,10 +16,13 @@ export class PostprocessingStage {
 	private screenVA: VertexArray;
 	private enabled: boolean;
 
-	public constructor(name: string, shader: Shader, enabled = true) {
+	private uniforms: [string, ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4][];
+
+	public constructor(name: string, shader: Shader, enabled = true, uniforms: [string, ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4][] = []) {
 		this.name = name;
 		this.shader = shader;
 		this.enabled = enabled;
+		this.uniforms = uniforms;
 		// SETUP FRAME BUFFER //
 		this.fbo = new FrameBuffer();
 		this.fbo.bind();
@@ -83,6 +87,29 @@ export class PostprocessingStage {
 		this.fbo.getTexture().bind();
 		this.shader.bind();
 		this.shader.uploadUniformInt('u_Texture', 0);
+		for (const uniform of this.uniforms) {
+			if (uniform[1] === ShaderDataType.Int) {
+				this.shader.uploadUniformInt(uniform[0], <number>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Float) {
+				this.shader.uploadUniformFloat(uniform[0], <number>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Float2) {
+				this.shader.uploadUniformFloat2(uniform[0], <glm.vec2>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Float3) {
+				this.shader.uploadUniformFloat3(uniform[0], <glm.vec3>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Float4) {
+				this.shader.uploadUniformFloat4(uniform[0], <glm.vec4>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Mat3) {
+				this.shader.uploadUniformMat3(uniform[0], <glm.mat3>uniform[2]);
+			}
+			else if (uniform[1] === ShaderDataType.Mat4) {
+				this.shader.uploadUniformMat4(uniform[0], <glm.mat4>uniform[2]);
+			}
+		}
 		RenderCommand.drawElements(this.screenVA);
 	}
 

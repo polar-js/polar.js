@@ -13,7 +13,6 @@ import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { PostprocessingStage } from 'Polar/Renderer/PostprocessingStage';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
-import * as ScreenShaderSource from 'Polar/Renderer/ShaderSource/PassthroughShaderSource';
 
 export  class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
@@ -46,8 +45,6 @@ export  class Renderer {
 
 		const colorShader = new Shader('ColorShader', ColorShaderSource.getVertexSource(), ColorShaderSource.getFragmentSource());
 		this.shaderLibrary.add(colorShader);
-
-		this.shaderLibrary.add(new Shader('ScreenShader', ScreenShaderSource.getVertexSource(), ScreenShaderSource.getFragmentSource()));
 	}
 
 	private static initBuffers() {

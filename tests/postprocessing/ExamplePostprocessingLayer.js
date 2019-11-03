@@ -1,4 +1,3 @@
-
 class ExamplePostprocessingLayer extends Polar.Layer {
 	constructor() {
 		super('example');
@@ -49,9 +48,11 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		// SETUP POST PROCESSING //
 		const invertShader = new Polar.Shader('InvertShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource());
 		const grayscaleShader = new Polar.Shader('GrayscaleShader', Polar.GrayscaleShaderSource.getVertexSource(), Polar.GrayscaleShaderSource.getFragmentSource());
+		const vignetteShader = new Polar.Shader('VignetteShader', Polar.VignetteShaderSource.getVertexSource(), Polar.VignetteShaderSource.getFragmentSource());
 
-		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Invert', invertShader, false));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Invert', invertShader), false);
 		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Grayscale', grayscaleShader, false));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Vignette', vignetteShader, false));
 
 		document.getElementById('invert-colors-checkbox').addEventListener('change', (event) => {
 			if (event.target.checked) {
@@ -69,6 +70,18 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 				Polar.Renderer.disablePostprocessingStage('Grayscale');
 			}
 		});
+		document.getElementById('vignette-checkbox').addEventListener('change', (event) => {
+			if (event.target.checked) {
+				Polar.Renderer.enablePostprocessingStage('Vignette');
+			}
+			else {
+				Polar.Renderer.disablePostprocessingStage('Vignette');
+			}
+		});
+
+		Polar.Renderer.disablePostprocessingStage('Invert');
+		Polar.Renderer.disablePostprocessingStage('Grayscale');
+		Polar.Renderer.disablePostprocessingStage('Vignette');
 	}
 
 	onUpdate(deltaTime) {

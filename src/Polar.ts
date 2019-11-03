@@ -18,11 +18,11 @@ import * as glm from 'gl-matrix';
 import * as p2 from 'p2';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
-import * as ScreenShaderSource from 'Polar/Renderer/ShaderSource/PassthroughShaderSource';
 import * as InvertShaderSource from 'Polar/Renderer/ShaderSource/InvertShaderSource';
 import * as GrayscaleShaderSource from 'Polar/Renderer/ShaderSource/GrayscaleShaderSource';
+import * as VignetteShaderSource from 'Polar/Renderer/ShaderSource/VignetteShaderSource';
 
-export { Application, glm, p2, TextureShaderSource, ColorShaderSource, ScreenShaderSource, InvertShaderSource, GrayscaleShaderSource };
+export { Application, glm, p2, TextureShaderSource, ColorShaderSource, InvertShaderSource, GrayscaleShaderSource, VignetteShaderSource };
 
 export * from 'Polar/Core/Layer';
 export * from 'Polar/Core/Input';
