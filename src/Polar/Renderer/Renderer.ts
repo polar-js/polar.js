@@ -10,8 +10,11 @@ import { Texture2D } from 'Polar/Renderer/Texture';
 import { Surface } from 'Polar/Renderer/Surface';
 import { createTransform } from 'Polar/Util/Math';
 import { ParticleRenderer } from './ParticleRenderer';
+import { FrameBuffer } from 'Polar/Renderer/FrameBuffer';
+import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
+import * as ScreenShaderSource from 'Polar/Renderer/ShaderSource/PassthroughShaderSource';
 
 export  class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
@@ -22,6 +25,11 @@ export  class Renderer {
 	private static outlineQuadVA: VertexArray;
 	private static lineVA: VertexArray;
 	private static circleVA: VertexArray;
+	
+	// POST PROCESSING //
+	private static doPostProcessing: boolean = false;
+	private static fbo: FrameBuffer;
+	private static screenVA: VertexArray;
 
 	/** Initialize the renderer. */
 	public static init() {
@@ -30,6 +38,7 @@ export  class Renderer {
 
 		this.initShaders();
 		this.initBuffers();
+		this.initPostprocessing();
 	}
 
 	private static initShaders() {
@@ -39,6 +48,8 @@ export  class Renderer {
 
 		const colorShader = new Shader('ColorShader', ColorShaderSource.getVertexSource(), ColorShaderSource.getFragmentSource());
 		this.shaderLibrary.add(colorShader);
+
+		this.shaderLibrary.add(new Shader('ScreenShader', ScreenShaderSource.getVertexSource(), ScreenShaderSource.getFragmentSource()));
 	}
 
 	private static initBuffers() {
@@ -172,14 +183,77 @@ export  class Renderer {
 		}
 	}
 
+	private static initPostprocessing() {
+		// SETUP FRAME BUFFER //
+		this.fbo = new FrameBuffer();
+		this.fbo.bind();
+
+		// ATTACH TEXTURE //
+		const texture = new Texture2D();
+		texture.loadEmpty(Surface.getWidth(), Surface.getHeight(), Surface.gl.RGBA);
+		texture.bind();
+		this.fbo.attachTexture(texture, Surface.gl.COLOR_ATTACHMENT0);
+		
+		// ATTACH RENDER BUFFER //
+		const rbo = new RenderBuffer();
+		rbo.storage(Surface.getWidth(), Surface.getHeight(), Surface.gl.DEPTH24_STENCIL8);
+		this.fbo.attachRenderbuffer(rbo);
+
+		if (!this.fbo.isComplete())
+			console.error('Framebuffer not complete!');
+		
+		
+		
+		this.screenVA = new VertexArray();
+
+		const quadVertices = [
+			-1, -1, 0.0, 0.0, 0,
+			1, -1, 0.0, 1.0, 0,
+			1,  1, 0.0, 1.0, 1.0,
+			-1,  1, 0.0, 0.0, 1.0
+		];
+
+		const quadVB = new VertexBuffer(new Float32Array(quadVertices));
+
+		const quadIndices = [0, 1, 2, 0, 2, 3];
+		const quadIB = new IndexBuffer(new Uint16Array(quadIndices));
+		this.screenVA.setIndexBuffer(quadIB);
+
+		const quadLayout = new BufferLayout([
+			new BufferElement(ShaderDataType.Float3, 'a_Position'),
+			new BufferElement(ShaderDataType.Float2, 'a_TexCoord')
+		]);
+
+		quadVB.setLayout(quadLayout);
+		this.screenVA.addVertexBuffer(quadVB, this.shaderLibrary.get('ScreenShader'));
+
+		this.fbo.unbind();
+		texture.unbind();
+		this.screenVA.unbind();
+	}
+
 	/** Begin the rendering of a scene. */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
+		
+		RenderCommand.clear();
+		if (this.doPostProcessing) {
+			this.fbo.bind();
+			RenderCommand.clear();
+		}
 	}
 
 	/** End the rendering of a scene. */
 	public static endScene() {
-
+		if (this.doPostProcessing) {
+			this.fbo.unbind();
+			this.screenVA.bind();
+			this.fbo.getTexture().bind();
+			const shader = this.shaderLibrary.get('ScreenShader');
+			shader.bind();
+			shader.uploadUniformInt('u_Texture', 0);
+			RenderCommand.drawElements(this.screenVA);
+		}
 	}
 
 	/** Submit a sprite for rendering.
@@ -215,18 +289,11 @@ export  class Renderer {
 		RenderCommand.drawElements(this.textureQuadVA);
 	}
 
-	public static submitColored(color: glm.vec4, transform: glm.mat4) {
-		const shader = this.shaderLibrary.get('ColorShader');
-
-		shader.bind();
-		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
-		shader.uploadUniformMat4('u_Transform', transform);
-		shader.uploadUniformFloat4('u_Color', color);
-
-		this.textureQuadVA.bind();
-		RenderCommand.drawElements(this.textureQuadVA);
-	}
-
+	/** Draw lines from a vertex array. 
+	 * @param {VertexArray} linesVA The vertex array.
+	 * @param {glm.vec4} color The color used to draw.
+	 * @param {glm.mat4} transform The transformation matrix.
+	*/
 	public static submitLines(linesVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
@@ -239,6 +306,11 @@ export  class Renderer {
 		RenderCommand.drawElements(linesVA, Surface.gl.LINES);
 	}
 
+	/** Draw a line strip from a vertex array.
+	 * @param {VertexArray} stripVA The vertex array.
+	 * @param {glm.vec4} color The color used to draw.
+	 * @param {glm.mat4} transform The transformation matrix.
+	 */
 	public static submitLineStrip(stripVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
@@ -269,6 +341,11 @@ export  class Renderer {
 		RenderCommand.drawElements(loopVA, Surface.gl.LINE_LOOP);
 	}
 
+	/**
+	 * Draw the outline of a quad.
+	 * @param {glm.vec4} color The color used to draw.
+	 * @param {glm.mat4} transform The transformation matrix. 
+	 */
 	public static submitColoredOutline(color: glm.vec4, transform: glm.mat4) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
@@ -281,6 +358,15 @@ export  class Renderer {
 		RenderCommand.drawElements(this.outlineQuadVA, Surface.gl.LINE_LOOP);
 	}
 
+	/**
+	 * Draw a single colored line.
+	 * @param {number} x0 The first x coordinate.
+	 * @param {number} y0 The first y coordinate.
+	 * @param {number} x1 The second x coordinate.
+	 * @param {number} y1 The second y coordinate.
+	 * @param {glm.vec4} color The color used to draw.
+	 * @param {number} [zIndex=0] How far / close the line is to the camera.
+	 */
 	public static submitLine(x0: number, y0: number, x1: number, y1: number, color: glm.vec4, zIndex: number = 0) {
 		const shader = this.shaderLibrary.get('ColorShader');
 		const dx = x1 - x0;
@@ -302,6 +388,14 @@ export  class Renderer {
 		RenderCommand.drawElements(this.lineVA, Surface.gl.LINE_LOOP);
 	}
 
+	/**
+	 * Draw a colored circle outline.
+	 * @param {number} x The x coordinate of the center of the circle.
+	 * @param {number} y The y coordinate of the center of the circle.
+	 * @param {number} radius The radius of the circle.
+	 * @param {glm.vec4} color The color used to draw.
+	 * @param {number} [zIndex=0] How far / close the line is to the camera.
+	 */
 	public static submitCircle(x: number, y: number, radius: number, color: glm.vec4, zIndex: number = 0) {
 		const shader = this.shaderLibrary.get('ColorShader');
 
@@ -314,6 +408,10 @@ export  class Renderer {
 		RenderCommand.drawElements(this.circleVA, Surface.gl.LINE_LOOP);;
 	}
 
+	/** Get the world position from a screen position.
+	 * @param {glm.vec2} position The screen position.
+	 * @returns {glm.vec2} The world position.
+	 */
 	public static screenToWorldPosition(position: glm.vec2): glm.vec2 {
 		const nx = position[0] / Surface.get().width * 2 - 1;
 		const ny = -(position[1] / Surface.get().height * 2 - 1);
@@ -323,5 +421,24 @@ export  class Renderer {
 		out = glm.vec4.transformMat4(out, glm.vec4.fromValues(nx, ny, 1, 1), inverse);
 		
 		return glm.vec2.fromValues(out[0], out[1]);
+	}
+
+	/** Enable postprocessing. */
+	public static enablePostprocessing() {
+		console.log('Enabling post processing...');
+		this.doPostProcessing = true;
+	}
+
+	/** Disable postprocessing. */
+	public static disablePostprocessing() {
+		this.doPostProcessing =  false;
+	}
+
+	/** Set the postprocessing shader.
+	 * @param {Shader} shader The shader.
+	 */
+	public static setPostprocessingShader(shader: Shader) {
+		this.shaderLibrary.set(shader, 'ScreenShader');
+		this.initPostprocessing();
 	}
 }

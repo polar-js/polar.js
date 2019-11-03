@@ -33,9 +33,7 @@ export abstract class Application {
 			const deltaTime = (time - this.lastFrameTime) / 1000;
 			this.lastFrameTime = time;
 
-			RenderCommand.clear();
 			Surface.font.clearRect(0, 0, Surface.get().width, Surface.get().height);
-
 			this.layerStack.onUpdate(deltaTime);
 			this.frameID = window.requestAnimationFrame(update);
 		};

@@ -13,11 +13,19 @@ export  class ShaderLibrary {
 	 * @param {Shader} shader The shader to add.
 	 * @param {string} [name] The name used to access the shader (optional).
 	 */
-	public add(shader: Shader, name: string = null): void {
+	public add(shader: Shader, name?: string) {
 		if (!name) {
 			name = shader.getName();
 		}
 		console.assert(!(name in this.shaders), 'Shader already exists!');
+
+		this.shaders[name] = shader;
+	}
+
+	public set(shader: Shader, name?: string) {
+		if (!name) {
+			name = shader.getName();
+		}
 
 		this.shaders[name] = shader;
 	}

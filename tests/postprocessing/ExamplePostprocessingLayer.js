@@ -1,5 +1,5 @@
 
-class ExampleParticleLayer extends Polar.Layer {
+class ExamplePostprocessingLayer extends Polar.Layer {
 	constructor() {
 		super('example');
 
@@ -12,7 +12,6 @@ class ExampleParticleLayer extends Polar.Layer {
 		this.manager.addSingleton(new Polar.FPSDebugCP());
 
 		// Add systems.
-		this.manager.addSystem(new ParticleWandSystem());
 		this.manager.addSystem(new Polar.CameraControllerSystem());
 		this.manager.addSystem(new Polar.FPSDebugSystem());
 		this.manager.addSystem(new Polar.RenderSystem());
@@ -31,54 +30,28 @@ class ExampleParticleLayer extends Polar.Layer {
 		const emitter = new Polar.ParticleEmitter({
 			origin: [0, 0.5],
 			angle: Math.PI / 2,
-			spread: Math.PI,
-			numParticles: 50,
-			spawnRate: 30,
+			spread: Math.PI / 4,
+			numParticles: 100,
+			spawnRate: 50,
 			zIndex: 1,
 			minSpeed: 0.1,
 			maxSpeed: 0.6,
 			minLife: 1,
 			maxLife: 3,
 			fadeTime: 0.5,
-			gravity: [0, -1],
-			mode: 'TEXTURE',
-			texture: texture,
-			scale: 0.01,
-			shrinkTime: 0
-			
+			gravity: [0, -1]
 		});
 
 		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.ParticleEmitterCP(emitter));
-		entity.addComponent(new ParticleWandCP());
 		this.manager.addEntitySubscriptions(entity.id);
+		
+		// SETUP POST PROCESSING //
+		Polar.Renderer.enablePostprocessing();
+		Polar.Renderer.setPostprocessingShader(new Polar.Shader('ScreenShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource()));
 	}
 
 	onUpdate(deltaTime) {
 		this.manager.onUpdate(deltaTime);
-	}
-
-
-}
-
-class ParticleWandSystem extends Polar.System {
-
-	onAttach() {}
-	onDetach() {}
-
-	beginUpdate(dt) {}
-	endUpdate(dt) {}
-
-	onEntityUpdate(dt, entity, subIndex) {
-		entity.getComponent('Polar:ParticleEmitter').emitter.origin = Polar.Renderer.screenToWorldPosition(Polar.Input.getMousePosition());
-	}
-
-	getComponentTuples() { return [['Sandbox:ParticleWand', 'Polar:ParticleEmitter']]; }
-	getName() { return 'Sandbox:ParticleWandSystem'; }
-}
-
-class ParticleWandCP extends Polar.Component {
-	getType() {
-		return 'Sandbox:ParticleWand';
 	}
 }

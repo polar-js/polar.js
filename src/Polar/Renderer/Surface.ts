@@ -121,4 +121,12 @@ export class Surface {
 		this.ui.style.width = width.toString() + 'px';
 		this.ui.style.height = height.toString() + 'px';
 	}
+
+	public static getWidth(): number {
+		return this.canvas.width;
+	}
+
+	public static getHeight(): number {
+		return this.canvas.height;
+	}
 }

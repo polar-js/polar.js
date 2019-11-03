@@ -49,11 +49,16 @@ export  class Texture2D {
 		}
 	}
 
-	public loadFromArray(pixels: Uint8Array, width: number, height: number, internalFormat?: number, format?: number) {
+	public loadFromArray(pixels: Uint8Array, width: number, height: number, internalFormat: number = s.gl.RGBA, format: number = s.gl.RGBA) {
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
-		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat || s.gl.RGBA, width, height, 0, format || s.gl.RGBA, s.gl.UNSIGNED_BYTE, pixels);
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat , width, height, 0, format, s.gl.UNSIGNED_BYTE, pixels);
 
 		this.loaded = true;
+	}
+
+	public loadEmpty(width: number, height: number, internalFormat: number = s.gl.RGBA, format: number = s.gl.RGBA) {
+		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
+		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat, width, height, 0, format, s.gl.UNSIGNED_BYTE, null);
 	}
 
 	/**
@@ -88,6 +93,10 @@ export  class Texture2D {
 	 */
 	public isLoaded(): boolean {
 		return this.loaded;
+	}
+
+	public getGLTexture(): WebGLTexture {
+		return this.texture;
 	}
 
 	private createTexture(image: HTMLImageElement) {

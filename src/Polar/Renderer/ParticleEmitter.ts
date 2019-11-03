@@ -52,7 +52,9 @@ export class ParticleEmitter {
 	public shrinkTime: number;
 
 	public constructor(settings: ParticleEmitterSettings) {
-		this.mode = settings.mode.toUpperCase();
+		if (settings.mode) this.mode = settings.mode.toUpperCase();
+		else this.mode = 'POINTS';
+		
 		this.numParticles = settings.numParticles;
 		this.spawnRate = settings.spawnRate;
 		this.gravity = settings.gravity;
