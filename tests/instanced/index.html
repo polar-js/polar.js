@@ -10,8 +10,12 @@
         <canvas id="test-canvas"></canvas>
         <div class="game-overlay">
             <label class="slider-container"># Instances
-                <input type="number" min="1" max="10000" value="9" id="num-instance-number">
-                <input type="range" min="1" max="10000" value="9" class="slider" id="num-instance-slider">
+                <input type="number" min="1" max="100000" value="9" id="num-instance-number" disabled>
+                <input type="range" min="1" max="100" value="9" class="slider" id="num-instance-slider">
+            </label>
+            <label class="checkbox-container">Use Instancing
+                <input type="checkbox" id="instancing-checkbox" checked/>
+                <span class="checkmark"></span>
             </label>
         </div>
 

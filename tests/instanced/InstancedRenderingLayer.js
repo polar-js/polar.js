@@ -49,18 +49,23 @@ class InstancedRenderingLayer extends Polar.Layer {
 
 		const numberInput = document.getElementById('num-instance-number');
 		const numberSlider = document.getElementById('num-instance-slider');
+		const instancingCheckbox = document.getElementById('instancing-checkbox');
 		this.numInstances = 9;
-
-		numberInput.onchange = () => {
-			numberSlider.value = numberInput.value;
-			this.numInstances = numberInput.value;
-		};
+		this.doInstancing = true;
+		
 		numberSlider.onchange = () => {
-			numberInput.value = numberSlider.value;
-			this.numInstances = numberSlider.value;
+			numberInput.value = numberSlider.value ** 2;
+			this.numInstances = numberSlider.value ** 2;
+		};
+		instancingCheckbox.onchange = () => {
+			this.doInstancing = instancingCheckbox.checked;
 		};
 
 		this.rotation = 0;
+		
+
+		this.checkerboard = new Polar.Texture2D();
+		this.checkerboard.loadFromPath('/textures/checkerboard.png');
 	}
 
 	finishLoad() {
@@ -86,7 +91,13 @@ class InstancedRenderingLayer extends Polar.Layer {
 					transform = Polar.glm.mat4.fromTranslation(transform, Polar.glm.vec3.fromValues(x * 0.1, y * 0.1, 0.0));
 					transform = Polar.glm.mat4.rotate(transform, transform, this.rotation, Polar.glm.vec3.fromValues(0.0, 0.0, 1.0));
 					transform = Polar.glm.mat4.scale(transform, transform, Polar.glm.vec3.fromValues(0.09, 0.09, 1.0));
-					Polar.InstancedRenderer.submitTextured('checkerboard', transform);
+					
+					if (this.doInstancing) {
+						Polar.InstancedRenderer.submitTextured('checkerboard', transform);
+					}
+					else {
+						Polar.Renderer.submitTextured(this.checkerboard, transform);
+					}
 				}
 			}
 		}
