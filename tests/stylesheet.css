@@ -60,7 +60,7 @@ li a {
     opacity: 0.9;
     top: 20;
     right: 20;
-    padding: 6px 10px 20px;
+    padding: 20px 10px 20px;
 }
 
 input[type=checkbox] {
@@ -80,11 +80,11 @@ input[type=checkbox] {
     background-color: #f0f0f0;
 }
 
-.container:hover input ~ .checkmark {
+.checkbox-container:hover input ~ .checkmark {
     background-color: #ddd;
 }
 
-.container input:checked ~ .checkmark {
+.checkbox-container input:checked ~ .checkmark {
     background-color: #333;
 }
 
@@ -94,11 +94,11 @@ input[type=checkbox] {
     display: none;
 }
   
-.container input:checked ~ .checkmark:after {
+.checkbox-container input:checked ~ .checkmark:after {
     display: block;
 }
   
-.container .checkmark:after {
+.checkbox-container .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;
@@ -110,15 +110,32 @@ input[type=checkbox] {
     transform: rotate(45deg);
 }
 
-.container {
+.checkbox-container {
     display: block;
     position: relative;
     padding-left: 35px;
-    margin-top: 12px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     cursor: pointer;
     font-size: 18px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.slider-container {
+    display: block;
+    position: relative;
+    font-size: 18px;
+    padding: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.slider-container .slider {
+    display: block;
+    width: 100%;
 }

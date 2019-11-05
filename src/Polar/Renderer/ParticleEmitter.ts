@@ -86,22 +86,12 @@ export class ParticleEmitter {
 
 		this.vertexArrays = [new VertexArray(), new VertexArray(), new VertexArray(), new VertexArray()];
 		let layout;
-		// if (this.mode === 'TEXTURE') {
-		// 	layout = new BufferLayout([
-		// 		new BufferElement(ShaderDataType.Float2, 'i_Position', false, 1),
-		// 		new BufferElement(ShaderDataType.Float, 'i_Age', false, 1),
-		// 		new BufferElement(ShaderDataType.Float, 'i_Life', false, 1),
-		// 		new BufferElement(ShaderDataType.Float2, 'i_Velocity', false, 1)
-		// 	]);
-		// }
-		// else {
 		layout = new BufferLayout([
 			new BufferElement(ShaderDataType.Float2, 'i_Position', false, 0),
 			new BufferElement(ShaderDataType.Float, 'i_Age', false, 0),
 			new BufferElement(ShaderDataType.Float, 'i_Life', false, 0),
 			new BufferElement(ShaderDataType.Float2, 'i_Velocity', false, 0)
 		]);
-		//}
 		
 		this.buffers[0].setLayout(layout);
 		this.buffers[1].setLayout(layout);

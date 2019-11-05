@@ -2,6 +2,7 @@ import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 import { Shader } from 'Polar/Renderer/Shader';
 import { RenderCommand } from 'Polar/Renderer/RenderCommand';
+import { InstancedRenderer } from 'Polar/Renderer/InstancedRenderer';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
@@ -31,6 +32,7 @@ export  class Renderer {
 	public static init() {
 		RenderCommand.init();
 		ParticleRenderer.init();
+		InstancedRenderer.init();
 
 		this.postprocessingStages = [];
 
@@ -196,10 +198,14 @@ export  class Renderer {
 				next.bind();
 			}
 		}
+
+		InstancedRenderer.beginScene(camera);
 	}
 
 	/** End the rendering of a scene. */
 	public static endScene() {
+		InstancedRenderer.endScene();
+
 		for (let i = 0; i < this.postprocessingStages.length; i++) {
 			const next = this.postprocessingStages.slice(i + 1).find((stage: PostprocessingStage) => {
 				return stage.isEnabled();
@@ -212,7 +218,7 @@ export  class Renderer {
 			}
 			if (this.postprocessingStages[i].isEnabled())
 				this.postprocessingStages[i].render();
-		} 
+		}
 	}
 
 	/** Submit a sprite for rendering.

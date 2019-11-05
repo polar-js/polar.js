@@ -1,16 +1,16 @@
 import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 import * as glm from 'gl-matrix';
+import { Texture2D } from './Texture';
 
 export class AtlasEntry extends Rectangle {
-	public path: string;
+	public alias: string;
 	public image: HTMLImageElement;
-	public loaded: boolean = false;
 
-	public uv: glm.vec4;
+	public bounds: glm.vec4;
 
-	constructor(path: string) {
+	constructor(alias: string) {
 		super();
-		this.path = path;
+		this.alias = alias;
 	}
 }
 
@@ -19,39 +19,44 @@ export class TextureAtlas {
 	private entries: Map<string, AtlasEntry>;
 	private canvas: HTMLCanvasElement;
 	private context: CanvasRenderingContext2D;
-	private image: HTMLImageElement;
+	private texture: Texture2D;
 
-	public constructor(paths: string[]) {
+	public constructor() {
 		this.entries = new Map<string, AtlasEntry>();
-		this.image = new Image();
-		const rawEntries: AtlasEntry[] = [];
-		let numLoaded: number = 0;
-
 		this.canvas = document.createElement('canvas');
 		this.context = this.canvas.getContext('2d');
+		this.texture = new Texture2D();
 
-		for (const path of paths) {
-			const entry = new AtlasEntry(path);
+		// DEBUG TESTING //
+		//document.getElementsByTagName('body')[0].appendChild(this.canvas);
+	}
+
+	public setImages(images: [string, HTMLImageElement][]) {
+		
+		const rawEntries: AtlasEntry[] = [];
+
+		for (const [alias, image] of images) {
+			if (!image.complete) {
+				console.error(`Image '${alias}' not loaded.`);
+			}
+
+			const entry = new AtlasEntry(alias);
 			rawEntries.push(entry);
 
-			entry.image = new Image();
-			entry.image.src = path;
-			entry.image.addEventListener('load', () => {
-				numLoaded++;
-				console.log('loaded ' + entry.image.src);
-				entry.loaded = true;
-				entry.width = entry.image.width;
-				entry.height = entry.image.height;
-
-				if (numLoaded == paths.length) {
-					this.pack(rawEntries);
-				}
-			});
+			entry.image = image;
+			entry.width = entry.image.width;
+			entry.height = entry.image.height;
 		}
+
+		this.pack(rawEntries);
+
+		const atlasImage = new Image();
+		atlasImage.src = this.canvas.toDataURL();
+		
+		this.texture.loadFromImage(atlasImage);
 	}
 
 	private pack(rawEntries: AtlasEntry[]) {
-
 		let packer = new MaxRectsPacker();
 		packer.addArray(rawEntries);
 
@@ -66,22 +71,20 @@ export class TextureAtlas {
 		this.entries.clear();
 		for (const rect of bin.rects) {
 			const entry = rect as AtlasEntry;
-			entry.uv = glm.vec4.create();
-			entry.uv.set([entry.x / bin.maxWidth, (entry.x + entry.width) / bin.maxWidth,
-				(entry.y + entry.height) / bin.maxHeight, entry.y / bin.maxHeight]);
+			entry.bounds = glm.vec4.create();
+			entry.bounds.set([entry.x / bin.width, entry.y + bin.height,
+				entry.width / bin.width, entry.height / bin.height]);
 
-			this.entries.set(entry.path, entry);
+			this.entries.set(entry.alias, entry);
 			this.context.drawImage(entry.image, entry.x, entry.y);
 		}
-
-		this.image.src = this.canvas.toDataURL();
 	}
 
-	public getImage(): HTMLImageElement {
-		return this.image;
+	public getTexture(): Texture2D {
+		return this.texture;
 	}
 
-	public getUV(path: string): glm.vec4 {
-		return this.entries.get(path).uv;
+	public getBounds(alias: string): glm.vec4 {
+		return this.entries.get(alias).bounds;
 	}
 }

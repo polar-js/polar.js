@@ -105,17 +105,19 @@ export  class Shader {
 		Surface.gl.linkProgram(program);
 
 		// LOG ERRORS //
-		const log = Surface.gl.getProgramInfoLog(program);
-		if (log != '' && log != null) {
-			Surface.gl.deleteProgram(program);
+		if (!Surface.gl.getProgramParameter(program, Surface.gl.LINK_STATUS)) {
+			const log = Surface.gl.getProgramInfoLog(program);
+			if (log != '' && log != null) {
+				Surface.gl.deleteProgram(program);
 
-			for (const shader of shaders) {
-				Surface.gl.deleteShader(shader);
+				for (const shader of shaders) {
+					Surface.gl.deleteShader(shader);
+				}
+
+				console.log(log);
+				console.assert(false, 'Program link failure!');
+				return;
 			}
-
-			console.log(log);
-			console.assert(false, 'Program link failure!');
-			return;
 		}
 
 		// DETACH AND DELETE SHADERS //

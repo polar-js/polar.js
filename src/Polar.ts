@@ -31,6 +31,7 @@ export * from 'Polar/Core/ApplicationSettings';
 export * from 'Polar/Renderer/Buffer';
 export * from 'Polar/Renderer/FrameBuffer';
 export * from 'Polar/Renderer/ImageLibrary';
+export * from 'Polar/Renderer/InstancedRenderer';
 export * from 'Polar/Renderer/OrthographicCamera';
 export * from 'Polar/Renderer/ParticleEmitter';
 export * from 'Polar/Renderer/ParticleRenderer';

@@ -11,7 +11,7 @@ export function shaderDataTypeSizes(type: ShaderDataType): number {
 	case ShaderDataType.Float3: return 4 * 3;
 	case ShaderDataType.Float4: return 4 * 4;
 	case ShaderDataType.Mat3:   return 4 * 3 * 3;
-	case ShaderDataType.Mat4:   return 4 * 3 * 4;
+	case ShaderDataType.Mat4:   return 4 * 4 * 4;
 	case ShaderDataType.Int:    return 4;
 	case ShaderDataType.Int2:   return 4 * 2;
 	case ShaderDataType.Int3:   return 4 * 3;
@@ -47,7 +47,7 @@ export class BufferElement
 		case ShaderDataType.Float3: return 3;
 		case ShaderDataType.Float4: return 4;
 		case ShaderDataType.Mat3:   return 3 * 3;
-		case ShaderDataType.Mat4:   return 3 * 4;
+		case ShaderDataType.Mat4:   return 4 * 4;
 		case ShaderDataType.Int:    return 1;
 		case ShaderDataType.Int2:   return 2;
 		case ShaderDataType.Int3:   return 3;
@@ -83,16 +83,27 @@ export class BufferLayout {
 	public getElements(): BufferElement[] {
 		return this.elements;
 	}
+
+	public getComponentCount(): number {
+		let count = 0;
+		for (let element of this.elements) {
+			count += element.getComponentCount();
+		}
+		return count;
+	}
 }
 
 export class VertexBuffer {
 	private buffer: WebGLBuffer;
 	private layout: BufferLayout;
 
-	public constructor (vertices: Float32Array, usage?: number) {
+	public constructor (vertices?: Float32Array, usage: number = Surface.gl.STATIC_DRAW, length?: number) {
 		this.buffer = Surface.gl.createBuffer();
 		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.buffer);
-		Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, usage || Surface.gl.STATIC_DRAW);
+		if (length)
+			Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, usage);
+		else
+			Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, vertices, usage, 0, length);
 	}
 
 	public bind() {
@@ -117,6 +128,16 @@ export class VertexBuffer {
 
 	public unbindBufferBase(target?: number, index: number = 0) {
 		Surface.gl.bindBufferBase(target || Surface.gl.TRANSFORM_FEEDBACK_BUFFER, index, null);
+	}
+
+	public setData(data: Float32Array, usage: number = Surface.gl.STATIC_DRAW, target: number = Surface.gl.ARRAY_BUFFER) {
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.buffer);
+		Surface.gl.bufferData(Surface.gl.ARRAY_BUFFER, data, usage);
+	}
+
+	public setSubData(data: Float32Array, offset: number, target: number = Surface.gl.ARRAY_BUFFER) {
+		Surface.gl.bindBuffer(Surface.gl.ARRAY_BUFFER, this.buffer);
+		Surface.gl.bufferSubData(target, offset, data);
 	}
 }
 

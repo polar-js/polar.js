@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/stylesheet.css">
+
+        <title>Sprite Rendering Example</title>
+    </head>
+    <body style="margin: 0">
+        <canvas id="test-canvas"></canvas>
+        <div class="game-overlay">
+            <label class="slider-container"># Instances
+                <input type="number" min="1" max="10000" value="9" id="num-instance-number">
+                <input type="range" min="1" max="10000" value="9" class="slider" id="num-instance-slider">
+            </label>
+        </div>
+
+        <script src="/polar.min.js"></script>
+        <script src="InstancedRenderingLayer.js"></script>
+        <script src="scripts.js"></script>
+    </body>
+</html>

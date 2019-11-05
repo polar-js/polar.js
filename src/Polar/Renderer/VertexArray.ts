@@ -58,16 +58,39 @@ export  class VertexArray {
 				location = element.location;
 			}
 			
-			Surface.gl.enableVertexAttribArray(location);
-			Surface.gl.vertexAttribPointer(location, 
-				element.getComponentCount(), 
-				shaderDataTypeToOpenGLBaseType(element.type),
-				element.normalized, 
-				layout.getStride(),
-				element.offset);
+			if (element.type === ShaderDataType.Mat4) {
+				for (let i = 0; i < 4; i++) {
+					const loc = location + i;
+					const size = element.getComponentCount() / 4;
+					const type = shaderDataTypeToOpenGLBaseType(element.type);
+					const stride = layout.getStride();
+					const offset = element.offset + 16 * i;
 
-			if (element.divisor >= 0) {
-				Surface.gl.vertexAttribDivisor(location, element.divisor);
+					Surface.gl.enableVertexAttribArray(loc);
+					Surface.gl.vertexAttribPointer(loc, 
+						element.getComponentCount() / 4, 
+						shaderDataTypeToOpenGLBaseType(element.type),
+						element.normalized, 
+						layout.getStride(),
+						element.offset + 16 * i);
+	
+					if (element.divisor >= 0) {
+						Surface.gl.vertexAttribDivisor(location + i, element.divisor);
+					}
+				}
+			}
+			else {
+				Surface.gl.enableVertexAttribArray(location);
+				Surface.gl.vertexAttribPointer(location, 
+					element.getComponentCount(), 
+					shaderDataTypeToOpenGLBaseType(element.type),
+					element.normalized, 
+					layout.getStride(),
+					element.offset);
+	
+				if (element.divisor >= 0) {
+					Surface.gl.vertexAttribDivisor(location, element.divisor);
+				}
 			}
 		}
 		shader.unbind();
