@@ -2,6 +2,7 @@ import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 import * as glm from 'gl-matrix';
 import { Texture2D } from './Texture';
 
+/** Represents a single texture within a texture atlas. */
 export class AtlasEntry extends Rectangle {
 	public alias: string;
 	public image: HTMLImageElement;
@@ -14,6 +15,7 @@ export class AtlasEntry extends Rectangle {
 	}
 }
 
+/** A class which combines and indexes a number of images into a single image. */
 export class TextureAtlas {
 	
 	private entries: Map<string, AtlasEntry>;
@@ -21,16 +23,17 @@ export class TextureAtlas {
 	private context: CanvasRenderingContext2D;
 	private texture: Texture2D;
 
+	/** Create a new texture atlas. */
 	public constructor() {
 		this.entries = new Map<string, AtlasEntry>();
 		this.canvas = document.createElement('canvas');
 		this.context = this.canvas.getContext('2d');
 		this.texture = new Texture2D();
-
-		// DEBUG TESTING //
-		//document.getElementsByTagName('body')[0].appendChild(this.canvas);
 	}
 
+	/** Set the images of the atlas and calculate.
+	 * @param {[string, HTMLImageElement][]} images A list of image tuples with format: [alias: string, image: HTMLImageElement].
+	 */
 	public setImages(images: [string, HTMLImageElement][]) {
 		
 		const rawEntries: AtlasEntry[] = [];
@@ -56,6 +59,10 @@ export class TextureAtlas {
 		this.texture.loadFromImage(atlasImage);
 	}
 
+	/** 
+	 * Pack the images
+	 * @param {AtlasEntry[]} rawEntries
+	 */
 	private pack(rawEntries: AtlasEntry[]) {
 		let packer = new MaxRectsPacker();
 		packer.addArray(rawEntries);
@@ -80,10 +87,20 @@ export class TextureAtlas {
 		}
 	}
 
+	/**
+	 * Get the atlas texture
+	 * @returns {Texture2D}
+	 */
 	public getTexture(): Texture2D {
 		return this.texture;
 	}
 
+	/**
+	 * Get the bounds of a texture within the atlas.
+	 * Format: x, y, width, height.
+	 * @param {string} alias The image's alias.
+	 * @returns {glm.vec4} The bounds. Format: x, y, width, height.
+	 */
 	public getBounds(alias: string): glm.vec4 {
 		return this.entries.get(alias).bounds;
 	}

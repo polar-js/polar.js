@@ -4,7 +4,7 @@ import { Surface } from 'Polar/Renderer/Surface';
 import * as glm from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
-export  class OrthographicCameraController {
+export class OrthographicCameraController {
 	private aspectRatio: number;
 	private zoomLevel: number;
 	private camera: OrthographicCamera;
@@ -15,8 +15,8 @@ export  class OrthographicCameraController {
 	private cameraPosition: glm.vec3 = glm.vec3.create();
 	// The camera's current rotation.
 	private cameraRotation = 0.0;
-	// How fast the camera rotates in degrees per second.
-	private cameraRotationSpeed = 90.0;
+	// How fast the camera rotates in radians per second.
+	private cameraRotationSpeed = Math.PI / 2;
 
 	/**
 	 * Create an orthographic camera controller.
@@ -37,7 +37,7 @@ export  class OrthographicCameraController {
 		});
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			this.aspectRatio = Surface.get().offsetWidth / Surface.get().offsetHeight;
+			this.aspectRatio = Surface.getWidth() / Surface.getHeight();
 			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 		});
 	}

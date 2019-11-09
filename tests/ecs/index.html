@@ -2,11 +2,17 @@
     <head>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/stylesheet.css">
 
         <title>Entity Component System Example</title>
     </head>
     <body style="margin: 0">
         <canvas id="test-canvas"></canvas>
+
+        <div class="game-overlay">
+            <h1>Entity Component System</h1>
+            <button id="entity-button">Create Entity</button>
+        </div>
 
         <script src="/polar.min.js"></script>
         <script src="ExampleECSLayer.js"></script>

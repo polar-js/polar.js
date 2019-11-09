@@ -1,11 +1,19 @@
 
 /** Represents a collection of components relating to a single entity in the world. */
 export class Entity {
+	/** The entity's ID
+	 * @type {number}
+	 */
 	public readonly id: number;
 	
+	/** The entity's components.
+	 * @type {Map<string, Component}
+	 */
 	public readonly components: Map<string, Component>;
 
-	/** Create a new entity. */
+	/** Create a new entity.
+	 * @param {number} id The entity's ID.
+	 */
 	public constructor(id: number) {
 		this.id = id;
 		this.components = new Map<string, Component>();
@@ -69,7 +77,9 @@ export abstract class Component {
  * @abstract
  */
 export abstract class System {
-	/** The system's ECS world manager. */
+	/** The system's ECS world manager.
+	 * @type {WorldManager}
+	 */
 	public manager: WorldManager;
 	/** The system's subscribed entities. Format: [Entity ID: string, Subscriber Index: string] */
 	public subscribers: Map<number, number>;
@@ -116,8 +126,9 @@ export abstract class System {
 
 	/**
 	 * Returns the name of the system, unique to each system type.
+	 * @remarks
 	 * Recommended format: '<Namespace>:<SystemClassName>'.
-	 * Example: 'Sandbox:GoalSystem'.
+	 * @example 'Sandbox:GoalSystem'.
 	 * @returns {string} The name of the system.
 	 * @abstract
 	 */
@@ -171,7 +182,7 @@ export abstract class WorldManager {
 
 	/**
 	 * Remove a system through its name.
-	 * @param name The name of the system, the overridden return value of System.getName().
+	 * @param {string} name The name of the system, the overridden return value of System.getName().
 	 */
 	public removeSystemByName(name: string) {
 		for (let i = this.systems.length - 1; i >= 0; i--) {

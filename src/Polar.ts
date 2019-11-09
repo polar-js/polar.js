@@ -2,12 +2,21 @@ import { Application } from 'Polar/Core/Application';
 
 let application: Application;
 
-export function create(app: Application) {
+/**
+ * Begin running the polar engine.
+ * 
+ * @remarks
+ * There can only be one application running at one time.
+ * 
+ * @param app Subclass of a Polar Application.
+ */
+export function begin(app: Application) {
 	console.assert(application == null, 'Application has already been created!');
 	application = app;
 	application.start();
 }
 
+/** Stop the engine. */
 export function stop() {
 	console.assert(application != null, 'Application has not been created yet!');
 	application.stop();

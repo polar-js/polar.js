@@ -5,6 +5,10 @@ export class Input {
 	private static mouseButtonStates: {[id: number]: boolean};
 	private static mousePosition: glm.vec2;
 	
+	/** Initialize the input system of Polar.
+	 * @remarks
+	 * Not to be called by the user. Called within Polar.
+	 */
 	public static init() {
 		this.keyStates = {};
 		this.mouseButtonStates = {};

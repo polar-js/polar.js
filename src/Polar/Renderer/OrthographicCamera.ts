@@ -16,7 +16,7 @@ export  class OrthographicCamera {
 	 * @param {number} bottom The bottom bound of the camera.
 	 * @param {number} top The top bound of the camera.
 	 * @param {glm.vec3} [position] The initial position of the camera.
-	 * @param {number} [rotation] The initial rotation of the camera in degrees.
+	 * @param {number} [rotation] The initial rotation of the camera in radians.
 	 */
 	public constructor(left: number, right: number, bottom: number, top: number, position: glm.vec3 = glm.vec3.create(), rotation: number = 0) {
 		this.viewMatrix = glm.mat4.create();
@@ -33,7 +33,7 @@ export  class OrthographicCamera {
 	private recalculateViewMatrix() {
 		let transform = glm.mat4.create();
 		glm.mat4.translate(transform, transform, this.position);
-		glm.mat4.rotate(transform, transform, this.rotation * Math.PI / 180.0, [0, 0, 1]);
+		glm.mat4.rotate(transform, transform, this.rotation, [0, 0, 1]);
 
 		glm.mat4.invert(this.viewMatrix, transform);
 		glm.mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
@@ -60,7 +60,7 @@ export  class OrthographicCamera {
 
 	/**
 	 * Get rotation of camera.
-	 * @returns {number} The camera's rotation in degrees.
+	 * @returns {number} The camera's rotation in radians.
 	 */
 	public getRotation(): number {
 		return this.rotation;

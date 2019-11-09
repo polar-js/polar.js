@@ -1,6 +1,7 @@
 import { Surface } from './Surface';
 import * as glm from 'gl-matrix';
 
+/** Get a shader data type from string 'vertex' or 'fragment'. */
 function shaderTypeFromString(type: string): number {
 	if (type == 'vertex')
 		return Surface.gl.VERTEX_SHADER;

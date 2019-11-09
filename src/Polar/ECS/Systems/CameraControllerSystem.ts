@@ -22,7 +22,7 @@ export  class CameraControllerSystem extends System {
 		});
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			controllerData.aspectRatio = Surface.get().offsetWidth / Surface.get().offsetHeight;
+			controllerData.aspectRatio = Surface.getWidth() / Surface.getHeight();
 			camera.setProjection(-controllerData.aspectRatio * controllerData.zoomLevel, controllerData.aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
 	}
@@ -101,7 +101,7 @@ export class CameraControllerCP extends Component {
 	public cameraPosition: glm.vec3;
 	// The camera's current rotation.
 	public cameraRotation: number;
-	// How fast the camera rotates in degrees per second.
+	// How fast the camera rotates in radians per second.
 	public cameraRotationSpeed: number;
 
 	/**
@@ -111,9 +111,9 @@ export class CameraControllerCP extends Component {
 	 * @param {boolean} [doRotation=false] Allows the camera to be rotated using the Q and E keys.
 	 * @param {glm.vec3} [cameraPosition=vec3.create()] The initial position of the camera.
 	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
-	 * @param {number} [cameraRotationSpeed=90.0] The rotation speed of the camera in degrees per second.
+	 * @param {number} [cameraRotationSpeed=Math.PI/2] The rotation speed of the camera in radians per second.
 	 */
-	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition: glm.vec3 = glm.vec3.create(), cameraRotation: number = 0.0, cameraRotationSpeed: number = 90.0) {
+	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition: glm.vec3 = glm.vec3.create(), cameraRotation: number = 0.0, cameraRotationSpeed: number = Math.PI/2) {
 		super();
 		this.aspectRatio = aspectRatio;
 		this.zoomLevel = zoomLevel;

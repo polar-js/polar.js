@@ -3,7 +3,8 @@ import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
 import { RenderCommand } from './RenderCommand';
 
 export class Surface {
-	private static canvas: HTMLCanvasElement;
+	/** The engine's main rendering canvas. */
+	public static canvas: HTMLCanvasElement;
 	private static fontCanvas: HTMLCanvasElement;
 
 	/**
@@ -19,7 +20,7 @@ export class Surface {
 	public static font: CanvasRenderingContext2D;
 
 	/** 
-	 * Initialize the canvas.
+	 * Initialize the surface.
 	 * @param {settings} settings The engine settings.
 	 */
 	public static init(settings: ApplicationSettings) {
@@ -75,20 +76,15 @@ export class Surface {
 			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});
 		
-		if (settings.clearColor && settings.clearColor.length >= 3)
+		if (settings.clearColor)
 			RenderCommand.setClearColor(glm.vec4.fromValues(settings.clearColor[0], settings.clearColor[1], settings.clearColor[2], 1.0));
 		else
 			RenderCommand.setClearColor(glm.vec4.fromValues(0.1, 0.1, 0.1, 1.0));
 	}
 
-	/**
-	 * Get the html canvas element.
+	/** Get the font canvas element.
 	 * @returns {HTMLCanvasElement} The canvas.
 	 */
-	public static get(): HTMLCanvasElement {
-		return this.canvas;
-	}
-
 	public static getFontCanvas(): HTMLCanvasElement {
 		return this.fontCanvas;
 	}
@@ -105,10 +101,16 @@ export class Surface {
 		this.fontCanvas.height = height;
 	}
 
+	/** Get the width of the rendering surface.
+	 * @returns {number} The width.
+	 */
 	public static getWidth(): number {
 		return this.canvas.width;
 	}
 
+	/** Get the height of the rendering surface.
+	 * @returns {number} The height.
+	*/
 	public static getHeight(): number {
 		return this.canvas.height;
 	}

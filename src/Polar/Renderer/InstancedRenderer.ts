@@ -3,15 +3,19 @@ import { Surface } from 'Polar/Renderer/Surface';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
 import { Shader } from 'Polar/Renderer/Shader';
-
-import * as InstancedTextureShaderSource from 'Polar/Renderer/ShaderSource/InstancedTextureShaderSource';
 import { OrthographicCamera } from './OrthographicCamera';
-import { Texture2D } from './Texture';
 import { TextureAtlas } from './TextureAtlas';
 import { RenderCommand } from './RenderCommand';
 
+import * as InstancedTextureShaderSource from 'Polar/Renderer/ShaderSource/InstancedTextureShaderSource';
+
+/**
+ * The maximum number of instances which can be rendered.
+ * @type {number}
+ */
 const MAX_INSTANCES = 1e4;
 
+/** The instanced renderer. */
 export class InstancedRenderer {
 
 	private static viewProjectionMatrix: glm.mat4;
@@ -24,6 +28,11 @@ export class InstancedRenderer {
 
 	private static instanceData: Float32Array;
 
+	/** Initialize the instanced renderer
+	 * @remarks
+	 * Only to be called by Renderer.
+	 * @internal
+	 */
 	public static init() {
 
 		this.textureAtlas = new TextureAtlas();
@@ -62,7 +71,13 @@ export class InstancedRenderer {
 		this.instanceVA.addVertexBuffer(this.instanceBuffer, this.instancedTextureShader);
 	}
 
-	/** CALLED ONLY BY Renderer.ts */
+	/** Begin the instanced renderer scene
+	 * @remarks
+	 * Called only by Renderer
+	 * 
+	 * @param {OrthographicCamera} camera The camera.
+	 * @internal
+	 */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		this.instanceCount = 0;
@@ -79,6 +94,11 @@ export class InstancedRenderer {
 		}
 	}
 
+	/** Begin the instanced renderer scene
+	 * @remarks
+	 * Called only by Renderer
+	 * @internal
+	 */
 	public static endScene() {
 		if (this.instanceCount > 0) {
 			this.textureAtlas.getTexture().bind();

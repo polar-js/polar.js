@@ -2,6 +2,12 @@ import { ShaderDataType, BufferLayout, VertexBuffer, IndexBuffer } from './Buffe
 import { Surface } from './Surface';
 import { Shader }  from './Shader';
 
+/**
+ * Get the OpenGL base type from a shader data type.
+ * @param {ShaderDataType} type The shader data type.
+ * @returns {number} The OpenGL enum.
+ * @internal
+ */
 function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 	switch (type) {
 	case ShaderDataType.Float:  return Surface.gl.FLOAT;
@@ -20,24 +26,33 @@ function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 	return 0;
 }
 
+/** Represents an OpenGL vertex array. */
 export  class VertexArray {
 	private vertexArray: WebGLVertexArrayObject;
 	private vertexBuffers: VertexBuffer[];
 	private indexBuffer: IndexBuffer;
 
+	/** Create a new vertex array. */
 	public constructor () {
 		this.vertexArray = Surface.gl.createVertexArray();
 		this.vertexBuffers = [];
 	}
 
+	/** Bind the vertex array in OpenGL. */
 	public bind(): void {
 		Surface.gl.bindVertexArray(this.vertexArray);
 	}
 
+	/** Unbind the vertex array in OpenGL. */
 	public unbind(): void {
 		Surface.gl.bindVertexArray(null);
 	}
 
+	/**
+	 * Add a vertex buffer to the array.
+	 * @param {VertexBuffer} vertexBuffer The vertex buffer.
+	 * @param {Shader} shader The shader.
+	 */
 	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
 		console.assert(vertexBuffer.getLayout().getElements().length != 0, 'Vertex Buffer has no layout!');
 
@@ -97,6 +112,10 @@ export  class VertexArray {
 		this.vertexBuffers.push(vertexBuffer);
 	}
 
+	/**
+	 * Set the vertex array's index buffer.
+	 * @param {IndexBuffer} indexBuffer The index buffer.
+	 */
 	public setIndexBuffer(indexBuffer: IndexBuffer) {
 		Surface.gl.bindVertexArray(this.vertexArray);
 		indexBuffer.bind();
@@ -104,10 +123,18 @@ export  class VertexArray {
 		this.indexBuffer = indexBuffer;
 	}
 
+	/**
+	 * Get the vertex buffers.
+	 * @returns {VertexBuffer[]} The vertex buffers.
+	 */
 	public getVertexBuffers(): VertexBuffer[] {
 		return this.vertexBuffers;
 	}
 
+	/**
+	 * Get the index buffer
+	 * @returns {IndexBuffer} The index buffer.
+	 */
 	public getIndexBuffer(): IndexBuffer {
 		return this.indexBuffer;
 	}

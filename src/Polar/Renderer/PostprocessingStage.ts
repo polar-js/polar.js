@@ -18,6 +18,15 @@ export class PostprocessingStage {
 
 	private uniforms: [string, ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4][];
 
+	/**
+	 * Create a new postprocessing stage.
+	 * @param {string} name The name of the stage.
+	 * @param {Shader} shader The shader.
+	 * @param {boolean} enabled Whether the stage will be used when rendering.
+	 * @param {[string, ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4][]} uniforms Fixed value uniforms used in the shader. Tuple Format: [name, ShaderDataType, value]
+	 * 
+	 * @example uniforms = [['u_Brightness', Polar.ShaderDataType.Float, 2]]
+	 */
 	public constructor(name: string, shader: Shader, enabled = true, uniforms: [string, ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4][] = []) {
 		this.name = name;
 		this.shader = shader;
@@ -74,14 +83,26 @@ export class PostprocessingStage {
 		});
 	}
 
+	/** Bind the postprocessing stage
+	 * @remarks
+	 * Generally only used within the Polar Renderer.
+	 */
 	public bind() {
 		this.fbo.bind();
 	}
 
+	/** Unbinds the postprocessing stage
+	 * @remarks
+	 * Generally only used within the Polar Renderer.
+	 */
 	public unbind() {
 		this.fbo.unbind();
 	}
 
+	/** Renders the stage to the currently bound framebuffer.
+	 * @remarks
+	 * Generally only used within the Polar Renderer.
+	 */
 	public render() {
 		this.screenVA.bind();
 		this.fbo.getTexture().bind();
@@ -113,18 +134,26 @@ export class PostprocessingStage {
 		RenderCommand.drawElements(this.screenVA);
 	}
 
+	/** Get the name of the stage.
+	 * @returns {string} The name.
+	 */
 	public getName(): string {
 		return this.name;
 	}
 
+	/** Check if the stage is enabled.
+	 * @returns {boolean} Whether the stage is enabled.
+	 */
 	public isEnabled(): boolean {
 		return this.enabled;
 	}
 
+	/** Enables the stage. */
 	public enable() {
 		this.enabled = true;
 	}
 
+	/** Disables the stage. */
 	public disable() {
 		this.enabled = false;
 	}

@@ -1,56 +1,114 @@
 import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
+import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType } from 'Polar/Renderer/Buffer';
 import { Surface } from './Surface';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { Texture2D } from './Texture';
-import { Renderer } from './Renderer';
 
+/** Settings for a particle emitter. */
 export class ParticleEmitterSettings {
-	public numParticles: number = 100;
-	public spawnRate: number = 100;
-	public gravity: glm.vec2 = glm.vec2.create();
-	public origin: glm.vec2 = glm.vec2.create();
-	public angle: number = 0;
-	public spread: number = Math.PI / 2;
-	public minSpeed: number = 1;
-	public maxSpeed: number = 2;
-	public minLife: number = 1;
-	public maxLife: number = 2;
-	public fadeTime: number = 0;
-	public zIndex: number = 0;
+	/** The mode of the particle emitter. Can be 'POINTS' or 'TEXTURE' */
 	public mode: string = 'POINTS';
+	/** The total number of particles which can be released by the emitter at one time. */
+	public numParticles: number = 100;
+	/** The rate at which the particles are released, in particles per second. */
+	public spawnRate: number = 100;
+	/** The acceleration applied to all particles. */
+	public gravity: glm.vec2 = glm.vec2.create();
+	/** The position in the world where the particles are released. */
+	public origin: glm.vec2 = glm.vec2.create();
+	/** The direction which the center of the spread releases particles in radians. Starts from the right going anticlockwise (like a unit circle). */
+	public angle: number = 0;
+	/** The spread angle of the released particles in radians. */
+	public spread: number = Math.PI / 2;
+	/** The minimum speed of the particles. */
+	public minSpeed: number = 1;
+	/** The maximum speed of the particles. */
+	public maxSpeed: number = 2;
+	/** The minimum life of the particles. */
+	public minLife: number = 1;
+	/** The maximum life of the particles. */
+	public maxLife: number = 2;
+	/** How long it takes the particles fade. 
+	 * The particles will have 100% opacity until the particle reaches the end of its life, where the opacity will be lowered for the specified time until it dies. 
+	 */
+	public fadeTime: number = 0;
+	/** The z-index of the rendering. Allows objects to be rendered on top of each other. The highest zIndex gets its pixels rendered on top. */
+	public zIndex: number = 0;
+	/** The texture to be rendered on the particle. Used in conjunction with mode 'TEXTURE'. */
 	public texture: Texture2D;
+	/** The scale applied to the textured quad. Used in conjunction with mode 'TEXTURE'. */
 	public scale: number = 1.0;
+	/** How long it takes the particles shrink to nothing. 
+	 * The particles will have 100% size until the particle reaches the end of its life, where the size will be lowered for the specified time until it dies.
+	 * Used in conjunction with mode 'TEXTURE'.
+	 */
 	public shrinkTime: number = 0.0;
 }
 
+/** A class representing an emitter of particles, rendered through ParticleRenderer. */
 export class ParticleEmitter {
-	
+	/** The mode of the particle emitter. Can be 'POINTS' or 'TEXTURE' */
 	public mode: string;
-
-	public buffers: VertexBuffer[];
-	public vertexArrays: VertexArray[];
-	public read = 0;
-	public write = 1;
-
+	/** The total number of particles which can be released by the emitter at one time. */
 	public numParticles: number;
+	/** The rate at which the particles are released, in particles per second. */
 	public spawnRate: number;
+	/** The number of particles which have been born. */
 	public bornParticles: number = 0;
+	/** The acceleration applied to all particles. */
 	public gravity: glm.vec2;
+	/** The position in the world where the particles are released. */
 	public origin: glm.vec2;
+	/** The direction which the center of the spread releases particles in radians. Starts from the right going anticlockwise (like a unit circle). */
 	public angle: number;
+	/** The spread angle of the released particles in radians. */
 	public spread: number;
+	/** The minimum speed of the particles. */
 	public minSpeed: number;
+	/** The maximum speed of the particles. */
 	public maxSpeed: number;
+	/** The minimum life of the particles. */
 	public minLife: number;
+	/** The maximum life of the particles. */
 	public maxLife: number;
+	/** How long it takes the particles fade. 
+	 * The particles will have 100% opacity until the particle reaches the end of its life, where the opacity will be lowered for the specified time until it dies. 
+	 */
 	public fadeTime: number;
+	/** The z-index of the rendering. Allows objects to be rendered on top of each other. The highest zIndex gets its pixels rendered on top. */
 	public zIndex: number;
+	/** The texture to be rendered on the particle. Used in conjunction with mode 'TEXTURE'. */
 	public texture: Texture2D;
+	/** The scale applied to the textured quad. Used in conjunction with mode 'TEXTURE'. */
 	public scale: number;
+	/** How long it takes the particles shrink to nothing. 
+	 * The particles will have 100% size until the particle reaches the end of its life, where the size will be lowered for the specified time until it dies.
+	 * Used in conjunction with mode 'TEXTURE'.
+	 */
 	public shrinkTime: number;
 
+	/** The vertex buffers used by the ParticleRenderer.
+	 * @internal
+	 */
+	public buffers: VertexBuffer[];
+	/** The vertex arrays used by the ParticleRenderer.
+	 * @internal
+	 */
+	public vertexArrays: VertexArray[];
+	/** The index to the current read buffer.
+	 * @internal
+	 */
+	public read = 0;
+	/** The index to the current read buffer.
+	 * @internal
+	 */
+	public write = 1;
+
+	/**
+	 * Create a new particle emitter.
+	 * @param {ParticleEmitterSettings} settings The settings. 
+	 */
 	public constructor(settings: ParticleEmitterSettings) {
 		if (settings.mode) this.mode = settings.mode.toUpperCase();
 		else this.mode = 'POINTS';
@@ -83,7 +141,7 @@ export class ParticleEmitter {
 			new VertexBuffer(initialParticleData(this.numParticles, this.minLife, this.maxLife), Surface.gl.STREAM_DRAW),
 			new VertexBuffer(initialParticleData(this.numParticles, this.minLife, this.maxLife), Surface.gl.STREAM_DRAW)
 		];
-
+		
 		this.vertexArrays = [new VertexArray(), new VertexArray(), new VertexArray(), new VertexArray()];
 		let layout;
 		layout = new BufferLayout([

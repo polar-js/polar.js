@@ -52,7 +52,7 @@ class ExampleECSLayer extends Polar.Layer {
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
-		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
+		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.getWidth() / Polar.Surface.getHeight()));
 
 		// Add systems.
 		this.manager.addSystem(new TestSystem());
@@ -71,10 +71,7 @@ class ExampleECSLayer extends Polar.Layer {
 		this.deltaNum = 0;
 		this.currentFPS = 0;
 
-		const testButton = document.createElement('button');
-		testButton.innerHTML = 'Test Button';
-		testButton.style.margin = '10px 100px';
-		Polar.Surface.ui.appendChild(testButton);
+		const testButton = document.getElementById('entity-button');
 
 		testButton.onclick = () => {
 			console.log('Adding entity...');

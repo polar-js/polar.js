@@ -98,16 +98,24 @@ export  class Texture2D {
 		return this.loaded;
 	}
 
+	/**
+	 * Get the OpenGL texture.
+	 * @returns {WebGLTexture}
+	 */
 	public getGLTexture(): WebGLTexture {
 		return this.texture;
 	}
 
+	/**
+	 * Create a new texture from an image element.
+	 * @param {HTMLImageElement} image The image.
+	 */
 	private createTexture(image: HTMLImageElement) {
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, s.gl.RGBA, s.gl.RGBA, s.gl.UNSIGNED_BYTE, image);
 		s.gl.generateMipmap(s.gl.TEXTURE_2D);
 		this.loaded = true;
-		this.width = image.clientWidth;
-		this.height = image.clientHeight;
+		this.width = image.width;
+		this.height = image.height;
 	}
 }

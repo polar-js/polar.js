@@ -15,6 +15,11 @@ import { PostprocessingStage } from 'Polar/Renderer/PostprocessingStage';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
 
+/** Handles the rendering objects to the canvas, including post.
+ * 
+ * @remarks
+ * For instanced rendering, see {@link Polar#InstancedRenderer | InstancedRenderer}
+ */
 export  class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
 	private static shaderLibrary: ShaderLibrary;
@@ -40,6 +45,7 @@ export  class Renderer {
 		this.initBuffers();
 	}
 
+	/** Initialize shaders */
 	private static initShaders() {
 		this.shaderLibrary = new ShaderLibrary();
 		const textureShader = new Shader('TextureShader', TextureShaderSource.getVertexSource(), TextureShaderSource.getFragmentSource());
@@ -49,6 +55,7 @@ export  class Renderer {
 		this.shaderLibrary.add(colorShader);
 	}
 
+	/** Initialize buffers */
 	private static initBuffers() {
 		
 		// CREATE TEXTURE QUAD //
@@ -180,7 +187,12 @@ export  class Renderer {
 		}
 	}
 
-	/** Begin the rendering of a scene. */
+	/** Begin the rendering of a scene.
+	 * @remarks
+	 * To be called every frame before using any rendering commands.
+	 * Used in conjunction with Renderer.endScene().
+	 * @param {OrthographicCamera} camera The scene's camera.
+	 */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		
@@ -202,7 +214,10 @@ export  class Renderer {
 		InstancedRenderer.beginScene(camera);
 	}
 
-	/** End the rendering of a scene. */
+	/** End the rendering of a scene.
+	 * @remarks
+	 * To be called every frame when all the rendering has been completed. Displays the results of all rendering commands.
+	 */
 	public static endScene() {
 		InstancedRenderer.endScene();
 
@@ -210,12 +225,10 @@ export  class Renderer {
 			const next = this.postprocessingStages.slice(i + 1).find((stage: PostprocessingStage) => {
 				return stage.isEnabled();
 			});
-			if (next) {
-				next.bind();
-			}
-			else {
-				this.postprocessingStages[i].unbind();
-			}
+
+			if (next) next.bind();
+			else this.postprocessingStages[i].unbind();
+			
 			if (this.postprocessingStages[i].isEnabled())
 				this.postprocessingStages[i].render();
 		}
@@ -338,10 +351,10 @@ export  class Renderer {
 		const dy = y1 - y0;
 		let angle = 0;
 		if (dx == 0) {
-			angle = dy > 0 ? 90 : 270;
+			angle = dy > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
 		}
 		else {
-			angle = dx > 0 ? Math.atan(dy / dx) * 180 / Math.PI : 180 + Math.atan(dy / dx) * 180 / Math.PI;
+			angle = dx > 0 ? Math.atan(dy / dx) : Math.PI + Math.atan(dy / dx);
 		}
 
 		shader.bind();
@@ -378,8 +391,8 @@ export  class Renderer {
 	 * @returns {glm.vec2} The world position.
 	 */
 	public static screenToWorldPosition(position: glm.vec2): glm.vec2 {
-		const nx = position[0] / Surface.get().width * 2 - 1;
-		const ny = -(position[1] / Surface.get().height * 2 - 1);
+		const nx = position[0] / Surface.getWidth() * 2 - 1;
+		const ny = -(position[1] / Surface.getHeight() * 2 - 1);
 		let inverse = glm.mat4.create();
 		inverse = glm.mat4.invert(inverse, this.viewProjectionMatrix);
 		let out = glm.vec4.create();

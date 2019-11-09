@@ -7,7 +7,7 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
-		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
+		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.getWidth() / Polar.Surface.getHeight()));
 		this.manager.addSingleton(new Polar.FPSDebugCP());
 
 		// Add systems.
@@ -52,7 +52,7 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 
 		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Invert', invertShader), false);
 		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Grayscale', grayscaleShader, false));
-		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Vignette', vignetteShader, false));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Vignette', vignetteShader, false, [['u_Brightness', Polar.ShaderDataType.Float, 2]]));
 
 		document.getElementById('invert-colors-checkbox').addEventListener('change', (event) => {
 			if (event.target.checked) {

@@ -88,7 +88,7 @@ export class PhysicsDebugRenderSystem extends System {
 				const box = <p2.Box>shape;
 				Renderer.submitColoredOutline(glm.vec4.fromValues(0.9, 0.1, 0.9, 1.0), 
 					createTransform(body.position[0] + box.position[0], body.position[1] + box.position[1], 
-						box.width, box.height, (body.angle + box.angle) * 180 / Math.PI, 0));
+						box.width, box.height, (body.angle + box.angle), 0));
 				Renderer.submitLine(body.position[0] + box.position[0], body.position[1] + box.position[1],
 					body.position[0] + box.position[0] + box.width / 2 * Math.cos(body.angle + box.angle), 
 					body.position[1] + box.position[1] + box.width / 2 * Math.sin(body.angle + box.angle), 
@@ -181,7 +181,7 @@ export class PhysicsDebugInteractionSystem extends System {
 			else {
 				quadrant = 3;
 			}
-		} 
+		}
 		return quadrant;
 	}
 

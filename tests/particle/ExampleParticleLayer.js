@@ -8,7 +8,7 @@ class ExampleParticleLayer extends Polar.Layer {
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
-		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight));
+		this.manager.addSingleton(new Polar.CameraControllerCP(Polar.Surface.getWidth() / Polar.Surface.getHeight()));
 		this.manager.addSingleton(new Polar.FPSDebugCP());
 
 		// Add systems.

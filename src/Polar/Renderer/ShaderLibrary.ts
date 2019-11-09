@@ -4,6 +4,7 @@ import { Shader } from './Shader';
 export  class ShaderLibrary {
 	private shaders: { [id: string]: Shader };
 
+	/** Create a new shader library. */
 	public constructor() {
 		this.shaders = {};
 	}

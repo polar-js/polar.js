@@ -8,8 +8,6 @@ import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import * as ParticleUpdateShaderSource from 'Polar/Renderer/ShaderSource/ParticleUpdateShaderSource';
 import * as ParticlePointShaderSource from 'Polar/Renderer/ShaderSource/ParticlePointShaderSource';
 import * as ParticleTextureShaderSource from 'Polar/Renderer/ShaderSource/ParticleTextureShaderSource';
-import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement, ShaderDataType } from 'Polar/Renderer/Buffer';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
 
 export class ParticleRenderer {
 
@@ -21,9 +19,12 @@ export class ParticleRenderer {
 	private static renderTextureShader: Shader;
 	private static randTexture: Texture2D;
 	
-
 	private static viewProjectionMatrix: glm.mat4;
 
+	/**
+	 * Initialize the particle renderer.
+	 * @internal
+	 */
 	public static init() {
 		// SETUP SHADERS //
 		this.updateShader = new Shader('ParticleUpdateShader', ParticleUpdateShaderSource.getVertexSource(), ParticleUpdateShaderSource.getFragmentSource(), ['v_Position', 'v_Age', 'v_Life', 'v_Velocity']);
@@ -33,18 +34,28 @@ export class ParticleRenderer {
 		// SETUP RANDOM TEXTURE //
 		this.randTexture = new Texture2D();
 		this.randTexture.loadFromArray(this.randomRGData(this.RAND_WIDTH, this.RAND_HEIGHT), this.RAND_WIDTH, this.RAND_HEIGHT, Surface.gl.RG8, Surface.gl.RG);
-
-		
 	}
 
+	/** 
+	 * Get the update shader.
+	 * @returns {Shader} The shader.
+	 */
 	public static getUpdateShader(): Shader {
 		return this.updateShader;
 	}
 
+	/**
+	 * Get the point rendering shader
+	 * @returns {Shader} The shader.
+	 */
 	public static getRenderPointShader(): Shader {
 		return this.renderPointShader;
 	}
 
+	/**
+	 * Get the texture rendering shader.
+	 * @returns {Shader} The shader.
+	 */
 	public static getRenderTextureShader(): Shader {
 		return this.renderTextureShader;
 	}
@@ -57,6 +68,12 @@ export class ParticleRenderer {
 	/** End the rendering of a scene. */
 	public static endParticleScene() {}
 
+	/** 
+	 * Render a particle emitter.
+	 * 
+	 * @param {ParticleEmitter} emitter The emitter.
+	 * @param {number} dt The delta time. Time elapsed since lase frame.
+	 */
 	public static renderParticleEmitter(emitter: ParticleEmitter, dt: number) {
 		if (emitter.bornParticles < emitter.numParticles) {
 			emitter.bornParticles = Math.min(emitter.numParticles, emitter.bornParticles + emitter.spawnRate * dt);
@@ -108,9 +125,6 @@ export class ParticleRenderer {
 			this.renderPointShader.uploadUniformFloat('u_FadeTime', emitter.fadeTime);
 			RenderCommand.drawArrays(Math.floor(emitter.bornParticles), Surface.gl.POINTS);
 		}
-		
-		
-		
 
 		// SWAP BUFFERS //
 		let tmp = emitter.read;
@@ -118,6 +132,13 @@ export class ParticleRenderer {
 		emitter.write = tmp;
 	}
 
+	/** 
+	 * Generate an image with random red-green data.
+	 * 
+	 * @param {number} width The width of the image.
+	 * @param {number} height The height of the image.
+	 * @returns {Uint8Array} The pixel array.
+	 */
 	private static randomRGData(width: number, height: number): Uint8Array {
 		let d = [];
 		for (let i = 0; i < width * height; ++i) {

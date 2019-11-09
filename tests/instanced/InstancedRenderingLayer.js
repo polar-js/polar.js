@@ -45,7 +45,7 @@ class InstancedRenderingLayer extends Polar.Layer {
 			});
 		}
 		
-		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight);
+		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.getWidth() / Polar.Surface.getHeight());
 
 		const numberInput = document.getElementById('num-instance-number');
 		const numberSlider = document.getElementById('num-instance-slider');

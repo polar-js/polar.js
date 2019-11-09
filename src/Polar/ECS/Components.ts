@@ -3,7 +3,10 @@ import { Component } from 'Polar/ECS/ECS';
 import { Texture2D } from 'Polar/Renderer/Texture';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 
-/** Polar component which stores information about an entity's transform (position, rotation, scale). */
+/** Polar component which stores information about an entity's transform (position, rotation, scale).
+ * 
+ * @component 'Polar:Transform'
+*/
 export class TransformCP extends Component {
 
 	public x: number;
@@ -33,18 +36,22 @@ export class TransformCP extends Component {
 	public recalculate() {
 		this.transform = glm.mat4.create();
 		this.transform = glm.mat4.translate(this.transform, this.transform, glm.vec3.fromValues(this.x, this.y, 0));
-		this.transform = glm.mat4.rotate(this.transform, this.transform, this.rotation * Math.PI / 180, glm.vec3.fromValues(0, 0, 1));
+		this.transform = glm.mat4.rotate(this.transform, this.transform, this.rotation, glm.vec3.fromValues(0, 0, 1));
 		this.transform = glm.mat4.scale(this.transform, this.transform, glm.vec3.fromValues(this.scale, this.scale, this.scale));
 	}
 }
 
+/** A component which stores data about a 2D texture. 
+ * 
+ * @component 'Polar:Texture2D'
+*/
 export class Texture2DCP extends Component {
 
 	public texture: Texture2D;
 	public width: number;
 	public height: number;
 
-	public constructor(texture: Texture2D, width: number = 1, height: number = 1) {
+	public constructor(texture: Texture2D, width = 1, height = 1) {
 		super();
 		this.texture = texture;
 		this.width = width;
@@ -54,6 +61,10 @@ export class Texture2DCP extends Component {
 	public getType(): string { return 'Polar:Texture2D'; }
 }
 
+/** A component which stores a camera.
+ * 
+ * @component 'Polar:Camera'
+ */
 export class CameraCP extends Component {
 	public camera: OrthographicCamera;
 

@@ -7,7 +7,7 @@ class ExampleLayer extends Polar.Layer {
 		this.checkerboardSprite = new Polar.Sprite(checkerboard);
 		
 		this.timeElapsed = 0;
-		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.get().offsetWidth / Polar.Surface.get().offsetHeight);
+		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.getWidth() / Polar.Surface.getHeight());
 		this.ready = true;
 	}
 

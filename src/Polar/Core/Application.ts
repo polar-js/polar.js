@@ -1,6 +1,5 @@
 import { Layer } from 'Polar/Core/Layer';
 import { LayerStack } from 'Polar/Core/LayerStack';
-import { RenderCommand } from '../Renderer/RenderCommand';
 import { Renderer } from '../Renderer/Renderer';
 import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
@@ -22,7 +21,6 @@ export abstract class Application {
 		Surface.init(settings);
 		Input.init();
 		Renderer.init();
-		
 	}
 
 	/** Starts the update loop of the application. */
@@ -33,7 +31,7 @@ export abstract class Application {
 			const deltaTime = (time - this.lastFrameTime) / 1000;
 			this.lastFrameTime = time;
 
-			Surface.font.clearRect(0, 0, Surface.get().width, Surface.get().height);
+			Surface.font.clearRect(0, 0, Surface.getWidth(), Surface.getHeight());
 			this.layerStack.onUpdate(deltaTime);
 			this.frameID = window.requestAnimationFrame(update);
 		};

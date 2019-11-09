@@ -21,8 +21,9 @@ export function getFragmentSource(): string {
 	in vec2 v_TexCoord;
 
 	uniform sampler2D u_Texture;
+	uniform float u_Brightness;
 
 	void main() {
-		color = vec4(vec3(texture(u_Texture, v_TexCoord)) * (1.0 - distance(vec2(0.5, 0.5), v_TexCoord) / 1.414214), 1.0);
+		color = vec4(vec3(texture(u_Texture, v_TexCoord)) * (1.0 - distance(vec2(0.5, 0.5), v_TexCoord) / u_Brightness), 1.0);
 	}`;
 }

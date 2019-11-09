@@ -27,8 +27,12 @@ export class ParticleSystem extends System {
 
 export class ParticleEmitterCP extends Component {
 
+	/** The particle emitter. */
 	public emitter: ParticleEmitter;
 
+	/** Create a new particle emitter component.
+	 * @param {ParticleEmitter} emitter The emitter.
+	 */
 	public constructor(emitter: ParticleEmitter) {
 		super();
 		this.emitter = emitter;
