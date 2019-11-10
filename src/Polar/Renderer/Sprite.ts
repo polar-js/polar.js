@@ -2,7 +2,7 @@ import * as glm from 'gl-matrix';
 import { Texture2D } from 'Polar/Renderer/Texture';
 
 /** Represents a texture within world-space. */
-export  class Sprite {
+export class Sprite {
 	/** The sprite's opacity. Unimplemented. */
 	public opacity: number;
 

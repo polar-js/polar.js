@@ -27,7 +27,7 @@ function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
 }
 
 /** Represents an OpenGL vertex array. */
-export  class VertexArray {
+export class VertexArray {
 	private vertexArray: WebGLVertexArrayObject;
 	private vertexBuffers: VertexBuffer[];
 	private indexBuffer: IndexBuffer;

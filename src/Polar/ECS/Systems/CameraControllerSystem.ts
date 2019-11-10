@@ -6,7 +6,7 @@ import { Surface } from 'Polar/Renderer/Surface';
 import { Input } from 'Polar/Core/Input';
 
 /** A simple camera movement controller. */
-export  class CameraControllerSystem extends System {
+export class CameraControllerSystem extends System {
 
 	public onAttach(): void {
 		const controllerData: CameraControllerCP = <CameraControllerCP>this.manager.getSingleton('Polar:CameraController');

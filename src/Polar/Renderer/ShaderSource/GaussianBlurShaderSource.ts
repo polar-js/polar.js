@@ -21,28 +21,30 @@ export function getFragmentSource(): string {
 	in vec2 v_TexCoord;
 
 	uniform sampler2D u_Texture;
+	uniform int u_KernelSize;
 	uniform bool u_Horizontal;
-	uniform float u_Weights[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+	uniform float u_Weights[5];
+	uniform float u_Spread;
 
 	void main() {
 
-		vec2 tex_offset = 1.0 / textureSize(u_Texture, 0); // gets size of single texel.
-    	vec3 result = texture(image, v_TexCoord).rgb * u_Weights[0]; // current fragment's contribution
+		vec2 tex_offset = 1.0 / vec2(textureSize(u_Texture, 0)); // gets size of single texel.
+    	vec3 result = texture(u_Texture, v_TexCoord).rgb * u_Weights[0]; // current fragment's contribution
 		
-		if(horizontal)
+		if(u_Horizontal)
 		{
-			for(int i = 1; i < 5; ++i)
+			for(float i = 1.0; i < ceil(float(u_KernelSize) / 2.0); i++)
 			{
-				result += texture(u_Texture, v_TexCoord + vec2(tex_offset.x * i, 0.0)).rgb * u_Weights[i];
-				result += texture(u_Texture, v_TexCoord - vec2(tex_offset.x * i, 0.0)).rgb * u_Weights[i];
+				result += texture(u_Texture, v_TexCoord + vec2(tex_offset.x * i * u_Spread, 0.0)).rgb * u_Weights[int(i)];
+				result += texture(u_Texture, v_TexCoord - vec2(tex_offset.x * i * u_Spread, 0.0)).rgb * u_Weights[int(i)];
 			}
 		}
 		else
 		{
-			for(int i = 1; i < 5; ++i)
+			for(float i = 1.0; i < ceil(float(u_KernelSize) / 2.0); i++)
 			{
-				result += texture(u_Texture, v_TexCoord + vec2(0.0, tex_offset.y * i)).rgb * u_Weights[i];
-				result += texture(u_Texture, v_TexCoord - vec2(0.0, tex_offset.y * i)).rgb * u_Weights[i];
+				result += texture(u_Texture, v_TexCoord + vec2(0.0, tex_offset.y * i * u_Spread)).rgb * u_Weights[int(i)];
+				result += texture(u_Texture, v_TexCoord - vec2(0.0, tex_offset.y * i * u_Spread)).rgb * u_Weights[int(i)];
 			}
 		}
 

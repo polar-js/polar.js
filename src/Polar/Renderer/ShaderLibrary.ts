@@ -1,7 +1,7 @@
 import { Shader } from './Shader';
 
 /** Stores a number of shaders. */
-export  class ShaderLibrary {
+export class ShaderLibrary {
 	private shaders: { [id: string]: Shader };
 
 	/** Create a new shader library. */

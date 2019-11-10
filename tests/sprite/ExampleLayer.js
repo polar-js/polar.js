@@ -2,20 +2,21 @@ class ExampleLayer extends Polar.Layer {
 	constructor() {
 		super('example');
 
+		// Create the sprite's texture.
 		const checkerboard = new Polar.Texture2D();
 		checkerboard.loadFromPath('/textures/checkerboard.png');
+		// Create the sprite.
 		this.checkerboardSprite = new Polar.Sprite(checkerboard);
 		
-		this.timeElapsed = 0;
+		// Allows the camera to be moved with user input.
 		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.getWidth() / Polar.Surface.getHeight());
-		this.ready = true;
 	}
 
 	onUpdate(deltaTime) {
-	    // Update
+	    // Update the camera controller.
 	    this.cameraController.onUpdate(deltaTime);
 
-	    // Render
+	    // Render the scene.
 	    Polar.Renderer.beginScene(this.cameraController.getCamera());
 
 		Polar.Renderer.submitSprite(this.checkerboardSprite);

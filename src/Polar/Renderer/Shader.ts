@@ -12,7 +12,7 @@ function shaderTypeFromString(type: string): number {
 }
 
 /** Represents an OpenGL shader. */
-export  class Shader {
+export class Shader {
 	private program: WebGLProgram;
 	private name: string;
 	private locations: { [id: string]: WebGLUniformLocation };
@@ -25,26 +25,34 @@ export  class Shader {
 	}
 
 	/**
-	 * Loads a shader from a file path.
+	 * Creates a shader from a file path.
 	 * @param {string} path The file path of the shader source code.
-	 * @param {string} [name] The name of the shader (Optional). If null, will use the filename.
+	 * @param {string} [name] The name of the shader (Optional). If null, shader will use the filename as name.
 	 * @returns {Shader} The shader that was loaded from the path.
-	 * @static
 	 */
-	public static async loadFromFetch(path: string, name: string = null): Promise<Shader> {
+	public static async loadFromFetch(path: string, name?: string): Promise<Shader> {
 		if (!name) name = path.substr(path.lastIndexOf('/') + 1);
 		const response = await fetch(path);
 		const source = await response.text();
 		const shaderSources = this.preProcess(source);
 		return new Shader(name, shaderSources[shaderTypeFromString('vertex')], shaderSources[shaderTypeFromString('fragment')]);
 	}
+
+	/**
+	 * Creates a shader from source code stored in script tags.
+	 * @param {string} vertexID The HTML ID of the vertex shader <script>.
+	 * @param {string} fragmentID The HTML ID of the fragment shader <script>.
+	 * @param {string} name The name of the shader.
+	 */
+	public static loadFromScript(vertexID: string, fragmentID: string, name: string): Shader {
+		console.log(document.getElementById(vertexID).innerHTML + '\n\n' + document.getElementById(fragmentID).innerHTML);
+		return new Shader(name, document.getElementById(vertexID).innerHTML, document.getElementById(fragmentID).innerHTML);
+	}
 	
 	/**
 	 * Processes the raw shader source file and returns the individual shaders.
 	 * @param {string} source The raw source code.
 	 * @returns {{[id: number]: string}} A dictionary of the individual shaders.
-	 * @private
-	 * @static
 	 */
 	private static preProcess(source: string): {[id: number]: string} {
 		let sources: {[id: number]: string} = {};
@@ -80,7 +88,7 @@ export  class Shader {
 		let program: WebGLProgram = Surface.gl.createProgram();
 		let shaders: WebGLShader[] = [];
 		for (let type in shaderSources) {
-			const source = shaderSources[type];
+			const source = shaderSources[type].trim();
 
 			const shader = Surface.gl.createShader(Number(type));
 			Surface.gl.shaderSource(shader, source);
@@ -234,5 +242,25 @@ export  class Shader {
 	 */
 	public uploadUniformMat4(name: string, value: glm.mat4) {
 		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
+	}
+
+	/**
+	 * Set a boolean uniform's value.
+	 * @param {string} name The name of the uniform variable.
+	 * @param {boolean} value The value which the uniform is set to.
+	 */
+	public uploadUniformBool(name: string, value: boolean) {
+		Surface.gl.uniform1i(this.getUniformLocation(name), value ? 1 : 0);
+	}
+
+	/**
+	 * 
+	 * @param {string} name 
+	 * @param {Float32Array} list 
+	 * @param {number} offset 
+	 * @param {number} length 
+	 */
+	public uploadUniformFloatArray(name: string, list: Float32Array, offset?: number, length?: number) {
+		Surface.gl.uniform1fv(this.getUniformLocation(name), list, offset, length);
 	}
 }
