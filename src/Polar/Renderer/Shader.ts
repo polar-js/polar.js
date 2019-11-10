@@ -243,4 +243,24 @@ export  class Shader {
 	public uploadUniformMat4(name: string, value: glm.mat4) {
 		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
 	}
+
+	/**
+	 * Set a boolean uniform's value.
+	 * @param {string} name The name of the uniform variable.
+	 * @param {boolean} value The value which the uniform is set to.
+	 */
+	public uploadUniformBool(name: string, value: boolean) {
+		Surface.gl.uniform1i(this.getUniformLocation(name), value ? 1 : 0);
+	}
+
+	/**
+	 * 
+	 * @param {string} name 
+	 * @param {Float32Array} list 
+	 * @param {number} offset 
+	 * @param {number} length 
+	 */
+	public uploadUniformFloatArray(name: string, list: Float32Array, offset?: number, length?: number) {
+		Surface.gl.uniform1fv(this.getUniformLocation(name), list, offset, length);
+	}
 }

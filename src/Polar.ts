@@ -30,8 +30,9 @@ import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSourc
 import * as InvertShaderSource from 'Polar/Renderer/ShaderSource/InvertShaderSource';
 import * as GrayscaleShaderSource from 'Polar/Renderer/ShaderSource/GrayscaleShaderSource';
 import * as VignetteShaderSource from 'Polar/Renderer/ShaderSource/VignetteShaderSource';
+import * as GaussianBlurShaderSource from 'Polar/Renderer/ShaderSource/GaussianBlurShaderSource';
 
-export { Application, glm, p2, TextureShaderSource, ColorShaderSource, InvertShaderSource, GrayscaleShaderSource, VignetteShaderSource };
+export { Application, glm, p2, TextureShaderSource, ColorShaderSource, InvertShaderSource, GrayscaleShaderSource, VignetteShaderSource, GaussianBlurShaderSource };
 
 export * from 'Polar/Core/Layer';
 export * from 'Polar/Core/Input';

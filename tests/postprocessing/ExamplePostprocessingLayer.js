@@ -49,10 +49,21 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		const invertShader = new Polar.Shader('InvertShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource());
 		const grayscaleShader = new Polar.Shader('GrayscaleShader', Polar.GrayscaleShaderSource.getVertexSource(), Polar.GrayscaleShaderSource.getFragmentSource());
 		const vignetteShader = new Polar.Shader('VignetteShader', Polar.VignetteShaderSource.getVertexSource(), Polar.VignetteShaderSource.getFragmentSource());
+		const blurShader = new Polar.Shader('BlurShader', Polar.GaussianBlurShaderSource.getVertexSource(), Polar.GaussianBlurShaderSource.getFragmentSource());
 
 		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Invert', invertShader), false);
 		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Grayscale', grayscaleShader, false));
-		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Vignette', vignetteShader, false, [['u_Brightness', Polar.ShaderDataType.Float, 2]]));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('Vignette', vignetteShader, false, [['u_Brightness', [Polar.ShaderDataType.Float, 2]]]));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('HorizontalBlur', blurShader, false, [	
+			['u_KernelSize', [Polar.ShaderDataType.Int, 9]],
+			['u_Horizontal', [Polar.ShaderDataType.Bool, true]],
+			['u_Weights', [Polar.ShaderDataType.FloatArray, [0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216]]],
+			['u_Spread', [Polar.ShaderDataType.Float, 1.0]]]));
+		Polar.Renderer.addPostprocessingStage(new Polar.PostprocessingStage('VerticalBlur', blurShader, false, [
+			['u_KernelSize', [Polar.ShaderDataType.Int, 9]],
+			['u_Horizontal', [Polar.ShaderDataType.Bool, false]],
+			['u_Weights', [Polar.ShaderDataType.FloatArray, [0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216]]],
+			['u_Spread', [Polar.ShaderDataType.Float, 1.0]]]));
 
 		document.getElementById('invert-colors-checkbox').addEventListener('change', (event) => {
 			if (event.target.checked) {
@@ -78,10 +89,28 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 				Polar.Renderer.disablePostprocessingStage('Vignette');
 			}
 		});
+		document.getElementById('blur-h-checkbox').addEventListener('change', (event) => {
+			if (event.target.checked) {
+				Polar.Renderer.enablePostprocessingStage('HorizontalBlur');
+			}
+			else {
+				Polar.Renderer.disablePostprocessingStage('HorizontalBlur');
+			}
+		});
+		document.getElementById('blur-v-checkbox').addEventListener('change', (event) => {
+			if (event.target.checked) {
+				Polar.Renderer.enablePostprocessingStage('VerticalBlur');
+			}
+			else {
+				Polar.Renderer.disablePostprocessingStage('VerticalBlur');
+			}
+		});
 
 		Polar.Renderer.disablePostprocessingStage('Invert');
 		Polar.Renderer.disablePostprocessingStage('Grayscale');
 		Polar.Renderer.disablePostprocessingStage('Vignette');
+		Polar.Renderer.disablePostprocessingStage('HorizontalBlur');
+		Polar.Renderer.disablePostprocessingStage('VerticalBlur');
 	}
 
 	onUpdate(deltaTime) {
