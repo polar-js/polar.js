@@ -17,13 +17,8 @@ jobs:
       with:
         node-version: 12
 
-    - name: Build
-      run: npm run build
-
-    - name: Deploy to gh-pages
-      run: |
-        echo polar.js.org > ./docs/CNAME
-        git subtree push --prefix docs origin gh-pages
+    - name: Build umd
+      run: npm run build:umd
       
     - name: Deploy to npm
       run: |
@@ -32,3 +27,9 @@ jobs:
       env:
         CI: true
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - name: Build docs
+      run: npm run build:docs
+
+    - name: Deploy to gh-pages
+      run: echo "TODO"
