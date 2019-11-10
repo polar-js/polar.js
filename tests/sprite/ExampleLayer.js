@@ -6,9 +6,7 @@ class ExampleLayer extends Polar.Layer {
 		checkerboard.loadFromPath('/textures/checkerboard.png');
 		this.checkerboardSprite = new Polar.Sprite(checkerboard);
 		
-		this.timeElapsed = 0;
 		this.cameraController = new Polar.OrthographicCameraController(Polar.Surface.getWidth() / Polar.Surface.getHeight());
-		this.ready = true;
 	}
 
 	onUpdate(deltaTime) {
