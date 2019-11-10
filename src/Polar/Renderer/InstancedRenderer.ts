@@ -94,8 +94,7 @@ export class InstancedRenderer {
 	}
 
 	/** Begin the instanced renderer scene
-	 * @remarks
-	 * Called only by Renderer
+	 * @remarks Called only by Renderer
 	 * @internal
 	 */
 	public static endScene() {

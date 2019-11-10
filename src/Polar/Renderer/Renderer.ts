@@ -17,8 +17,7 @@ import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSourc
 
 /** Handles the rendering objects to the canvas, including post.
  * 
- * @remarks
- * For instanced rendering, see {@link Polar#InstancedRenderer | InstancedRenderer}
+ * @remarks For instanced rendering, see {@link Polar#InstancedRenderer | InstancedRenderer}
  */
 export class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
@@ -188,9 +187,7 @@ export class Renderer {
 	}
 
 	/** Begin the rendering of a scene.
-	 * @remarks
-	 * To be called every frame before using any rendering commands.
-	 * Used in conjunction with Renderer.endScene().
+	 * @remarks To be called every frame before using any rendering commands. Used in conjunction with Renderer.endScene().
 	 * @param {OrthographicCamera} camera The scene's camera.
 	 */
 	public static beginScene(camera: OrthographicCamera) {
@@ -215,8 +212,7 @@ export class Renderer {
 	}
 
 	/** End the rendering of a scene.
-	 * @remarks
-	 * To be called every frame when all the rendering has been completed. Displays the results of all rendering commands.
+	 * @remarks To be called every frame when all the rendering has been completed. Displays the results of all rendering commands.
 	 */
 	public static endScene() {
 		InstancedRenderer.endScene();

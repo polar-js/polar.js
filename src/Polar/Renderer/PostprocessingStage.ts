@@ -84,24 +84,21 @@ export class PostprocessingStage {
 	}
 
 	/** Bind the postprocessing stage
-	 * @remarks
-	 * Generally only used within the Polar Renderer.
+	 * @remarks Generally only used within the Polar Renderer.
 	 */
 	public bind() {
 		this.fbo.bind();
 	}
 
 	/** Unbinds the postprocessing stage
-	 * @remarks
-	 * Generally only used within the Polar Renderer.
+	 * @remarks Generally only used within the Polar Renderer.
 	 */
 	public unbind() {
 		this.fbo.unbind();
 	}
 
 	/** Renders the stage to the currently bound framebuffer.
-	 * @remarks
-	 * Generally only used within the Polar Renderer.
+	 * @remarks Generally only used within the Polar Renderer.
 	 */
 	public render() {
 		this.screenVA.bind();
