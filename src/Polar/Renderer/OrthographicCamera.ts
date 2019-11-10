@@ -1,7 +1,7 @@
 import * as glm from 'gl-matrix';
 
 /** Class representing an orthographic camera for use in a Polar scene. */
-export  class OrthographicCamera {
+export class OrthographicCamera {
 	private projectionMatrix: glm.mat4;
 	private viewMatrix: glm.mat4;
 	private viewProjectionMatrix: glm.mat4;

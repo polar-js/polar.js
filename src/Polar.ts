@@ -5,8 +5,7 @@ let application: Application;
 /**
  * Begin running the polar engine.
  * 
- * @remarks
- * There can only be one application running at one time.
+ * @remarks There can only be one application running at one time.
  * 
  * @param app Subclass of a Polar Application.
  */

@@ -20,7 +20,7 @@ import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSourc
  * @remarks
  * For instanced rendering, see {@link Polar#InstancedRenderer | InstancedRenderer}
  */
-export  class Renderer {
+export class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
 	private static shaderLibrary: ShaderLibrary;
 

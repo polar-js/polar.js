@@ -6,8 +6,7 @@ export class Input {
 	private static mousePosition: glm.vec2;
 	
 	/** Initialize the input system of Polar.
-	 * @remarks
-	 * Not to be called by the user. Called within Polar.
+	 * @remarks Not to be called by the user. Called within Polar.
 	 */
 	public static init() {
 		this.keyStates = {};

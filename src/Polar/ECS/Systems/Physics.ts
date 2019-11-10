@@ -5,9 +5,7 @@ import { Renderer } from 'Polar/Renderer/Renderer';
 import { createTransform } from 'Polar/Util/Math';
 import { Input } from 'Polar/Core/Input';
 
-/** A system which manages a p2 physics world.
- * @extends System
- */
+/** A system which manages a p2 physics world. */
 export class PhysicsSystem extends System {
 
 	public onAttach() {}
@@ -29,9 +27,7 @@ export class PhysicsSystem extends System {
 	public getName(): string { return 'Polar:PhysicsSystem'; }
 }
 
-/** A component which stores information about an entity's physics body.
- * @extends Component
- */
+/** A component which stores information about an entity's physics body. */
 export class PhysicsBodyCP extends Component {
 
 	public body: p2.Body;
@@ -53,9 +49,7 @@ export class PhysicsBodyCP extends Component {
 	}
 }
 
-/** A singleton component which represents a p2 physics world.
- * @extends Component
- */
+/** A singleton component which represents a p2 physics world. */
 export class PhysicsWorldCP extends Component {
 
 	public world: p2.World;
@@ -74,9 +68,7 @@ export class PhysicsWorldCP extends Component {
 	}
 }
 
-/** A system which renders debug outlines of physics bodies within the world. 
- * @extends System
- */
+/** A system which renders debug outlines of physics bodies within the world. */
 export class PhysicsDebugRenderSystem extends System {
 	public onAttach(): void {}
 
@@ -125,9 +117,7 @@ export class PhysicsDebugRenderSystem extends System {
 	}
 }
 
-/** A system which allows the user to click and drag physics bodies around the world.
- * @extends System
- */
+/** A system which allows the user to click and drag physics bodies around the world. */
 export class PhysicsDebugInteractionSystem extends System {
 	public onAttach(): void {
 		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody = new p2.Body({mass: 0});
@@ -313,9 +303,7 @@ export class PhysicsDebugInteractionSystem extends System {
 	}
 }
 
-/** A singleton component which stores information for a PhysicsDebugInteractionSystem 
- * @extends Component
-*/
+/** A singleton component which stores information for a PhysicsDebugInteractionSystem */
 export class PhysicsDebugInteractionCP extends Component {
 
 	public currentBody: p2.Body;

@@ -1,7 +1,7 @@
 import { Surface as s } from './Surface';
 
 /** Represents a 2D OpenGL Texture */
-export  class Texture2D {
+export class Texture2D {
 	private path: string;
 	private width: number;
 	private height: number;

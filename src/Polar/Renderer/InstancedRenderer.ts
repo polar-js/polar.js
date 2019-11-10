@@ -29,8 +29,7 @@ export class InstancedRenderer {
 	private static instanceData: Float32Array;
 
 	/** Initialize the instanced renderer
-	 * @remarks
-	 * Only to be called by Renderer.
+	 * @remarks Only to be called by Renderer.
 	 * @internal
 	 */
 	public static init() {

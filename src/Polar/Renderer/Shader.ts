@@ -12,7 +12,7 @@ function shaderTypeFromString(type: string): number {
 }
 
 /** Represents an OpenGL shader. */
-export  class Shader {
+export class Shader {
 	private program: WebGLProgram;
 	private name: string;
 	private locations: { [id: string]: WebGLUniformLocation };

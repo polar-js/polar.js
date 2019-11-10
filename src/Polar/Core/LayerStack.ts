@@ -1,6 +1,6 @@
 import { Layer } from 'Polar/Core/Layer';
 
-export  class LayerStack {
+export class LayerStack {
 	private layers: Layer[];
 	private layerInsertIndex = 0;
 
