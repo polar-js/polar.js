@@ -3,7 +3,7 @@ const { version } = require('./package.json');
 
 module.exports = env => ({
 	entry: './src/Polar.ts',
-	mode: env === 'dev' ? 'development' : 'production',
+	mode: env.production ? 'production' : 'development',
 	module: {
 		rules: [
 			{
@@ -20,10 +20,10 @@ module.exports = env => ({
 		}
 	},
 	output: {
-		filename: env === 'dev' ? 'polar.min.js' : `discord.${version}.js`,
-		path: path.resolve(__dirname, env === 'dev' ? 'tests' : 'umd',),
+		filename: env === 'dev' ? 'polar.min.js' : `polar.${env.production ? version : 'min'}.js`,
+		path: path.resolve(__dirname, env.production ? 'umd' : 'tests',),
 		library: 'Polar',
 		libraryTarget: 'window'
 	},
-	watch: env === dev ? true : false
+	watch: env.production ? false : true,
 });
