@@ -11,7 +11,8 @@
         "serve": "npx serve tests",
         "watch": "npx webpack --env.NODE_ENV=local",
         "build:umd": "npx webpack -env.NODE_ENV=local --env.production",
-        "build:docs": "npx github:polar-js/docgen"
+        "build:docs": "npx github:polar-js/docgen",
+        "build:js": "npx typescript src/Polar.ts"
     },
     "repository": {
         "type": "git",
