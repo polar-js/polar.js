@@ -3,6 +3,9 @@ import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
 import { RenderCommand } from './RenderCommand';
 
 export class Surface {
+
+	private static settings: ApplicationSettings;
+
 	/** The engine's main rendering canvas. */
 	public static canvas: HTMLCanvasElement;
 	private static fontCanvas: HTMLCanvasElement;
@@ -24,25 +27,27 @@ export class Surface {
 	 * @param {settings} settings The engine settings.
 	 */
 	public static init(settings: ApplicationSettings) {
+		this.settings = settings;
+		if (!this.settings.clearColor) this.settings.clearColor = glm.vec3.fromValues(0.1, 0.1, 0.1);
 
 		// CREATE WEBGL CANVAS //
-		if (settings.canvasID) {
-			this.canvas = <HTMLCanvasElement> document.getElementById(settings.canvasID);
+		if (this.settings.canvasID) {
+			this.canvas = <HTMLCanvasElement> document.getElementById(this.settings.canvasID);
 		}
 		else {
 			this.canvas = document.createElement('canvas');
 			document.getElementsByTagName('body')[0].appendChild(this.canvas);
 		}
 
-		if (settings.displayMode == 'fill') {
+		if (this.settings.displayMode == 'fill') {
 			this.canvas.style.width = '100%';
 			this.canvas.style.height = '100%';
 			this.canvas.width = this.canvas.parentElement.offsetWidth;
 			this.canvas.height = this.canvas.parentElement.offsetHeight;
 		}
-		else if (settings.displayMode == 'fixed' && settings.canvasID) {
-			this.canvas.width = settings.width || 780;
-			this.canvas.height = settings.height || 480;
+		else if (this.settings.displayMode == 'fixed' && this.settings.canvasID) {
+			this.canvas.width = this.settings.width || 780;
+			this.canvas.height = this.settings.height || 480;
 		}
 		this.gl = this.canvas.getContext('webgl2');
 
@@ -63,7 +68,7 @@ export class Surface {
 		this.font = this.fontCanvas.getContext('2d');
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			if (settings.displayMode == 'fill') {
+			if (this.settings.displayMode == 'fill') {
 				this.canvas.width = this.canvas.parentElement.offsetWidth;
 				this.canvas.height = this.canvas.parentElement.offsetHeight;
 			}
@@ -76,10 +81,7 @@ export class Surface {
 			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});
 		
-		if (settings.clearColor)
-			RenderCommand.setClearColor(glm.vec4.fromValues(settings.clearColor[0], settings.clearColor[1], settings.clearColor[2], 1.0));
-		else
-			RenderCommand.setClearColor(glm.vec4.fromValues(0.1, 0.1, 0.1, 1.0));
+		RenderCommand.setClearColor(glm.vec4.fromValues(this.settings.clearColor[0], this.settings.clearColor[1], this.settings.clearColor[2], 1.0));
 	}
 
 	/** Get the font canvas element.
@@ -113,5 +115,10 @@ export class Surface {
 	*/
 	public static getHeight(): number {
 		return this.canvas.height;
+	}
+
+	public static clear(color?: glm.vec4) {
+		RenderCommand.setClearColor(color ? color : glm.vec4.fromValues(this.settings.clearColor[0], this.settings.clearColor[1], this.settings.clearColor[2], 1.0));
+		RenderCommand.clear();
 	}
 }

@@ -1,18 +1,18 @@
 import * as glm from 'gl-matrix';
 
 /** Settings for creating a new application. */
-export interface ApplicationSettings {
+export class ApplicationSettings {
 	/** The ID of the HTMLCanvasElement. */
-	canvasID: string;
+	public canvasID: string;
 	/** The display mode of the game engine.
 	 * @remarks
 	 * Can be 'fixed' or 'fill'.
 	 */
-	displayMode: string;
+	public displayMode: string;
 	/** The width of the display surface. */
-	width: number;
+	public width: number;
 	/** The height of the display surface. */
-	height: number;
+	public height: number;
 	/** The background color of the surface. */
-	clearColor: glm.vec3;
+	public clearColor: glm.vec3 = glm.vec3.fromValues(0.1, 0.1, 0.1);
 }

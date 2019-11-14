@@ -28,8 +28,8 @@ export function getFragmentSource(): string {
 
 	void main() {
 
-		vec2 tex_offset = 1.0 / vec2(textureSize(u_Texture, 0)); // gets size of single texel.
-    	vec3 result = texture(u_Texture, v_TexCoord).rgb * u_Weights[0]; // current fragment's contribution
+		vec2 tex_offset = 1.0 / vec2(textureSize(u_Texture, 0));
+    	vec3 result = texture(u_Texture, v_TexCoord).rgb * u_Weights[0];
 		
 		if(u_Horizontal)
 		{

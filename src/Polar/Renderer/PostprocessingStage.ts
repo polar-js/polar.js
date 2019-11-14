@@ -10,13 +10,13 @@ import { RenderCommand } from 'Polar/Renderer/RenderCommand';
 
 export class PostprocessingStage {
 
-	private name: string;
-	private shader: Shader;
-	private fbo: FrameBuffer;
-	private screenVA: VertexArray;
-	private enabled: boolean;
+	protected name: string;
+	protected shader: Shader;
+	protected fbo: FrameBuffer;
+	protected screenVA: VertexArray;
+	protected enabled: boolean;
 
-	private uniforms: Map<string, [ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4 | boolean | Float32Array]>;
+	protected uniforms: Map<string, [ShaderDataType, number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4 | boolean | Float32Array]>;
 
 	/**
 	 * Create a new postprocessing stage.
@@ -84,14 +84,14 @@ export class PostprocessingStage {
 	}
 
 	/** Bind the postprocessing stage
-	 * @remarks Generally only used within the Polar Renderer.
+	 * @internal
 	 */
 	public bind() {
 		this.fbo.bind();
 	}
 
 	/** Unbinds the postprocessing stage
-	 * @remarks Generally only used within the Polar Renderer.
+	 * @internal
 	 */
 	public unbind() {
 		this.fbo.unbind();
@@ -105,6 +105,35 @@ export class PostprocessingStage {
 		this.fbo.getTexture().bind();
 		this.shader.bind();
 		this.shader.uploadUniformInt('u_Texture', 0);
+		this.uploadCustomUniforms();
+		RenderCommand.drawElements(this.screenVA);
+	}
+
+	/** Get the name of the stage.
+	 * @returns {string} The name.
+	 */
+	public getName(): string {
+		return this.name;
+	}
+
+	/** Check if the stage is enabled.
+	 * @returns {boolean} Whether the stage is enabled.
+	 */
+	public isEnabled(): boolean {
+		return this.enabled;
+	}
+
+	/** Enables the stage. */
+	public enable() {
+		this.enabled = true;
+	}
+
+	/** Disables the stage. */
+	public disable() {
+		this.enabled = false;
+	}
+
+	protected uploadCustomUniforms() {
 		for (const [name, [type, value]] of this.uniforms) {
 			if (type === ShaderDataType.Int) {
 				this.shader.uploadUniformInt(name, <number>value);
@@ -137,31 +166,6 @@ export class PostprocessingStage {
 				console.error(`Unknown ShaderDataType: '${type}'`);
 			}
 		}
-		RenderCommand.drawElements(this.screenVA);
-	}
-
-	/** Get the name of the stage.
-	 * @returns {string} The name.
-	 */
-	public getName(): string {
-		return this.name;
-	}
-
-	/** Check if the stage is enabled.
-	 * @returns {boolean} Whether the stage is enabled.
-	 */
-	public isEnabled(): boolean {
-		return this.enabled;
-	}
-
-	/** Enables the stage. */
-	public enable() {
-		this.enabled = true;
-	}
-
-	/** Disables the stage. */
-	public disable() {
-		this.enabled = false;
 	}
 
 	/**

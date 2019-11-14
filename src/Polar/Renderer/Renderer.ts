@@ -2,7 +2,6 @@ import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
 import { Shader } from 'Polar/Renderer/Shader';
 import { RenderCommand } from 'Polar/Renderer/RenderCommand';
-import { InstancedRenderer } from 'Polar/Renderer/InstancedRenderer';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
 import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
@@ -11,6 +10,8 @@ import { Texture2D } from 'Polar/Renderer/Texture';
 import { Surface } from 'Polar/Renderer/Surface';
 import { createTransform } from 'Polar/Util/Math';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
+import { InstancedRenderer } from 'Polar/Renderer/InstancedRenderer';
+import { LightRenderer } from 'Polar/Renderer/LightRenderer';
 import { PostprocessingStage } from 'Polar/Renderer/PostprocessingStage';
 import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
@@ -32,11 +33,14 @@ export class Renderer {
 	// POST PROCESSING //
 	private static postprocessingStages: PostprocessingStage[];
 
+	private static doLighting: boolean = false;
+
 	/** Initialize the renderer. */
 	public static init() {
 		RenderCommand.init();
 		ParticleRenderer.init();
 		InstancedRenderer.init();
+		LightRenderer.init();
 
 		this.postprocessingStages = [];
 
@@ -193,21 +197,26 @@ export class Renderer {
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		
-		RenderCommand.clear();
+		Surface.clear();
 		for (const stage of this.postprocessingStages) {
 			stage.bind();
-			RenderCommand.clear();
+			Surface.clear();
 			stage.unbind();
 		}
-		if (this.postprocessingStages.length >= 1) {
-			const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
-				return stage.isEnabled();
-			});
-			if (next)  {
-				next.bind();
+		
+		if (this.doLighting) {
+			LightRenderer.beginScene(camera);
+		}
+		else {
+			if (this.postprocessingStages.length >= 1) {
+				const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
+					return stage.isEnabled();
+				});
+				if (next)  {
+					next.bind();
+				}
 			}
 		}
-
 		InstancedRenderer.beginScene(camera);
 	}
 
@@ -216,15 +225,32 @@ export class Renderer {
 	 */
 	public static endScene() {
 		InstancedRenderer.endScene();
+		if (this.doLighting) {
+			if (this.postprocessingStages.length >= 1) {
+				const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
+					return stage.isEnabled();
+				});
+				if (next)  {
+					next.bind();
+				}
+				else Surface.gl.bindFramebuffer(Surface.gl.FRAMEBUFFER, null);
+			}
+			LightRenderer.endScene();
+		}
+		
 
 		for (let i = 0; i < this.postprocessingStages.length; i++) {
+			// Get next enabled framebuffer.
 			const next = this.postprocessingStages.slice(i + 1).find((stage: PostprocessingStage) => {
 				return stage.isEnabled();
 			});
 
+			// Bind next frame buffer if it exists.
 			if (next) next.bind();
+			// Else target the screen's framebuffer (ie. none bound).
 			else this.postprocessingStages[i].unbind();
 			
+			// Render the stage to the current framebuffer.
 			if (this.postprocessingStages[i].isEnabled())
 				this.postprocessingStages[i].render();
 		}
@@ -435,5 +461,15 @@ export class Renderer {
 		this.postprocessingStages.find((value: PostprocessingStage, index: number, array: PostprocessingStage[]) => {
 			return value.getName() === name;
 		}).disable();
+	}
+
+	/** Enable lighting. */
+	public static enableLighting() {
+		this.doLighting = true;
+	}
+
+	/** Disable lighting. */
+	public static disableLighting() {
+		this.doLighting = false;
 	}
 }

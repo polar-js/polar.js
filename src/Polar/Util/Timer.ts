@@ -1,4 +1,5 @@
 
+/** A utility used to check when a certain time has elapsed. */
 export class Timer {
 
 	// Delay the timer will wait before returning true.

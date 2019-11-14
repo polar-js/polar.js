@@ -92,7 +92,9 @@ export class CameraControllerSystem extends System {
 }
 
 export class CameraControllerCP extends Component {
+	/** The camera's aspect ratio. */
 	public aspectRatio: number;
+	/** The camera's zoom. */
 	public zoomLevel: number;
 
 	public doRotation: boolean;

@@ -66,6 +66,7 @@ export class Texture2DCP extends Component {
  * @component 'Polar:Camera'
  */
 export class CameraCP extends Component {
+	/** The camera. */
 	public camera: OrthographicCamera;
 
 	public getType(): string { return 'Polar:Camera'; }
