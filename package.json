@@ -8,10 +8,11 @@
     "types": "dist/Polar.d.ts",
     "scripts": {
         "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-        "watch": "node build.js watch",
-        "tests": "npx http-server tests -c-1",
-        "build": "npx typescript && node build prod",
-        "clean": "rm -r docs umd dist && rm tests/polar.min.js || true"
+        "serve": "npx serve tests",
+        "watch": "npx webpack --env.NODE_ENV=local",
+        "build:umd": "npx webpack -env.NODE_ENV=local --env.production",
+        "build:docs": "npx github:polar-js/docgen",
+        "build:js": "npx typescript src/Polar.ts"
     },
     "repository": {
         "type": "git",
@@ -30,11 +31,13 @@
         "ts-loader": "^6.2.1",
         "typedoc": "^0.15.0",
         "typescript": "^3.6.4",
-        "webpack": "^4.41.2"
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10"
     },
     "dependencies": {
         "@types/gl-matrix": "^2.4.5",
         "@types/p2": "^0.7.35",
+        "@types/webgl2": "0.0.5",
         "gl-matrix": "^3.1.0",
         "maxrects-packer": "^2.5.0",
         "p2": "^0.7.1"
