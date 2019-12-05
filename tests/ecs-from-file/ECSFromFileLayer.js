@@ -47,47 +47,47 @@ class ECSFromFileLayer extends Polar.Layer {
 		Polar.ECSLoader.registerSystem(new Polar.TransformSystem());
 		Polar.ECSLoader.registerSystem(new TestSystem());
 
-		let ecsState = {
-			systemNames: ['Polar:TextureLoadSystem', 'Polar:CameraControllerSystem', 'Polar:TransformSystem', 'Polar:RenderSystem', 'Sandbox:TestSystem'],
-			singletons: {
-				components: [{
-					type: 'Polar:TextureLibrary',
-					texturePaths: [['checkerboard', '/textures/checkerboard.png']]
+		let ecsState = JSON.parse(`{
+			"systemNames": ["Polar:TextureLoadSystem", "Polar:CameraControllerSystem", "Polar:TransformSystem", "Polar:RenderSystem", "Sandbox:TestSystem"],
+			"singletons": {
+				"components": [{
+					"type": "Polar:TextureLibrary",
+					"texturePaths": [["checkerboard", "/textures/checkerboard.png"]]
 				},
 				{
-					type: 'Polar:Camera'
+					"type": "Polar:Camera"
 				},
 				{
-					type: 'Polar:CameraController',
-					aspectRatio: 0,
-					zoomLevel: 1,
-					doRotation: false,
-					cameraPosition: [0, 0, 0],
-					cameraRotation: 0,
-					cameraRotationSpeed: Math.PI / 2
+					"type": "Polar:CameraController",
+					"aspectRatio": 0,
+					"zoomLevel": 1,
+					"doRotation": false,
+					"cameraPosition": [0, 0, 0],
+					"cameraRotation": 0,
+					"cameraRotationSpeed": 1.57079632679
 				}]
 			},
-			entities: [{
-				components: [{
-					type: 'Polar:Transform',
-					x: 0,
-					y: 0,
-					rotation: 0,
-					scale: 1,
-					modified: true,
-					transform: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+			"entities": [{
+				"components": [{
+					"type": "Polar:Transform",
+					"x": 0,
+					"y": 0,
+					"rotation": 0,
+					"scale": 1,
+					"modified": true,
+					"transform": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 				},
 				{
-					type: 'Polar:TextureRef',
-					alias: 'checkerboard',
-					width: 1,
-					height: 1
+					"type": "Polar:TextureRef",
+					"alias": "checkerboard",
+					"width": 1,
+					"height": 1
 				},
 				{
-					type: 'Sandbox:Test'
+					"type": "Sandbox:Test"
 				}]
-			}],
-		};
+			}]
+		}`);
 
 		// Create world manager.
 		this.manager = new Polar.WorldManager(ecsState);
