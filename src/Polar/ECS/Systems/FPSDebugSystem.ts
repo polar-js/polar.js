@@ -1,5 +1,7 @@
 import * as glm from 'gl-matrix';
-import { System, Component, Entity } from 'Polar/ECS/ECS';
+import { System } from 'Polar/ECS/System';
+import { Component} from 'Polar/ECS/Component';
+import { Entity } from 'Polar/ECS/Entity';
 import { Timer } from 'Polar/Util/Timer';
 import { Surface } from 'Polar/Renderer/Surface';
 
@@ -7,7 +9,7 @@ export class FPSDebugSystem extends System {
 
 	public onAttach(): void {
 		// Setup FPS timer.
-		const systemData = <FPSDebugCP>this.manager.getSingleton('Polar:FPSDebug');
+		const systemData = <FPSDebugCP>this.getManager().getSingleton('Polar:FPSDebug');
 		if (!systemData) {
 			console.error('FPS Debug System requires FPSDebugCP singleton to store data.');
 		}
@@ -18,7 +20,7 @@ export class FPSDebugSystem extends System {
 
 	public beginUpdate(dt: number): void {
 		// Check FPS timer.
-		const systemData = <FPSDebugCP>this.manager.getSingleton('Polar:FPSDebug');
+		const systemData = <FPSDebugCP>this.getManager().getSingleton('Polar:FPSDebug');
 		systemData.numUpdates++;
 		if (systemData.timer.update(dt)) {
 			systemData.fps = Math.round(systemData.numUpdates);
@@ -61,7 +63,5 @@ export class FPSDebugCP extends Component {
 		this.fillStyle = fillStyle;
 	}
 
-	public getType(): string {
-		return 'Polar:FPSDebug';
-	}
+	public readonly type = 'Polar:FPSDebug';
 }

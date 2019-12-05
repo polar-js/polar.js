@@ -232,7 +232,7 @@ export class Shader {
 	 * @param {glm.mat3} value The value which the uniform is set to.
 	 */
 	public uploadUniformMat3(name: string, value: glm.mat3) {
-		Surface.gl.uniformMatrix3fv(this.getUniformLocation(name), false, value);
+		Surface.gl.uniformMatrix3fv(this.getUniformLocation(name), false, new Float32Array(value));
 	}
 
 	/**
@@ -241,7 +241,7 @@ export class Shader {
 	 * @param {glm.mat4} value The value which the uniform is set to.
 	 */
 	public uploadUniformMat4(name: string, value: glm.mat4) {
-		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, value);
+		Surface.gl.uniformMatrix4fv(this.getUniformLocation(name), false, new Float32Array(value));
 	}
 
 	/**

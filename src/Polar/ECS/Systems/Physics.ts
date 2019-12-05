@@ -1,6 +1,8 @@
 import * as glm from 'gl-matrix';
 import * as p2 from 'p2';
-import { System, Component, Entity } from 'Polar/ECS/ECS';
+import { System } from 'Polar/ECS/System';
+import { Component} from 'Polar/ECS/Component';
+import { Entity } from 'Polar/ECS/Entity';
 import { Renderer } from 'Polar/Renderer/Renderer';
 import { createTransform } from 'Polar/Util/Math';
 import { Input } from 'Polar/Core/Input';
@@ -13,7 +15,7 @@ export class PhysicsSystem extends System {
 	public onDetach() {}
 
 	public beginUpdate(dt: number) {
-		const systemData = <PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld');
+		const systemData = <PhysicsWorldCP>this.getManager().getSingleton('Polar:PhysicsWorld');
 		if (dt < 0.2) 
 			systemData.world.step(dt, null, 3);
 	}
@@ -29,6 +31,8 @@ export class PhysicsSystem extends System {
 
 /** A component which stores information about an entity's physics body. */
 export class PhysicsBodyCP extends Component {
+	
+	public readonly type = 'Polar:PhysicsBody';
 
 	public body: p2.Body;
 
@@ -43,14 +47,12 @@ export class PhysicsBodyCP extends Component {
 		if (world)
 			world.addBody(this.body);
 	}
-
-	public getType(): string {
-		return 'Polar:PhysicsBody';
-	}
 }
 
 /** A singleton component which represents a p2 physics world. */
 export class PhysicsWorldCP extends Component {
+	
+	public readonly type = 'Polar:PhysicsWorld';
 
 	public world: p2.World;
 
@@ -61,10 +63,6 @@ export class PhysicsWorldCP extends Component {
 	public constructor(settings?: p2.WorldOptions) {
 		super();
 		this.world = new p2.World(settings);
-	}
-
-	public getType(): string {
-		return 'Polar:PhysicsWorld';
 	}
 }
 
@@ -120,13 +118,13 @@ export class PhysicsDebugRenderSystem extends System {
 /** A system which allows the user to click and drag physics bodies around the world. */
 export class PhysicsDebugInteractionSystem extends System {
 	public onAttach(): void {
-		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody = new p2.Body({mass: 0});
-		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).nullBody.collisionResponse = false;
-		(<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world.islandSplit = false;
+		(<PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction')).nullBody = new p2.Body({mass: 0});
+		(<PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction')).nullBody.collisionResponse = false;
+		(<PhysicsWorldCP>this.getManager().getSingleton('Polar:PhysicsWorld')).world.islandSplit = false;
 
 		window.addEventListener('mousedown', (ev: MouseEvent) => {
 			if (ev.button === 0) {
-				(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).doClick = true;
+				(<PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction')).doClick = true;
 			}
 		});
 
@@ -140,8 +138,8 @@ export class PhysicsDebugInteractionSystem extends System {
 
 		window.addEventListener('mouseup', (ev: MouseEvent) => {
 			if (ev.button === 0) {
-				const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
-				const world = (<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world;
+				const info = <PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction');
+				const world = (<PhysicsWorldCP>this.getManager().getSingleton('Polar:PhysicsWorld')).world;
 				world.removeConstraint(info.constraint);
 				info.constraint = null;
 				info.currentBody = null;
@@ -154,7 +152,7 @@ export class PhysicsDebugInteractionSystem extends System {
 	public beginUpdate(dt: number) {}
 
 	private checkQuadrant() {
-		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+		const systemData = <PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction');
 		let quadrant: number;
 		if ((systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.cos(systemData.currentBody.angle)+(systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.sin(systemData.currentBody.angle) >= 0) {
 			if ((systemData.nullBody.position[1]-systemData.currentBody.position[1])*Math.cos(systemData.currentBody.angle)-(systemData.nullBody.position[0]-systemData.currentBody.position[0])*Math.sin(systemData.currentBody.angle) >= 0) {
@@ -244,7 +242,7 @@ export class PhysicsDebugInteractionSystem extends System {
 	}
 
 	public endUpdate(dt: number) {
-		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+		const systemData = <PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction');
 		if (systemData.doClick) 
 			this.startClick();
 
@@ -265,10 +263,10 @@ export class PhysicsDebugInteractionSystem extends System {
 	}
 
 	private startClick() {
-		(<PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction')).doClick = false;
+		(<PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction')).doClick = false;
 
-		const systemData = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
-		const world = (<PhysicsWorldCP>this.manager.getSingleton('Polar:PhysicsWorld')).world;
+		const systemData = <PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction');
+		const world = (<PhysicsWorldCP>this.getManager().getSingleton('Polar:PhysicsWorld')).world;
 		systemData.constraint = null;
 		systemData.currentBody = null;
 		
@@ -297,7 +295,7 @@ export class PhysicsDebugInteractionSystem extends System {
 	private updatePosition() {
 		if (Input.isMouseButtonPressed(0)) {
 			const position = Renderer.screenToWorldPosition(Input.getMousePosition());
-			const info = <PhysicsDebugInteractionCP>this.manager.getSingleton('Polar:PhysicsDebugInteraction');
+			const info = <PhysicsDebugInteractionCP>this.getManager().getSingleton('Polar:PhysicsDebugInteraction');
 			info.nullBody.position = [position[0], position[1]];
 		}
 	}
@@ -306,6 +304,8 @@ export class PhysicsDebugInteractionSystem extends System {
 /** A singleton component which stores information for a PhysicsDebugInteractionSystem */
 export class PhysicsDebugInteractionCP extends Component {
 
+	public readonly type = 'Polar:PhysicsDebugInteraction';
+	
 	public currentBody: p2.Body;
 	public nullBody: p2.Body;
 	public constraint: p2.RevoluteConstraint;
@@ -323,7 +323,4 @@ export class PhysicsDebugInteractionCP extends Component {
 		this.doDebugRendering = doDebugRendering;
 	}
 
-	getType(): string {
-		return 'Polar:PhysicsDebugInteraction';
-	}
 }

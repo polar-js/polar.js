@@ -75,10 +75,25 @@ li a {
     border: 1px solid gray;
     cursor: pointer;
     outline: none;
+    width: 100%;
 }
 
 .game-overlay h1 {
     font-size: 14pt;
+}
+
+.game-overlay a {
+    color: black;
+    display: block;
+    font-size: 16pt;
+    padding: 14px 16px;
+    text-decoration: none;
+    text-align: center;
+    margin: 10px 0 0 0;
+}
+
+.game-overlay a:hover {
+    background-color: #f2f2f2;
 }
 
 input[type=checkbox] {

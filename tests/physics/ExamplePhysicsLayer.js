@@ -41,7 +41,7 @@ class ExamplePhysicsLayer extends Polar.Layer {
 				height: 0.5
 			}));
 			entity.addComponent(new Polar.PhysicsBodyCP(body, this.manager.getSingleton('Polar:PhysicsWorld').world));
-			this.manager.addEntitySubscriptions(entity.id);
+			this.manager.registerComponents(entity);
 		}
 
 		{
@@ -57,7 +57,7 @@ class ExamplePhysicsLayer extends Polar.Layer {
 				height: 1
 			}));
 			entity.addComponent(new Polar.PhysicsBodyCP(body, this.manager.getSingleton('Polar:PhysicsWorld').world));
-			this.manager.addEntitySubscriptions(entity.id);
+			this.manager.registerComponents(entity);
 		}
 
 		this.entityTimer = new Polar.Timer(0.5, false, true);

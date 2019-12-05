@@ -2,6 +2,9 @@ import * as glm from 'gl-matrix';
 import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
 import { RenderCommand } from './RenderCommand';
 
+// TODO: Make gl external to surface?
+//export var gl: WebGL2RenderingContext;
+
 export class Surface {
 
 	private static settings: ApplicationSettings;

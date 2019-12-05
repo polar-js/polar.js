@@ -1,5 +1,7 @@
 import { ParticleEmitter } from 'Polar/Renderer/ParticleEmitter';
-import { System, Component, Entity } from 'Polar/ECS/ECS';
+import { System } from 'Polar/ECS/System';
+import { Component} from 'Polar/ECS/Component';
+import { Entity } from 'Polar/ECS/Entity';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { CameraCP } from 'Polar/ECS/Components';
 
@@ -7,7 +9,7 @@ export class ParticleSystem extends System {
 	public onAttach(): void {}
 
 	public beginUpdate(dt: number): void {
-		ParticleRenderer.beginParticleScene((<CameraCP>this.manager.getSingleton('Polar:Camera')).camera);
+		ParticleRenderer.beginParticleScene((<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera);
 	}
 	
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {
@@ -26,7 +28,8 @@ export class ParticleSystem extends System {
 }
 
 export class ParticleEmitterCP extends Component {
-
+	
+	public readonly type = 'Polar:ParticleEmitter';
 	/** The particle emitter. */
 	public emitter: ParticleEmitter;
 
@@ -38,5 +41,4 @@ export class ParticleEmitterCP extends Component {
 		this.emitter = emitter;
 	}
 
-	public getType(): string { return 'Polar:ParticleEmitter'; }
 }

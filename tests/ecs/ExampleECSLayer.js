@@ -1,10 +1,8 @@
 class TestCP extends Polar.Component {
 	constructor() {
 		super();
-	}
 
-	getType() {
-		return 'Sandbox:Test';
+		this.type = 'Sandbox:Test';
 	}
 }
 
@@ -24,7 +22,7 @@ class TestSystem extends Polar.System {
 		const transform = entity.getComponent('Polar:Transform');
 		transform.x += 0.5 * dt;
 		transform.y += 0.1 * dt;
-		transform.recalculate();
+		transform.transform = Polar.createTransform(transform.x, transform.y, transform.scale, transform.scale, transform.rotation, 0);
 	}
 
 	endUpdate(dt) {}
@@ -65,7 +63,7 @@ class ExampleECSLayer extends Polar.Layer {
 		const checkerboard = new Polar.Texture2D();
 		checkerboard.loadFromImage(this.images.get('checkerboard'));
 		entity.addComponent(new Polar.Texture2DCP(checkerboard));
-		this.manager.addEntitySubscriptions(entity.id);
+		this.manager.registerComponents(entity);
 
 		this.fpsTimer = new Polar.Timer(1, false, true);
 		this.deltaNum = 0;
@@ -81,7 +79,7 @@ class ExampleECSLayer extends Polar.Layer {
 			texture.loadFromImage(this.images.get('test1'));
 			testEntity.addComponent(new Polar.Texture2DCP(texture));
 			testEntity.addComponent(new TestCP());
-			this.manager.addEntitySubscriptions(testEntity.id);
+			this.manager.registerComponents(testEntity);
 		};
 
 		this.entityTimer = new Polar.Timer(0.5, false, true);
@@ -105,7 +103,7 @@ class ExampleECSLayer extends Polar.Layer {
 			texture.loadFromImage(this.images.get('test2'));
 			entity.addComponent(new Polar.Texture2DCP(texture));
 			entity.addComponent(new TestCP());
-			this.manager.addEntitySubscriptions(entity.id);
+			this.manager.registerComponents(entity);
 		}
 		
 		this.manager.onUpdate(deltaTime);

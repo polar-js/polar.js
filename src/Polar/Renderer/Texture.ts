@@ -25,6 +25,10 @@ export class Texture2D {
 		s.gl.texParameteri(s.gl.TEXTURE_2D, s.gl.TEXTURE_MAG_FILTER, s.gl.NEAREST);
 	}
 
+	/**
+	 * Load an image into the texture through a HTMLImageElement.
+	 * @param {HTMLImageElement} image The image to be loaded.
+	 */
 	public loadFromImage(image: HTMLImageElement) {
 		this.path = image.src;
 		if (image.complete) {
@@ -37,6 +41,10 @@ export class Texture2D {
 		}
 	}
 
+	/**
+	 * Load an image into the texture through a path.
+	 * @param {string} path The path of the image.
+	 */
 	public loadFromPath(path: string) {
 		this.path = path;
 		
@@ -49,6 +57,14 @@ export class Texture2D {
 		}
 	}
 
+	/**
+	 * Load an array of pixels into the texture.
+	 * @param {Uint8Array} pixels Array of pixel data to be inputted.
+	 * @param {number} width The width of the texture in pixels.
+	 * @param {number} height The height of the texture in pixels.
+	 * @param {number} [internalFormat=gl.RGBA] The OpenGL internal format.
+	 * @param {number} [format=gl.RGBA] The OpenGL format.
+	 */
 	public loadFromArray(pixels: Uint8Array, width: number, height: number, internalFormat: number = s.gl.RGBA, format: number = s.gl.RGBA) {
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat , width, height, 0, format, s.gl.UNSIGNED_BYTE, pixels);
@@ -57,6 +73,13 @@ export class Texture2D {
 		this.loaded = true;
 	}
 
+	/**
+	 * Load an empty texture of specified width and height.
+	 * @param {number} width The width of the texture in pixels.
+	 * @param {number} height The height of the texture in pixels.
+	 * @param {number} [internalFormat=gl.RGBA] The OpenGL internal format.
+	 * @param {number} [format=gl.RGBA] The OpenGL format.
+	 */
 	public loadEmpty(width: number, height: number, internalFormat: number = s.gl.RGBA, format: number = s.gl.RGBA) {
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 		s.gl.texImage2D(s.gl.TEXTURE_2D, 0, internalFormat, width, height, 0, format, s.gl.UNSIGNED_BYTE, null);

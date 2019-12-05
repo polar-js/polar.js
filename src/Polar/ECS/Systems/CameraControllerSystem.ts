@@ -1,5 +1,7 @@
 import * as glm from 'gl-matrix';
-import { System, Entity, Component } from 'Polar/ECS/ECS';
+import { System } from 'Polar/ECS/System';
+import { Component} from 'Polar/ECS/Component';
+import { Entity } from 'Polar/ECS/Entity';
 import { CameraCP } from 'Polar/ECS/Components';
 import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
 import { Surface } from 'Polar/Renderer/Surface';
@@ -9,29 +11,35 @@ import { Input } from 'Polar/Core/Input';
 export class CameraControllerSystem extends System {
 
 	public onAttach(): void {
-		const controllerData: CameraControllerCP = <CameraControllerCP>this.manager.getSingleton('Polar:CameraController');
-		(<CameraCP>this.manager.getSingleton('Polar:Camera')).camera = new OrthographicCamera(-controllerData.aspectRatio * controllerData.zoomLevel, 
-			controllerData.aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+		const controllerData: CameraControllerCP = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
 
-		let camera = (<CameraCP>this.manager.getSingleton('Polar:Camera')).camera;
+		let aspectRatio = controllerData.aspectRatio == 0 ? Surface.getWidth() / Surface.getHeight() : controllerData.aspectRatio;
+
+		(<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera = new OrthographicCamera(-aspectRatio * controllerData.zoomLevel, 
+			aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+
+		let camera = (<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera;
 
 		window.addEventListener('mousewheel', (ev: MouseWheelEvent) => {
 			controllerData.zoomLevel += ev.deltaY / 1000 * controllerData.zoomLevel;
 			controllerData.zoomLevel = controllerData.zoomLevel > 0.1 ? controllerData.zoomLevel : 0.1;
-			camera.setProjection(-controllerData.aspectRatio * controllerData.zoomLevel, controllerData.aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
 
 		window.addEventListener('resize', (ev: UIEvent) => {
-			controllerData.aspectRatio = Surface.getWidth() / Surface.getHeight();
-			camera.setProjection(-controllerData.aspectRatio * controllerData.zoomLevel, controllerData.aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+			aspectRatio = Surface.getWidth() / Surface.getHeight();
+			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
+
+		camera.setPosition(controllerData.cameraPosition);
+		camera.setRotation(controllerData.cameraRotation);
 	}
 
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {}
 
 	public beginUpdate(deltaTime: number): void {
-		const controllerData: CameraControllerCP = <CameraControllerCP>this.manager.getSingleton('Polar:CameraController');
-		let camera = (<CameraCP>this.manager.getSingleton('Polar:Camera')).camera;
+		const controllerData: CameraControllerCP = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
+		let camera = (<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera;
 
 		let doPosition = false;
 		if (Input.isKeyPressed('a')) {
@@ -92,30 +100,31 @@ export class CameraControllerSystem extends System {
 }
 
 export class CameraControllerCP extends Component {
+
+	public readonly type = 'Polar:CameraController';
 	/** The camera's aspect ratio. */
-	public aspectRatio: number;
+	public aspectRatio: number = 0;
 	/** The camera's zoom. */
-	public zoomLevel: number;
-
-	public doRotation: boolean;
-
+	public zoomLevel: number = 1;
+	/** Whether the camera will rotate using Q and E. */
+	public doRotation: boolean = false;
 	// The camera's position in world space.
-	public cameraPosition: glm.vec3;
+	public cameraPosition: glm.vec3 = glm.vec3.create();
 	// The camera's current rotation.
-	public cameraRotation: number;
+	public cameraRotation: number = 0.0;
 	// How fast the camera rotates in radians per second.
-	public cameraRotationSpeed: number;
+	public cameraRotationSpeed: number = Math.PI/2;
 
 	/**
 	 * Create a new camera controller component.
-	 * @param {number} [aspectRatio=1] The aspect ratio of the camera.
+	 * @param {number} [aspectRatio=0] The aspect ratio of the camera. If 0, will use the canvas' aspect ratio.
 	 * @param {number} [zoomLevel=1] The initial zoom of the camera.
 	 * @param {boolean} [doRotation=false] Allows the camera to be rotated using the Q and E keys.
 	 * @param {glm.vec3} [cameraPosition=vec3.create()] The initial position of the camera.
 	 * @param {number} [cameraRotation=0.0] The initial rotation of the camera.
 	 * @param {number} [cameraRotationSpeed=Math.PI/2] The rotation speed of the camera in radians per second.
 	 */
-	public constructor(aspectRatio: number = 1, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition: glm.vec3 = glm.vec3.create(), cameraRotation: number = 0.0, cameraRotationSpeed: number = Math.PI/2) {
+	public constructor(aspectRatio: number = 0, zoomLevel: number = 1, doRotation: boolean = false, cameraPosition: glm.vec3 = glm.vec3.create(), cameraRotation: number = 0.0, cameraRotationSpeed: number = Math.PI/2) {
 		super();
 		this.aspectRatio = aspectRatio;
 		this.zoomLevel = zoomLevel;
@@ -124,6 +133,4 @@ export class CameraControllerCP extends Component {
 		this.cameraRotation = cameraRotation;
 		this.cameraRotationSpeed = cameraRotationSpeed;
 	}
-
-	public getType(): string { return 'Polar:CameraController'; }
 }

@@ -21,7 +21,7 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		const alphatest = new Polar.Texture2D();
 		alphatest.loadFromPath('/textures/alphatest.png');
 		e.addComponent(new Polar.Texture2DCP(alphatest));
-		this.manager.addEntitySubscriptions(e.id);
+		this.manager.registerComponents(e);
 
 		const texture = new Polar.Texture2D();
 		texture.loadFromPath('/textures/fire.png');
@@ -43,7 +43,7 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 
 		const entity = this.manager.createEntity();
 		entity.addComponent(new Polar.ParticleEmitterCP(emitter));
-		this.manager.addEntitySubscriptions(entity.id);
+		this.manager.registerComponents(entity);
 
 		// SETUP POST PROCESSING //
 		const invertShader = new Polar.Shader('InvertShader', Polar.InvertShaderSource.getVertexSource(), Polar.InvertShaderSource.getFragmentSource());
