@@ -91,7 +91,7 @@ export class BufferElement
 		case ShaderDataType.Bool:   return 1;
 		}
 
-		console.assert(false, 'Unknown ShaderDataType!');
+		console.error('Unknown ShaderDataType!');
 		return 0;
 	}
 }
