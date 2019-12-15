@@ -24,7 +24,7 @@ export class Renderer {
 	private static viewProjectionMatrix: glm.mat4;
 	private static shaderLibrary: ShaderLibrary;
 
-	public static textureQuadVA: VertexArray;
+	private static textureQuadVA: VertexArray;
 	private static colorQuadVA: VertexArray;
 	private static outlineQuadVA: VertexArray;
 	private static lineVA: VertexArray;
