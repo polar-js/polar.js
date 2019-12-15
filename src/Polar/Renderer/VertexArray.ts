@@ -8,7 +8,7 @@ import { Shader }  from './Shader';
  * @returns {number} The OpenGL enum.
  * @internal
  */
-function shaderDataTypeToOpenGLBaseType(type: ShaderDataType) {
+function shaderDataTypeToOpenGLBaseType(type: ShaderDataType): number {
 	switch (type) {
 	case ShaderDataType.Float:  return Surface.gl.FLOAT;
 	case ShaderDataType.Float2: return Surface.gl.FLOAT;
@@ -39,12 +39,12 @@ export class VertexArray {
 	}
 
 	/** Bind the vertex array in OpenGL. */
-	public bind(): void {
+	public bind() {
 		Surface.gl.bindVertexArray(this.vertexArray);
 	}
 
 	/** Unbind the vertex array in OpenGL. */
-	public unbind(): void {
+	public unbind() {
 		Surface.gl.bindVertexArray(null);
 	}
 
@@ -53,7 +53,7 @@ export class VertexArray {
 	 * @param {VertexBuffer} vertexBuffer The vertex buffer.
 	 * @param {Shader} shader The shader.
 	 */
-	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader): void {
+	public addVertexBuffer(vertexBuffer: VertexBuffer, shader: Shader) {
 		console.assert(vertexBuffer.getLayout().getElements().length != 0, 'Vertex Buffer has no layout!');
 
 		shader.bind();
@@ -82,12 +82,7 @@ export class VertexArray {
 					const offset = element.offset + 16 * i;
 
 					Surface.gl.enableVertexAttribArray(loc);
-					Surface.gl.vertexAttribPointer(loc, 
-						element.getComponentCount() / 4, 
-						shaderDataTypeToOpenGLBaseType(element.type),
-						element.normalized, 
-						layout.getStride(),
-						element.offset + 16 * i);
+					Surface.gl.vertexAttribPointer(loc, size, type, element.normalized, stride, offset);
 	
 					if (element.divisor >= 0) {
 						Surface.gl.vertexAttribDivisor(location + i, element.divisor);
