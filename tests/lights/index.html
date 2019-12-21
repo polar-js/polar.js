@@ -10,10 +10,24 @@
         <div>
             <canvas id="test-canvas"></canvas>
             <div class="game-overlay">
-                <h1>Lighting</h1>
+                <h1>Click to place a light.</h1>
                 <label class="checkbox-container">Enable Lighting
-                    <input type="checkbox" id="enable-lighting-checkbox"/>
+                    <input type="checkbox" id="enable-lighting-checkbox" checked/>
                     <span class="checkmark"></span>
+                </label>
+
+                <h1>Ambient Light Color</h1>
+                <label class="slider-container">Red
+                    <input type="number" min="0" max="255" value="30" id="red-number" disabled>
+                    <input type="range" min="0" max="255" value="30" class="slider" id="red-slider">
+                </label>
+                <label class="slider-container">Green
+                    <input type="number" min="0" max="255" value="30" id="green-number" disabled>
+                    <input type="range" min="0" max="255" value="30" class="slider" id="green-slider">
+                </label>
+                <label class="slider-container">Blue
+                    <input type="number" min="0" max="255" value="30" id="blue-number" disabled>
+                    <input type="range" min="0" max="255" value="30" class="slider" id="blue-slider">
                 </label>
             </div>
         </div>

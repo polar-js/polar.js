@@ -25,12 +25,16 @@ class ExampleLightingLayer extends Polar.Layer {
 			intensity: 1.0
 		};
 
-		this.light2 = {
+		this.lights = [{
 			transform: Polar.createTransform(1, 0, 2, 2),
 			position: Polar.glm.vec2.fromValues(0, 1),
 			color: Polar.glm.vec3.fromValues(1, 0.5, 0.2),
 			intensity: 1.0
-		};
+		}];
+
+		window.addEventListener('click', e => {
+			this.lights.push(new Polar.Light(this.light1));
+		});
 
 		// Move the light to the cursor's position.
 		window.addEventListener('mousemove', e => {
@@ -39,7 +43,7 @@ class ExampleLightingLayer extends Polar.Layer {
 		});
 
 		Polar.Renderer.enableLighting();
-		Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(0.05, 0.05, 0.05));
+		
 
 		document.getElementById('enable-lighting-checkbox').addEventListener('change', (event) => {
 			if (event.target.checked) {
@@ -49,6 +53,31 @@ class ExampleLightingLayer extends Polar.Layer {
 				Polar.Renderer.disableLighting();
 			}
 		});
+
+		const redInput = document.getElementById('red-number');
+		const redSlider = document.getElementById('red-slider');
+		const greenInput = document.getElementById('green-number');
+		const greenSlider = document.getElementById('green-slider');
+		const blueInput = document.getElementById('blue-number');
+		const blueSlider = document.getElementById('blue-slider');
+
+		redSlider.onchange = () => {
+			redInput.value = redSlider.value;
+			Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
+		};
+
+		greenSlider.onchange = () => {
+			greenInput.value = greenSlider.value;
+			Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
+		};
+
+		blueSlider.onchange = () => {
+			blueInput.value = blueSlider.value;
+			Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
+		};
+		Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
+	
+		
 	}
 
 	onUpdate(deltaTime) {
@@ -60,7 +89,10 @@ class ExampleLightingLayer extends Polar.Layer {
 
 		Polar.Renderer.submitSprite(this.checkerboardSprite);
 		Polar.LightRenderer.submitLight(this.light1);
-		Polar.LightRenderer.submitLight(this.light2);
+		
+		for (let light of this.lights) {
+			Polar.LightRenderer.submitLight(light);
+		}
 
 		Polar.Renderer.endScene();
 	}

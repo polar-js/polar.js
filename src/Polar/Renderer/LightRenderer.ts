@@ -15,6 +15,12 @@ export class Light {
 	public transform: glm.mat4;
 	public color: glm.vec3;
 	public intensity: number;
+
+	public constructor(light: Light) {
+		this.transform = light.transform;
+		this.color = light.color;
+		this.intensity = light.intensity;
+	}
 }
 
 const MAX_LIGHTS = 1e4;
