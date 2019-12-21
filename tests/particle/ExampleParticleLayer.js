@@ -43,7 +43,7 @@ class ExampleParticleLayer extends Polar.Layer {
 			gravity: [0, -1],
 			mode: 'TEXTURE',
 			texture: texture,
-			scale: 0.01,
+			scale: 0.005,
 			shrinkTime: 0
 			
 		});

@@ -77,9 +77,12 @@ export class PostprocessingStage {
 		this.fbo.unbind();
 		this.fbo.getTexture().unbind();
 
-		window.addEventListener('resize', (ev: UIEvent) => {
-			texture.loadEmpty(Surface.getWidth(), Surface.getHeight(), Surface.gl.RGBA);
-			rbo.storage(Surface.getWidth(), Surface.getHeight(), Surface.gl.DEPTH24_STENCIL8);
+		var timeout: number = null;
+		window.addEventListener('resize', () => {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				this.fbo.resize(Surface.getWidth(), Surface.getHeight());
+			}, 100);
 		});
 	}
 

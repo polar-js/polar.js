@@ -1,6 +1,6 @@
 import * as glm from 'gl-matrix';
 import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType } from 'Polar/Renderer/Buffer';
+import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
 import { Surface } from './Surface';
 import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
 import { Texture2D } from './Texture';
@@ -176,11 +176,12 @@ export class ParticleEmitter {
 				-0.5, -0.5, 0.0, 1.0,
 				0.5, -0.5, 1.0, 1.0,
 				0.5,  0.5, 1.0, 0.0,
-				-0.5, -0.5, 0.0, 1.0,
-				0.5,  0.5, 1.0, 0.0,
-				-0.5,  0.5, 0.0, 0.0
+				-0.5, 0.5, 0.0, 0.0,
 			];
 			const quadVB = new VertexBuffer(new Float32Array(quadVertices));
+
+			const indices = [ 0, 1, 2, 0, 2, 3]
+			const quadIB = new IndexBuffer(new Uint16Array(indices))
 
 			const quadLayout = new BufferLayout([
 				new BufferElement(ShaderDataType.Float2, 'i_Coord', false, 0),
@@ -188,6 +189,9 @@ export class ParticleEmitter {
 			]);
 
 			quadVB.setLayout(quadLayout);
+			this.vertexArrays[2].setIndexBuffer(quadIB);
+			this.vertexArrays[3].setIndexBuffer(quadIB);
+			
 			this.vertexArrays[2].addVertexBuffer(quadVB, ParticleRenderer.getRenderTextureShader());
 			this.vertexArrays[3].addVertexBuffer(quadVB, ParticleRenderer.getRenderTextureShader());
 

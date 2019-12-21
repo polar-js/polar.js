@@ -25,7 +25,6 @@ export function getFragmentSource(): string {
 	precision mediump float;
 	out vec4 color;
 
-
 	in vec4 v_AtlasBounds;
 	in vec2 v_TexCoord;
 

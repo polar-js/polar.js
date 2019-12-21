@@ -25,6 +25,8 @@ export class Surface {
 	 */
 	public static font: CanvasRenderingContext2D;
 
+	private static resizing: boolean = false;
+
 	/** 
 	 * Initialize the surface.
 	 * @param {settings} settings The engine settings.
@@ -69,8 +71,18 @@ export class Surface {
 		this.fontCanvas.height = this.canvas.height;
 
 		this.font = this.fontCanvas.getContext('2d');
-
+		
+		var timeout: number = null;
 		window.addEventListener('resize', (ev: UIEvent) => {
+			this.resizing = true;
+			console.log('Resizing true...');
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+				this.resizing = false;
+				console.log('Resizing false...');
+			}, 100);
+
 			if (this.settings.displayMode == 'fill') {
 				this.canvas.width = this.canvas.parentElement.offsetWidth;
 				this.canvas.height = this.canvas.parentElement.offsetHeight;
@@ -80,8 +92,6 @@ export class Surface {
 			this.fontCanvas.style.top = this.canvas.offsetTop.toString() + 'px';
 			this.fontCanvas.width = this.canvas.width;
 			this.fontCanvas.height = this.canvas.height;
-
-			this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 		});
 		
 		RenderCommand.setClearColor(glm.vec4.fromValues(this.settings.clearColor[0], this.settings.clearColor[1], this.settings.clearColor[2], 1.0));
@@ -104,6 +114,10 @@ export class Surface {
 		this.canvas.height = height;
 		this.fontCanvas.width = width;
 		this.fontCanvas.height = height;
+	}
+
+	public static isResizing(): boolean {
+		return this.resizing;
 	}
 
 	/** Get the width of the rendering surface.

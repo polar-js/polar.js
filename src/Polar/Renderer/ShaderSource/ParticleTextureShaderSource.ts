@@ -6,6 +6,7 @@ export function getVertexSource(): string {
 			uniform float u_ShrinkTime;
 			uniform float u_zIndex;
 			uniform mat4 u_ViewProjection;
+			uniform int u_InstanceCount;
 			
 			layout(location = 0) in vec2 i_Position;
 			layout(location = 1) in float i_Age;
@@ -33,7 +34,7 @@ export function getVertexSource(): string {
 					vert_coord = i_Position + u_Scale * i_Coord;
 				}
 
-				gl_Position = u_ViewProjection * vec4(vert_coord, u_zIndex, 1.0);
+				gl_Position = u_ViewProjection * vec4(vert_coord, float(gl_InstanceID) / float(u_InstanceCount), 1.0);
 			}
 			`;
 }

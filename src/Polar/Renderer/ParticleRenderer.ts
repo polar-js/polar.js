@@ -115,8 +115,9 @@ export class ParticleRenderer {
 			this.renderTextureShader.uploadUniformFloat('u_Scale', emitter.scale);
 			this.renderTextureShader.uploadUniformFloat('u_ShrinkTime', emitter.shrinkTime);
 			this.renderTextureShader.uploadUniformInt('u_Texture', 0);
+			this.renderTextureShader.uploadUniformInt('u_InstanceCount', Math.floor(emitter.bornParticles));
 			emitter.texture.bind();
-			RenderCommand.drawArraysInstanced(6, Math.floor(emitter.bornParticles));
+			RenderCommand.drawElementsInstanced(emitter.vertexArrays[emitter.read + 2], Math.floor(emitter.bornParticles));
 		}
 		else {
 			this.renderPointShader.bind();

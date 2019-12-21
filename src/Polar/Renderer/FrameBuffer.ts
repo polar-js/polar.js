@@ -1,4 +1,4 @@
-import { Surface as s} from 'Polar/Renderer/Surface';
+import { Surface as s } from 'Polar/Renderer/Surface';
 import { Texture2D } from 'Polar/Renderer/Texture';
 import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
 
@@ -8,6 +8,14 @@ export class FrameBuffer {
 	private framebuffer: WebGLFramebuffer;
 	private texture: Texture2D;
 	private renderbuffer: RenderBuffer;
+
+	private textureAttachment: number;
+	private fbTarget: number;
+	private textureTarget: number;
+
+	private rbAttachment: number;
+	private rbTarget: number;
+	private rbRenderBufferTarget: number;
 
 	/** Create a new framebuffer. */
 	public constructor() {
@@ -38,6 +46,9 @@ export class FrameBuffer {
 		s.gl.bindFramebuffer(fbTarget, this.framebuffer);
 		s.gl.framebufferTexture2D(fbTarget, attachment, textureTartget, texture.getGLTexture(), 0);
 		this.texture = texture;
+		this.textureAttachment = attachment;
+		this.fbTarget = fbTarget;
+		this.textureTarget = textureTartget;
 	}
 
 	/** Attach a render buffer to the framebuffer.
@@ -49,6 +60,9 @@ export class FrameBuffer {
 	public attachRenderbuffer(renderbuffer: RenderBuffer, attachment: number = s.gl.DEPTH_STENCIL_ATTACHMENT, target: number = s.gl.FRAMEBUFFER, renderbufferTarget: number = s.gl.RENDERBUFFER) {
 		s.gl.framebufferRenderbuffer(target, attachment, renderbufferTarget, renderbuffer.getGLRenderbuffer());
 		this.renderbuffer = renderbuffer;
+		this.rbAttachment = attachment;
+		this.rbTarget = target;
+		this.rbRenderBufferTarget = renderbufferTarget;
 	}
 
 	/** Check if the framebuffer is complete.
@@ -70,5 +84,22 @@ export class FrameBuffer {
 	 */
 	public getRenderbuffer(): RenderBuffer {
 		return this.renderbuffer;
+	}
+
+	public resize(width: number, height: number) {
+		s.gl.deleteFramebuffer(this.framebuffer);
+		this.framebuffer = s.gl.createFramebuffer();
+		this.bind();
+
+		if (this.texture) {
+			this.texture.loadEmpty(width, height, s.gl.RGBA);
+			s.gl.framebufferTexture2D(this.fbTarget, this.textureAttachment, this.textureTarget, this.texture.getGLTexture(), 0);
+		}
+		
+		if (this.renderbuffer) {
+			this.renderbuffer.resize(width, height);
+			s.gl.framebufferRenderbuffer(this.rbTarget, this.rbAttachment, this.rbRenderBufferTarget, this.renderbuffer.getGLRenderbuffer());
+		}
+
 	}
 }

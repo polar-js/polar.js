@@ -103,9 +103,11 @@ export class Texture2D {
 		return this.height;
 	}
 
-	/** Bind the texture */
-	public bind() {
-		s.gl.activeTexture(s.gl.TEXTURE0);
+	/** Bind the texture 
+	 * @param {number} [slot=gl.TEXTURE0] The texture number.
+	*/
+	public bind(slot: number = s.gl.TEXTURE0) {
+		s.gl.activeTexture(slot);
 		s.gl.bindTexture(s.gl.TEXTURE_2D, this.texture);
 	}
 

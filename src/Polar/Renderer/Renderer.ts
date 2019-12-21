@@ -195,28 +195,30 @@ export class Renderer {
 	 * @param {OrthographicCamera} camera The scene's camera.
 	 */
 	public static beginScene(camera: OrthographicCamera) {
+		if (Surface.isResizing()) return;
+			
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		
+		Surface.gl.bindFramebuffer(Surface.gl.FRAMEBUFFER, null);
 		Surface.clear();
 		for (const stage of this.postprocessingStages) {
 			stage.bind();
 			Surface.clear();
 			stage.unbind();
 		}
-		
+
 		if (this.doLighting) {
 			LightRenderer.beginScene(camera);
 		}
-		else {
-			if (this.postprocessingStages.length >= 1) {
-				const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
-					return stage.isEnabled();
-				});
-				if (next)  {
-					next.bind();
-				}
+		else if (this.postprocessingStages.length >= 1) {
+			const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
+				return stage.isEnabled();
+			});
+			if (next)  {
+				next.bind();
 			}
 		}
+		
 		InstancedRenderer.beginScene(camera);
 	}
 
@@ -224,8 +226,11 @@ export class Renderer {
 	 * @remarks To be called every frame when all the rendering has been completed. Displays the results of all rendering commands.
 	 */
 	public static endScene() {
+		if (Surface.isResizing()) return;
 		InstancedRenderer.endScene();
+		
 		if (this.doLighting) {
+			LightRenderer.endScene();
 			if (this.postprocessingStages.length >= 1) {
 				const next = this.postprocessingStages.find((stage: PostprocessingStage) => {
 					return stage.isEnabled();
@@ -233,11 +238,9 @@ export class Renderer {
 				if (next)  {
 					next.bind();
 				}
-				else Surface.gl.bindFramebuffer(Surface.gl.FRAMEBUFFER, null);
 			}
-			LightRenderer.endScene();
+			LightRenderer.render();
 		}
-		
 
 		for (let i = 0; i < this.postprocessingStages.length; i++) {
 			// Get next enabled framebuffer.
@@ -250,7 +253,7 @@ export class Renderer {
 			// Else target the screen's framebuffer (ie. none bound).
 			else this.postprocessingStages[i].unbind();
 			
-			// Render the stage to the current framebuffer.
+			// Render the current stage to the next framebuffer.
 			if (this.postprocessingStages[i].isEnabled())
 				this.postprocessingStages[i].render();
 		}
@@ -260,6 +263,7 @@ export class Renderer {
 	 * @param {Sprite} sprite The sprite to be rendered.
 	 */
 	public static submitSprite(sprite: Sprite) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('TextureShader');
 		sprite.getTexture().bind();
 
@@ -277,6 +281,7 @@ export class Renderer {
 	 * @param {glm.mat4} transform The transform to be applied to the texture.
 	 */
 	public static submitTextured(texture: Texture2D, transform: glm.mat4) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('TextureShader');
 		texture.bind();
 
@@ -295,6 +300,7 @@ export class Renderer {
 	 * @param {glm.mat4} transform The transformation matrix.
 	*/
 	public static submitLines(linesVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -312,6 +318,7 @@ export class Renderer {
 	 * @param {glm.mat4} transform The transformation matrix.
 	 */
 	public static submitLineStrip(stripVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -330,6 +337,7 @@ export class Renderer {
 	 * @param {glm.mat4} transform The transformation matrix.
 	 */
 	public static submitLoop(loopVA: VertexArray, color: glm.vec4, transform: glm.mat4) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -347,6 +355,7 @@ export class Renderer {
 	 * @param {glm.mat4} transform The transformation matrix. 
 	 */
 	public static submitColoredOutline(color: glm.vec4, transform: glm.mat4) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
@@ -368,6 +377,7 @@ export class Renderer {
 	 * @param {number} [zIndex=0] How far / close the line is to the camera.
 	 */
 	public static submitLine(x0: number, y0: number, x1: number, y1: number, color: glm.vec4, zIndex: number = 0) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 		const dx = x1 - x0;
 		const dy = y1 - y0;
@@ -397,6 +407,7 @@ export class Renderer {
 	 * @param {number} [zIndex=0] How far / close the line is to the camera.
 	 */
 	public static submitCircle(x: number, y: number, radius: number, color: glm.vec4, zIndex: number = 0) {
+		if (Surface.isResizing()) return;
 		const shader = this.shaderLibrary.get('ColorShader');
 
 		shader.bind();
