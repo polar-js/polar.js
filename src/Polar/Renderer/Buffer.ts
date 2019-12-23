@@ -29,33 +29,19 @@ export function shaderDataTypeSizes(type: ShaderDataType): number {
 /** Represents a buffer element within a layout. */
 export class BufferElement
 {
-	/** The attribute name
-	 * @type {string}
-	 */
+	/** The attribute name.*/
 	public name: string;
-	/** The attribute type
-	 * @type {ShaderDataType}
-	 */
+	/** The attribute type.*/
 	public type: ShaderDataType;
-	/** The attribute size
-	 * @type {number}
-	 */
+	/** The attribute size.*/
 	public size: number;
-	/** The attribute offset
-	 *  @type {number}
-	 */
+	/** The attribute offset.*/
 	public offset: number;
-	/** Whether the attribute is normalized
-	 *  @type {boolean}
-	 */
+	/** Whether the attribute is normalized.*/
 	public normalized: boolean;
-	/** The attribute divisor
-	 * @type {number}
-	 */
+	/** The attribute divisor.*/
 	public divisor: number;
-	/** The attribute location
-	 * @type {number}
-	 */
+	/** The attribute location.*/
 	public location: number;
 
 	/** Create a new buffer element

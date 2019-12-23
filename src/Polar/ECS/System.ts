@@ -7,10 +7,6 @@ import { Entity } from './Entity';
  * @abstract
  */
 export abstract class System {
-	/** The system's ECS world manager.
-	 * @type {WorldManager}
-	 */
-	//public manager: WorldManager;
 	/** The system's subscribed entities. Format: [Entity ID: string, Subscriber Index: string] */
 	public subscribers: Map<number, number>;
 

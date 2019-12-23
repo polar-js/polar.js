@@ -10,10 +10,8 @@ import { RenderCommand } from './RenderCommand';
 import * as InstancedTextureShaderSource from 'Polar/Renderer/ShaderSource/InstancedTextureShaderSource';
 
 /**
- * The maximum number of instances which can be rendered.
- * @type {number}
- */
-const MAX_INSTANCES = 1e4;
+ * The maximum number of instances which can be rendered.*/
+const MAX_INSTANCES: number = 1e4;
 
 /** The instanced renderer. */
 export class InstancedRenderer {

@@ -1,6 +1,6 @@
 /**
  * Represents a collection of information about an entity used to define behavior.
- * Should contain no behavior / functionality, only data.
+ * Should contain no behavior or functionality, only data in the form of properties.
  * @abstract
  */
 export abstract class Component {

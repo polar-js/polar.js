@@ -2,14 +2,10 @@ import { Component } from './Component';
 
 /** Represents a collection of components relating to a single entity in the world. */
 export class Entity {
-	/** The entity's ID
-	 * @type {number}
-	 */
+	/** The entity's ID.*/
 	public id: number;
 	
-	/** The entity's components.
-	 * @type {Map<string, Component}
-	 */
+	/** The entity's components.*/
 	public readonly components: Map<string, Component>;
 
 	/** Create a new entity.
