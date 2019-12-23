@@ -25,16 +25,16 @@ class ExampleParticleLayer extends Polar.Layer {
 		e.addComponent(new Polar.Texture2DCP(alphatest));
 		this.manager.registerComponents(e);
 
-		const texture = new Polar.Texture2D();
-		texture.loadFromPath('/textures/fire.png');
+		const fireTexture = new Polar.Texture2D();
+		fireTexture.loadFromPath('/textures/fire.png');
 
-		const emitter = new Polar.ParticleEmitter({
+		const mouseEmitter = new Polar.ParticleEmitter({
 			origin: [0, 0.5],
 			angle: Math.PI / 2,
 			spread: Math.PI,
 			numParticles: 50,
 			spawnRate: 30,
-			zIndex: 1,
+			zIndex: 0.5,
 			minSpeed: 0.1,
 			maxSpeed: 0.6,
 			minLife: 1,
@@ -42,16 +42,42 @@ class ExampleParticleLayer extends Polar.Layer {
 			fadeTime: 0.5,
 			gravity: [0, -1],
 			mode: 'TEXTURE',
-			texture: texture,
+			texture: fireTexture,
 			scale: 0.005,
 			shrinkTime: 0
 			
 		});
 
-		const entity = this.manager.createEntity();
-		entity.addComponent(new Polar.ParticleEmitterCP(emitter));
-		entity.addComponent(new ParticleWandCP());
-		this.manager.registerComponents(entity);
+		const smokeTexture = new Polar.Texture2D();
+		smokeTexture.loadFromPath('/textures/smoke.png');
+		const smokeEmitter = new Polar.ParticleEmitter({
+			origin: [0, 0],
+			angle: Math.PI / 2,
+			spread: Math.PI,
+			numParticles: 40,
+			spawnRate: 5,
+			zIndex: 0.7,
+			minSpeed: 0.05,
+			maxSpeed: 0.1,
+			minLife: 1,
+			maxLife: 3,
+			fadeTime: 20,
+			gravity: [0, 0.1],
+			mode: 'TEXTURE',
+			texture: smokeTexture,
+			scale: 0.1,
+			shrinkTime: 1.0
+			
+		});
+
+		const mouseEmitterEntity = this.manager.createEntity();
+		mouseEmitterEntity.addComponent(new Polar.ParticleEmitterCP(mouseEmitter));
+		mouseEmitterEntity.addComponent(new ParticleWandCP());
+		this.manager.registerComponents(mouseEmitterEntity);
+
+		const smokeEntity = this.manager.createEntity();
+		smokeEntity.addComponent(new Polar.ParticleEmitterCP(smokeEmitter));
+		this.manager.registerComponents(smokeEntity);
 	}
 
 	onUpdate(deltaTime) {

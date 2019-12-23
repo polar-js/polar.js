@@ -75,12 +75,10 @@ export class Surface {
 		var timeout: number = null;
 		window.addEventListener('resize', (ev: UIEvent) => {
 			this.resizing = true;
-			console.log('Resizing true...');
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
 				this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 				this.resizing = false;
-				console.log('Resizing false...');
 			}, 100);
 
 			if (this.settings.displayMode == 'fill') {

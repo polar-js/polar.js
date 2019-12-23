@@ -34,7 +34,7 @@ export function getVertexSource(): string {
 					vert_coord = i_Position + u_Scale * i_Coord;
 				}
 
-				gl_Position = u_ViewProjection * vec4(vert_coord, float(gl_InstanceID) / float(u_InstanceCount), 1.0);
+				gl_Position = u_ViewProjection * vec4(vert_coord, u_zIndex + 0.1 * (float(gl_InstanceID) / float(u_InstanceCount)), 1.0);
 			}
 			`;
 }

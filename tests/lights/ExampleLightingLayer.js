@@ -60,6 +60,7 @@ class ExampleLightingLayer extends Polar.Layer {
 		const greenSlider = document.getElementById('green-slider');
 		const blueInput = document.getElementById('blue-number');
 		const blueSlider = document.getElementById('blue-slider');
+		const intensitySlider = document.getElementById('intensity-slider');
 
 		redSlider.onchange = () => {
 			redInput.value = redSlider.value;
@@ -75,9 +76,12 @@ class ExampleLightingLayer extends Polar.Layer {
 			blueInput.value = blueSlider.value;
 			Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
 		};
+
+		intensitySlider.onchange = () => {
+			this.light1.intensity = intensitySlider.value;
+		};
+
 		Polar.LightRenderer.setAmbientLightColor(Polar.glm.vec3.fromValues(redSlider.value / 255, greenSlider.value / 255, blueSlider.value / 255));
-	
-		
 	}
 
 	onUpdate(deltaTime) {

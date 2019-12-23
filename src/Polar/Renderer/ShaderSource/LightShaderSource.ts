@@ -21,7 +21,7 @@ export function getVertexSource(): string {
 		v_Intensity = a_Intensity;
 		v_Position = a_Position;
 
-		gl_Position = u_ViewProjection * a_Transform * vec4(a_Position, float(gl_InstanceID) / float(u_InstanceCount), 1.0);
+		gl_Position = u_ViewProjection * a_Transform * vec4(a_Position, 0.1 * (float(gl_InstanceID) / float(u_InstanceCount)), 1.0);
 	}`;
 }
 

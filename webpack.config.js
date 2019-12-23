@@ -1,5 +1,7 @@
 const path = require('path');
 const { version } = require('./package.json');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TypescriptDeclarationPlugin = require('typescript-declaration-webpack-plugin');
 
 module.exports = env => ({
 	entry: './src/Polar.ts',
@@ -17,7 +19,10 @@ module.exports = env => ({
 		extensions: [ '.tsx', '.ts', '.js' ],
 		alias: {
 			Polar: path.resolve(__dirname, 'src/Polar')
-		}
+		},
+		plugins: [
+			new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })
+		]
 	},
 	output: {
 		filename: env === 'dev' ? 'polar.min.js' : `polar.${env.production ? version : 'min'}.js`,
@@ -26,4 +31,9 @@ module.exports = env => ({
 		libraryTarget: 'window'
 	},
 	watch: env.production ? false : true,
+	plugins: [
+		new TypescriptDeclarationPlugin({
+		  out: 'polar.d.ts'
+		})
+	  ]
 });
