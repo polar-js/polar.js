@@ -11,20 +11,30 @@ import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
 import * as LightShaderSource from 'Polar/Renderer/ShaderSource/LightShaderSource';
 import * as MultiplyTextureShaderSource from 'Polar/Renderer/ShaderSource/MultiplyTextureShaderSource';
 
-export class Light {
+/** Represents a point light which illuminates a 2D scene with lighting enabled. */
+export class PointLight {
+	/** The light's transform. The light's quad is 1x1 units and can be scaled or translated by manipulating this matrix. */
 	public transform: glm.mat4;
+	/** The color of the light. */
 	public color: glm.vec3;
+	/** The intensity of the light, from 0 to 1. If the value is raised above 1, the edges of the light will appear more bright and the center will not get brighter. */
 	public intensity: number;
 
-	public constructor(light: Light) {
+	/**
+	 * Copy a light from an existing one.
+	 * @param light 
+	 */
+	public constructor(light: PointLight) {
 		this.transform = light.transform;
 		this.color = light.color;
 		this.intensity = light.intensity;
 	}
 }
 
+/** The maximum number of lights able to be used in a scene. */
 const MAX_LIGHTS = 1e4;
 
+/** A static class which contains functions to draw lights to the 2D scene. The maximum number of lights usable in a scene is 10000. */
 export class LightRenderer {
 
 	private static ambientLightColor: glm.vec3 = glm.vec3.fromValues(0, 0, 0);
@@ -44,6 +54,10 @@ export class LightRenderer {
 
 	private static kernel: Float32Array = new Float32Array([1, 0.939, 0.7777, 0.5681, 0.366, 0.2079, 0.1042, 0.0461, 0.0179, 0.0062, 0]);
 
+	/**
+	 * Initialize the light renderer.
+	 * @internal
+	 */
 	public static init() {
 
 		// SETUP FRAME BUFFER //
@@ -157,7 +171,11 @@ export class LightRenderer {
 		this.lightFB.getTexture().unbind();
 	}
 
-	public static submitLight(light: Light) {
+	/**
+	 * Submit a light to be rendered.
+	 * @param {PointLight} light The light.
+	 */
+	public static submitLight(light: PointLight) {
 		if (this.lightCount < MAX_LIGHTS) {
 			this.lightData.set(Float32Concat(light.transform, Float32Concat(light.color, new Float32Array([light.intensity]))), 
 				this.lightCount * this.instanceBuffer.getLayout().getComponentCount());
@@ -165,6 +183,9 @@ export class LightRenderer {
 		}
 	}
 
+	/** Begin the light renderer's scene. Only to be called by the Polar Renderer.
+	 * @internal
+	 */
 	public static beginScene(camera: OrthographicCamera) {
 		this.viewProjectionMatrix = camera.getViewProjectionMatrix();
 		this.lightCount = 0;
@@ -172,6 +193,9 @@ export class LightRenderer {
 		Surface.clear();
 	}
 
+	/** End the light renderer's scene. Only to be called by the Polar Renderer.
+	 * @internal
+	 */
 	public static endScene() {
 		this.lightFB.bind();
 		Surface.clear(glm.vec4.fromValues(this.ambientLightColor[0], this.ambientLightColor[1], this.ambientLightColor[2], 1));
@@ -191,6 +215,9 @@ export class LightRenderer {
 		this.lightFB.unbind();
 	}
 
+	/** Multiply the two internal render buffers together and render to the currently bound FBO. Only to be called by the Polar Renderer.
+	 * @internal
+	 */
 	public static render() {
 		this.multiplyShader.bind();
 		this.spriteFB.getTexture().bind(Surface.gl.TEXTURE0);
