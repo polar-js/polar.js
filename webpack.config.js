@@ -1,7 +1,6 @@
 const path = require('path');
 const { version } = require('./package.json');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const TypescriptDeclarationPlugin = require('typescript-declaration-webpack-plugin');
 
 module.exports = env => ({
 	entry: './src/Polar.ts',
@@ -30,10 +29,5 @@ module.exports = env => ({
 		library: 'Polar',
 		libraryTarget: 'window'
 	},
-	watch: env.production ? false : true,
-	plugins: [
-		new TypescriptDeclarationPlugin({
-		  out: 'polar.d.ts'
-		})
-	  ]
+	watch: env.production ? false : true
 });
