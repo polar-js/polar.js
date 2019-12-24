@@ -33,7 +33,7 @@ class ExampleLightingLayer extends Polar.Layer {
 		}];
 
 		window.addEventListener('click', e => {
-			this.lights.push(new Polar.Light(this.light1));
+			this.lights.push(new Polar.PointLight(this.light1));
 		});
 
 		// Move the light to the cursor's position.
