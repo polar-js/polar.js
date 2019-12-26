@@ -17,6 +17,13 @@ export class Shader {
 	private name: string;
 	private locations: { [id: string]: WebGLUniformLocation };
 
+	/**
+	 * Create a new shader.
+	 * @param {string} name The shader's name.
+	 * @param {string} vertexSrc The GLSL vertex shader source code.
+	 * @param {string} fragmentSrc The GLSL fragment shader source code.
+	 * @param {string[]} [transformFeedbackVaryings] The shader's transform feedback varyings.
+	 */
 	public constructor(name: string, vertexSrc: string, fragmentSrc: string, transformFeedbackVaryings?: string[]) {
 		this.name = name;
 		this.locations = {};
