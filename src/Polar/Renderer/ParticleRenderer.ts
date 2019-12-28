@@ -1,13 +1,13 @@
 import * as glm from 'gl-matrix';
-import { Shader } from 'Polar/Renderer/Shader';
-import { Surface } from 'Polar/Renderer/Surface';
-import { ParticleEmitter } from 'Polar/Renderer/ParticleEmitter';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { RenderCommand } from 'Polar/Renderer/RenderCommand';
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import * as ParticleUpdateShaderSource from 'Polar/Renderer/ShaderSource/ParticleUpdateShaderSource';
-import * as ParticlePointShaderSource from 'Polar/Renderer/ShaderSource/ParticlePointShaderSource';
-import * as ParticleTextureShaderSource from 'Polar/Renderer/ShaderSource/ParticleTextureShaderSource';
+import { Shader } from './Shader';
+import { Surface } from './Surface';
+import { ParticleEmitter } from './ParticleEmitter';
+import { Texture2D } from './Texture';
+import { RenderCommand } from './RenderCommand';
+import { OrthographicCamera } from './OrthographicCamera';
+import * as ParticleUpdateShaderSource from './ShaderSource/ParticleUpdateShaderSource';
+import * as ParticlePointShaderSource from './ShaderSource/ParticlePointShaderSource';
+import * as ParticleTextureShaderSource from './ShaderSource/ParticleTextureShaderSource';
 
 export class ParticleRenderer {
 

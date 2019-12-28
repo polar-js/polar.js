@@ -1,6 +1,6 @@
-import { Surface as s } from 'Polar/Renderer/Surface';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
+import { Surface as s } from './Surface';
+import { Texture2D } from './Texture';
+import { RenderBuffer } from './RenderBuffer';
 
 /** Represents an OpenGL framebuffer. */
 export class FrameBuffer {

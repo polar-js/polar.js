@@ -1,11 +1,11 @@
 import * as glm from 'gl-matrix';
-import { System } from 'Polar/ECS/System';
-import { Component} from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { CameraCP } from 'Polar/ECS/Components';
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import { Surface } from 'Polar/Renderer/Surface';
-import { Input } from 'Polar/Core/Input';
+import { System } from '../System';
+import { Component} from '../Component';
+import { Entity } from '../Entity';
+import { CameraCP } from '../Components';
+import { OrthographicCamera } from '../../Renderer/OrthographicCamera';
+import { Surface } from '../../Renderer/Surface';
+import { Input } from '../../Core/Input';
 
 /** A simple camera movement controller. */
 export class CameraControllerSystem extends System {

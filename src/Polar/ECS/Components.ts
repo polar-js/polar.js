@@ -1,8 +1,8 @@
 import * as glm from 'gl-matrix';
-import { Component } from 'Polar/ECS/Component';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import { createTransform } from 'Polar/Util/Math';
+import { Component } from './Component';
+import { Texture2D } from '../Renderer/Texture';
+import { OrthographicCamera } from '../Renderer/OrthographicCamera';
+import { createTransform } from '../Util/Math';
 
 /** Polar component which stores information about an entity's transform (position, rotation, scale).
  * 

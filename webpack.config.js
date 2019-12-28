@@ -16,9 +16,6 @@ module.exports = env => ({
 	},
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js' ],
-		alias: {
-			Polar: path.resolve(__dirname, 'src/Polar')
-		},
 		plugins: [
 			new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })
 		]

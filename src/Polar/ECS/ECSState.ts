@@ -1,6 +1,5 @@
-import { Component } from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { System } from 'Polar/ECS/System';
+import { Component } from './Component';
+import { System } from './System';
 
 export class ECSState {
 	public systemNames: string[];

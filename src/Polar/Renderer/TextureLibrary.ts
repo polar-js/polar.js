@@ -1,5 +1,5 @@
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { Surface } from 'Polar/Renderer/Surface';
+import { Texture2D } from './Texture';
+import { Surface } from './Surface';
 
 /** Stores a number of textures accessible through aliases. */
 export class TextureLibrary {

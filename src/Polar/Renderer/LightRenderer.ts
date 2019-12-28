@@ -1,15 +1,15 @@
 import * as glm from 'gl-matrix';
-import { Surface } from 'Polar/Renderer/Surface';
-import { Shader } from 'Polar/Renderer/Shader';
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
-import { RenderCommand } from 'Polar/Renderer/RenderCommand';
-import { FrameBuffer } from 'Polar/Renderer/FrameBuffer';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
-import * as LightShaderSource from 'Polar/Renderer/ShaderSource/LightShaderSource';
-import * as MultiplyTextureShaderSource from 'Polar/Renderer/ShaderSource/MultiplyTextureShaderSource';
+import { Surface } from './Surface';
+import { Shader } from './Shader';
+import { OrthographicCamera } from './OrthographicCamera';
+import { VertexArray } from './VertexArray';
+import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from './Buffer';
+import { RenderCommand } from './RenderCommand';
+import { FrameBuffer } from './FrameBuffer';
+import { Texture2D } from './Texture';
+import { RenderBuffer } from './RenderBuffer';
+import * as LightShaderSource from './ShaderSource/LightShaderSource';
+import * as MultiplyTextureShaderSource from './ShaderSource/MultiplyTextureShaderSource';
 
 /** Represents a point light which illuminates a 2D scene with lighting enabled. */
 export class PointLight {

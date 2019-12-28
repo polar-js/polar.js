@@ -1,9 +1,9 @@
-import { ParticleEmitter } from 'Polar/Renderer/ParticleEmitter';
-import { System } from 'Polar/ECS/System';
-import { Component} from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
-import { CameraCP } from 'Polar/ECS/Components';
+import { ParticleEmitter } from '../../Renderer/ParticleEmitter';
+import { System } from '../System';
+import { Component} from '../Component';
+import { Entity } from '../Entity';
+import { ParticleRenderer } from '../../Renderer/ParticleRenderer';
+import { CameraCP } from '../Components';
 
 export class ParticleSystem extends System {
 	public onAttach(): void {}

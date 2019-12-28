@@ -1,10 +1,10 @@
-import { System } from 'Polar/ECS/System';
-import { Entity } from 'Polar/ECS/Entity';
-import { TextureRefCP, TextureLibraryCP } from 'Polar/ECS/Systems/TextureLoad';
-import { Renderer } from 'Polar/Renderer/Renderer';
-import { Texture2DCP, TransformCP, CameraCP } from 'Polar/ECS/Components';
-import { PhysicsBodyCP } from 'Polar/ECS/Systems/Physics';
-import { createTransform } from 'Polar/Util/Math';
+import { System } from '../System';
+import { Entity } from '../Entity';
+import { TextureRefCP, TextureLibraryCP } from '../Systems/TextureLoad';
+import { Renderer } from '../../Renderer/Renderer';
+import { Texture2DCP, TransformCP, CameraCP } from '../Components';
+import { PhysicsBodyCP } from './Physics';
+import { createTransform } from '../../Util/Math';
 
 /** System which renders entities.
  * 

@@ -1,9 +1,9 @@
 import * as glm from 'gl-matrix';
-import { System } from 'Polar/ECS/System';
-import { Component} from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { Timer } from 'Polar/Util/Timer';
-import { Surface } from 'Polar/Renderer/Surface';
+import { System } from '../System';
+import { Component} from '../Component';
+import { Entity } from '../Entity';
+import { Timer } from '../../Util/Timer';
+import { Surface } from '../../Renderer/Surface';
 
 export class FPSDebugSystem extends System {
 

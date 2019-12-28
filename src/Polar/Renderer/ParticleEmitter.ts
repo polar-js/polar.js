@@ -1,8 +1,8 @@
 import * as glm from 'gl-matrix';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
+import { VertexArray } from './VertexArray';
+import { VertexBuffer, BufferLayout, BufferElement, ShaderDataType, IndexBuffer } from './Buffer';
 import { Surface } from './Surface';
-import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
+import { ParticleRenderer } from './ParticleRenderer';
 import { Texture2D } from './Texture';
 
 /** Settings for a particle emitter. */

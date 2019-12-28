@@ -1,11 +1,11 @@
 import * as glm from 'gl-matrix';
 import * as p2 from 'p2';
-import { System } from 'Polar/ECS/System';
-import { Component} from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { Renderer } from 'Polar/Renderer/Renderer';
-import { createTransform } from 'Polar/Util/Math';
-import { Input } from 'Polar/Core/Input';
+import { System } from '../System';
+import { Component} from '../Component';
+import { Entity } from '../Entity';
+import { Renderer } from '../../Renderer/Renderer';
+import { createTransform } from '../../Util/Math';
+import { Input } from '../../Core/Input';
 
 /** A system which manages a p2 physics world. */
 export class PhysicsSystem extends System {

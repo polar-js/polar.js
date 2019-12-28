@@ -1,7 +1,7 @@
-import { System } from 'Polar/ECS/System';
-import { Component } from 'Polar/ECS/Component';
-import { Entity } from 'Polar/ECS/Entity';
-import { TextureLibrary } from 'Polar/Renderer/TextureLibrary';
+import { System } from '../System';
+import { Component } from '../Component';
+import { Entity } from '../Entity';
+import { TextureLibrary } from '../../Renderer/TextureLibrary';
 
 /** A system which loads and allows textures to be accessed using aliases within the entity component system. */
 export class TextureLoadSystem extends System {

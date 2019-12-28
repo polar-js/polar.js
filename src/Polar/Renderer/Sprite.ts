@@ -1,5 +1,5 @@
 import * as glm from 'gl-matrix';
-import { Texture2D } from 'Polar/Renderer/Texture';
+import { Texture2D } from './Texture';
 
 /** Represents a texture within world-space. */
 export class Sprite {

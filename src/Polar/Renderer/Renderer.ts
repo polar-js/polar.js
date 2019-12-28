@@ -1,20 +1,20 @@
 import * as glm from 'gl-matrix';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { Shader } from 'Polar/Renderer/Shader';
-import { RenderCommand } from 'Polar/Renderer/RenderCommand';
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import { ShaderLibrary } from 'Polar/Renderer/ShaderLibrary';
-import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
-import { Sprite } from 'Polar/Renderer/Sprite';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { Surface } from 'Polar/Renderer/Surface';
+import { VertexArray } from './VertexArray';
+import { Shader } from './Shader';
+import { RenderCommand } from './RenderCommand';
+import { OrthographicCamera } from './OrthographicCamera';
+import { ShaderLibrary } from './ShaderLibrary';
+import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from './Buffer';
+import { Sprite } from './Sprite';
+import { Texture2D } from './Texture';
+import { Surface } from './Surface';
 import { createTransform } from 'Polar/Util/Math';
-import { ParticleRenderer } from 'Polar/Renderer/ParticleRenderer';
-import { InstancedRenderer } from 'Polar/Renderer/InstancedRenderer';
-import { LightRenderer } from 'Polar/Renderer/LightRenderer';
-import { PostprocessingStage } from 'Polar/Renderer/PostprocessingStage';
-import * as TextureShaderSource from 'Polar/Renderer/ShaderSource/TextureShaderSource';
-import * as ColorShaderSource from 'Polar/Renderer/ShaderSource/ColorShaderSource';
+import { ParticleRenderer } from './ParticleRenderer';
+import { InstancedRenderer } from './InstancedRenderer';
+import { LightRenderer } from './LightRenderer';
+import { PostprocessingStage } from './PostprocessingStage';
+import * as TextureShaderSource from './ShaderSource/TextureShaderSource';
+import * as ColorShaderSource from './ShaderSource/ColorShaderSource';
 
 /** Handles the rendering objects to the canvas, including post.
  * 

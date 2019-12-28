@@ -1,9 +1,9 @@
-import { Layer } from 'Polar/Core/Layer';
-import { LayerStack } from 'Polar/Core/LayerStack';
+import { Layer } from './Layer';
+import { LayerStack } from './LayerStack';
 import { Renderer } from '../Renderer/Renderer';
-import { Surface } from 'Polar/Renderer/Surface';
-import { Input } from 'Polar/Core/Input';
-import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
+import { Surface } from '../Renderer/Surface';
+import { Input } from './Input';
+import { ApplicationSettings } from './ApplicationSettings';
 
 /** Represents a Polar Application to be attached to the engine. */
 export abstract class Application {

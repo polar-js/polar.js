@@ -1,13 +1,13 @@
 import * as glm from 'gl-matrix';
-import { Surface } from 'Polar/Renderer/Surface';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from 'Polar/Renderer/Buffer';
-import { Shader } from 'Polar/Renderer/Shader';
+import { Surface } from './Surface';
+import { VertexArray } from './VertexArray';
+import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer } from './Buffer';
+import { Shader } from './Shader';
 import { OrthographicCamera } from './OrthographicCamera';
 import { TextureAtlas } from './TextureAtlas';
 import { RenderCommand } from './RenderCommand';
 
-import * as InstancedTextureShaderSource from 'Polar/Renderer/ShaderSource/InstancedTextureShaderSource';
+import * as InstancedTextureShaderSource from './ShaderSource/InstancedTextureShaderSource';
 
 /**
  * The maximum number of instances which can be rendered.*/

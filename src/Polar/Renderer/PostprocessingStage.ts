@@ -1,12 +1,12 @@
 import * as glm from 'gl-matrix';
-import { Surface } from 'Polar/Renderer/Surface';
-import { Shader } from 'Polar/Renderer/Shader';
-import { FrameBuffer } from 'Polar/Renderer/FrameBuffer';
-import { RenderBuffer } from 'Polar/Renderer/RenderBuffer';
-import { VertexBuffer, IndexBuffer, BufferElement, BufferLayout, ShaderDataType } from 'Polar/Renderer/Buffer';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
-import { Texture2D } from 'Polar/Renderer/Texture';
-import { RenderCommand } from 'Polar/Renderer/RenderCommand';
+import { Surface } from './Surface';
+import { Shader } from './Shader';
+import { FrameBuffer } from './FrameBuffer';
+import { RenderBuffer } from './RenderBuffer';
+import { VertexBuffer, IndexBuffer, BufferElement, BufferLayout, ShaderDataType } from './Buffer';
+import { VertexArray } from './VertexArray';
+import { Texture2D } from './Texture';
+import { RenderCommand } from './RenderCommand';
 
 export class PostprocessingStage {
 

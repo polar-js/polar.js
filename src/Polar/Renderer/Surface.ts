@@ -1,5 +1,5 @@
 import * as glm from 'gl-matrix';
-import { ApplicationSettings } from 'Polar/Core/ApplicationSettings';
+import { ApplicationSettings } from '../Core/ApplicationSettings';
 import { RenderCommand } from './RenderCommand';
 
 // TODO: Make gl external to surface?

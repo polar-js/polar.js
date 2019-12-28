@@ -1,4 +1,4 @@
-import { Layer } from 'Polar/Core/Layer';
+import { Layer } from './Layer';
 
 export class LayerStack {
 	private layers: Layer[];

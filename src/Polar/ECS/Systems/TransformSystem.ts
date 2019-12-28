@@ -1,7 +1,7 @@
-import { System } from 'Polar/ECS/System';
-import { Entity } from 'Polar/ECS/Entity';
-import { TransformCP } from 'Polar/ECS/Components';
-import { createTransform } from 'Polar/Util/Math';
+import { System } from '../System';
+import { Entity } from '../Entity';
+import { TransformCP } from '../Components';
+import { createTransform } from '../../Util/Math';
 
 export class TransformSystem extends System {
 

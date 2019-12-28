@@ -1,4 +1,4 @@
-import { Surface } from 'Polar/Renderer/Surface';
+import { Surface } from './Surface';
 
 /** Represents an OpenGL renderbuffer. */
 export class RenderBuffer {

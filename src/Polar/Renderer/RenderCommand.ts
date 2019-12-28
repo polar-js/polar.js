@@ -1,6 +1,6 @@
 import * as glm from 'gl-matrix';
-import { Surface } from 'Polar/Renderer/Surface';
-import { VertexArray } from 'Polar/Renderer/VertexArray';
+import { Surface } from './Surface';
+import { VertexArray } from './VertexArray';
 
 /** Static class which acts as an abstraction layer from raw OpenGL function calls. */
 export class RenderCommand {

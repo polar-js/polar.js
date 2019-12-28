@@ -1,6 +1,6 @@
-import { OrthographicCamera } from 'Polar/Renderer/OrthographicCamera';
-import { Input } from 'Polar/Core/Input';
-import { Surface } from 'Polar/Renderer/Surface';
+import { OrthographicCamera } from '../Renderer/OrthographicCamera';
+import { Input } from '../Core/Input';
+import { Surface } from '../Renderer/Surface';
 import * as glm from 'gl-matrix';
 
 /** Class which controls the input and control of an orthographic camera. */
