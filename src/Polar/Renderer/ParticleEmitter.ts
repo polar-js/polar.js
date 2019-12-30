@@ -180,8 +180,8 @@ export class ParticleEmitter {
 			];
 			const quadVB = new VertexBuffer(new Float32Array(quadVertices));
 
-			const indices = [ 0, 1, 2, 0, 2, 3]
-			const quadIB = new IndexBuffer(new Uint16Array(indices))
+			const indices = [ 0, 1, 2, 0, 2, 3];
+			const quadIB = new IndexBuffer(new Uint16Array(indices));
 
 			const quadLayout = new BufferLayout([
 				new BufferElement(ShaderDataType.Float2, 'i_Coord', false, 0),

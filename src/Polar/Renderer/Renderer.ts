@@ -8,7 +8,7 @@ import { VertexBuffer, BufferElement, BufferLayout, ShaderDataType, IndexBuffer 
 import { Sprite } from './Sprite';
 import { Texture2D } from './Texture';
 import { Surface } from './Surface';
-import { createTransform } from 'Polar/Util/Math';
+import { createTransform } from '../Util/Math';
 import { ParticleRenderer } from './ParticleRenderer';
 import { InstancedRenderer } from './InstancedRenderer';
 import { LightRenderer } from './LightRenderer';

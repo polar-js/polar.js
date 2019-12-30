@@ -29,10 +29,15 @@ export class TextureLoadSystem extends System {
 /** A singleton component used to store a number of textures for the TextureLoadSystem. */
 export class TextureLibraryCP extends Component {
 
-	public readonly type = 'Polar:TextureLibary';
+	public readonly type = 'Polar:TextureLibrary';
 	public library: TextureLibrary;
 	/** An array of alias/path pairs to be loaded on TextureLoadSystem.onAttach(). */
 	public texturePaths: [string, string][] = [];
+
+	public constructor(texturePaths: [string, string][]) {
+		super();
+		this.texturePaths = texturePaths;
+	}
 }
 
 export class TextureRefCP extends Component {
@@ -47,6 +52,8 @@ export class TextureRefCP extends Component {
 	/**
 	 * Create a new texture reference component.
 	 * @param {string} alias The alias of the texture within the texture library.
+	 * @param {string} width The unscaled width of the rendered texture in world units.
+	 * @param {string} height The unscaled height of the rendered texture in world units.
 	 */
 	public constructor(alias: string, width: number, height: number) {
 		super();

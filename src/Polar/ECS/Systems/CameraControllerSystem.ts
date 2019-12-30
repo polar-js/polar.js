@@ -108,11 +108,11 @@ export class CameraControllerCP extends Component {
 	public zoomLevel: number = 1;
 	/** Whether the camera will rotate using Q and E. */
 	public doRotation: boolean = false;
-	// The camera's position in world space.
+	/** The camera's position in world space. */
 	public cameraPosition: glm.vec3 = glm.vec3.create();
-	// The camera's current rotation.
+	/** The camera's current rotation. */
 	public cameraRotation: number = 0.0;
-	// How fast the camera rotates in radians per second.
+	/** How fast the camera rotates in radians per second. */
 	public cameraRotationSpeed: number = Math.PI/2;
 
 	/**

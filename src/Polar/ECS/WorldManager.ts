@@ -4,7 +4,7 @@ import { Component } from './Component';
 import { ECSState, ECSLoader, EntityTemplate } from './ECSState';
 
 /** Controls and manages the entity component system of a world. */
-export abstract class WorldManager {
+export class WorldManager {
 	private systems: System[];
 
 	private entities: Map<number, Entity>;
@@ -14,6 +14,7 @@ export abstract class WorldManager {
 
 	/** Create a new world manager. */
 	public constructor(state?: ECSState) {
+
 		this.entityCount = 0;
 		this.entities = new Map<number, Entity>();
 		this.systems = [];
@@ -136,11 +137,6 @@ export abstract class WorldManager {
 						system.subscribers.set(entity.id, i);
 					}
 				}
-				// else {
-				// 	if (system.subscribers.has(entity.id)) {
-				// 		system.subscribers.delete(entity.id);
-				// 	}
-				// }
 				
 				if (systemAdded)
 					break;
