@@ -36,13 +36,9 @@ export class OrthographicCameraController {
 			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 		});
 
-		var timeout: number = null;
-		window.addEventListener('resize', () => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => {
-				this.aspectRatio = Surface.getWidth() / Surface.getHeight();
-				this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
-			}, 100);
+		Surface.addResizeCallback(canvas => {
+			this.aspectRatio = canvas.width / canvas.height;
+			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
 		});
 	}
 

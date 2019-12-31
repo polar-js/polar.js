@@ -1,10 +1,12 @@
 import { System } from '../System';
 import { Entity } from '../Entity';
+import { Component } from '../Component';
 import { TextureRefCP, TextureLibraryCP } from '../Systems/TextureLoad';
 import { Renderer } from '../../Renderer/Renderer';
 import { Texture2DCP, TransformCP, CameraCP } from '../Components';
 import { PhysicsBodyCP } from './Physics';
 import { createTransform } from '../../Util/Math';
+import * as glm from 'gl-matrix';
 
 /** System which renders entities.
  * 
@@ -20,7 +22,8 @@ export class RenderSystem extends System {
 			['Polar:Transform', 'Polar:Texture2D'],
 			['Polar:PhysicsBody', 'Polar:Texture2D'],
 			['Polar:Transform', 'Polar:TextureRef'],
-			['Polar:PhysicsBody', 'Polar:TextureRef']];
+			['Polar:PhysicsBody', 'Polar:TextureRef'],
+			['Polar:Transform', 'Polar:Outline']];
 	}
 
 	public getName(): string {
@@ -41,18 +44,24 @@ export class RenderSystem extends System {
 		}
 		// Render sprites with TextureRef component.
 		else if (subIndex == 2) {
-			let textureCP = <TextureRefCP>entity.getComponent('Polar:TextureRef');
-			let textureLibCP = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
+			const textureCP = <TextureRefCP>entity.getComponent('Polar:TextureRef');
+			const textureLibCP = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
 			Renderer.submitTextured(textureLibCP.library.get(textureCP.alias), (<TransformCP>entity.getComponent('Polar:Transform')).transform);
 		}
 		// Render physics bodies with TextureRef component.
 		else if (subIndex == 3) {
 			const body = (<PhysicsBodyCP>entity.getComponent('Polar:PhysicsBody')).body;
-			let textureCP = <TextureRefCP>entity.getComponent('Polar:TextureRef');
-			let textureLibCP = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
-			let texture = textureLibCP.library.get(textureCP.alias);
+			const textureCP = <TextureRefCP>entity.getComponent('Polar:TextureRef');
+			const textureLibCP = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
+			const texture = textureLibCP.library.get(textureCP.alias);
 			Renderer.submitTextured(texture, createTransform(body.position[0], body.position[1], textureCP.width, textureCP.height, body.angle));
 			console.log(`${body.position[0]}, ${body.position[1]}, ${texture.getWidth()}, ${texture.getWidth()}, ${body.angle}`);
+		}
+		// Render outline.
+		else if (subIndex == 4) {
+			const transform = (<TransformCP>entity.getComponent('Polar:Transform')).transform;
+			const color = (<OutlineCP>entity.getComponent('Polar:Outline')).color;
+			Renderer.submitColoredOutline(color, transform);
 		}
 	}
 
@@ -62,5 +71,15 @@ export class RenderSystem extends System {
 
 	public endUpdate(dt: number): void {
 		Renderer.endScene();
+	}
+}
+
+export class OutlineCP extends Component {
+	public readonly type = 'Polar:Wireframe';
+	public color: glm.vec4;
+
+	public constructor(color: glm.vec4 = glm.vec4.fromValues(1, 0, 0, 1)) {
+		super();
+		this.color = color;
 	}
 }

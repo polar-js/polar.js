@@ -26,8 +26,8 @@ export class CameraControllerSystem extends System {
 			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
 
-		window.addEventListener('resize', (ev: UIEvent) => {
-			aspectRatio = Surface.getWidth() / Surface.getHeight();
+		Surface.addResizeCallback(canvas => {
+			aspectRatio = canvas.width / canvas.height;
 			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 		});
 

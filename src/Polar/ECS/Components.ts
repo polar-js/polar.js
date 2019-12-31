@@ -30,20 +30,6 @@ export class TransformCP extends Component {
 		this.transform = createTransform(x, y, scale, scale, rotation, 0);
 		this.modified = false;
 	}
-
-
-	// /**
-	//  * Recalculate the transform component's transformation matrix.
-	//  * To be called after editing position, rotation or scale.
-	//  */
-	// public recalculate(transformCP: TransformCP) {
-	// 	this.transform = glm.mat4.create();
-	// 	this.transform = glm.mat4.translate(this.transform, this.transform, glm.vec3.fromValues(this.x, this.y, 0));
-	// 	this.transform = glm.mat4.rotate(this.transform, this.transform, this.rotation, glm.vec3.fromValues(0, 0, 1));
-	// 	this.transform = glm.mat4.scale(this.transform, this.transform, glm.vec3.fromValues(this.scale, this.scale, this.scale));
-
-	// 	this.modified = false;
-	// }
 }
 
 /** A component which stores data about a 2D texture. 

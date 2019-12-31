@@ -97,13 +97,9 @@ export class LightRenderer {
 		if (!this.spriteFB.isComplete())
 			console.error('Framebuffer not complete!');
 
-		var timeout: number = null;
-		window.addEventListener('resize', () => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => {
-				this.spriteFB.resize(Surface.getWidth(), Surface.getHeight());
-				this.lightFB.resize(Surface.getWidth(), Surface.getHeight());
-			}, 100);
+		Surface.addResizeCallback(canvas => {
+			this.spriteFB.resize(canvas.width, canvas.height);
+			this.lightFB.resize(canvas.width, canvas.height);
 		});
 		
 		// SETUP SHADER //

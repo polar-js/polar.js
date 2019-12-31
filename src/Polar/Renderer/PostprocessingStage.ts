@@ -77,12 +77,8 @@ export class PostprocessingStage {
 		this.fbo.unbind();
 		this.fbo.getTexture().unbind();
 
-		var timeout: number = null;
-		window.addEventListener('resize', () => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => {
-				this.fbo.resize(Surface.getWidth(), Surface.getHeight());
-			}, 100);
+		Surface.addResizeCallback(canvas => {
+			this.fbo.resize(canvas.width, canvas.height);
 		});
 	}
 
