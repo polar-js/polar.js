@@ -75,7 +75,7 @@ export class RenderSystem extends System {
 }
 
 export class OutlineCP extends Component {
-	public readonly type = 'Polar:Wireframe';
+	public readonly type = 'Polar:Outline';
 	public color: glm.vec4;
 
 	public constructor(color: glm.vec4 = glm.vec4.fromValues(1, 0, 0, 1)) {
