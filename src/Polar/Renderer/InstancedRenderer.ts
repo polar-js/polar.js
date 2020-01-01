@@ -86,7 +86,8 @@ export class InstancedRenderer {
 	 */
 	public static submitTextured(textureAlias: string, transform: glm.mat4) {
 		if (this.instanceCount < MAX_INSTANCES) {
-			this.instanceData.set(Float32Concat(transform, this.textureAtlas.getBounds(textureAlias)), this.instanceCount * this.instanceBuffer.getLayout().getComponentCount());
+			this.instanceData.set(Float32Concat(transform, this.textureAtlas.getBounds(textureAlias)), 
+				this.instanceCount * this.instanceBuffer.getLayout().getComponentCount());
 			this.instanceCount++;
 		}
 	}
