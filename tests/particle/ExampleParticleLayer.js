@@ -2,9 +2,11 @@
 class ExampleParticleLayer extends Polar.Layer {
 	constructor() {
 		super('example');
+	}
 
+	onAttach() {
 		// Create world manager.
-		this.manager = new Polar.WorldManager();
+		this.manager = new Polar.WorldManager(this.eventCallbackFn);
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
@@ -84,7 +86,9 @@ class ExampleParticleLayer extends Polar.Layer {
 		this.manager.onUpdate(deltaTime);
 	}
 
-
+	onEvent(event) {
+		this.manager.onEvent(event);
+	}
 }
 
 class ParticleWandSystem extends Polar.System {
@@ -98,6 +102,8 @@ class ParticleWandSystem extends Polar.System {
 	onEntityUpdate(dt, entity, subIndex) {
 		entity.getComponent('Polar:ParticleEmitter').emitter.origin = Polar.Renderer.screenToWorldPosition(Polar.Input.getMousePosition());
 	}
+
+	onEvent(event) {}
 
 	getComponentTuples() { return [['Sandbox:ParticleWand', 'Polar:ParticleEmitter']]; }
 	getName() { return 'Sandbox:ParticleWandSystem'; }

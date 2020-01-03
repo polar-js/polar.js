@@ -14,20 +14,22 @@ export class TransformCP extends Component {
 	public x: number = 0;
 	public y: number = 0;
 	public rotation: number = 0;
-	public scale: number = 1;
+	public scaleX: number = 1;
+	public scaleY: number = 1;
 	public modified: boolean = true;
 
 	public transform: glm.mat4;
 
 	/** Create a new transform component. */
-	public constructor(x: number = 0, y: number = 0, rotation: number = 0, scale: number = 1) {
+	public constructor(x: number = 0, y: number = 0, rotation: number = 0, scaleX: number = 1, scaleY: number = 1) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.rotation = rotation;
-		this.scale = scale;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 
-		this.transform = createTransform(x, y, scale, scale, rotation, 0);
+		this.transform = createTransform(x, y, rotation, scaleX, scaleY, 0);
 		this.modified = false;
 	}
 }
@@ -39,15 +41,16 @@ export class TransformCP extends Component {
 export class Texture2DCP extends Component {
 
 	public readonly type = 'Polar:Texture2D';
+	/** The texture. */
 	public texture: Texture2D;
-	public width: number;
-	public height: number;
 
-	public constructor(texture: Texture2D, width = 1, height = 1) {
+	/**
+	 * Create a new texture 2D component.
+	 * @param {Texture2D} texture THe texture.
+	 */
+	public constructor(texture: Texture2D) {
 		super();
 		this.texture = texture;
-		this.width = width;
-		this.height = height;
 	}
 }
 

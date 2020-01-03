@@ -100,7 +100,12 @@ export class InstancedRenderer {
 		if (this.instanceCount > 0) {
 			this.textureAtlas.getTexture().bind();
 
-			this.instanceBuffer.setData(this.instanceData, Surface.gl.DYNAMIC_DRAW);
+			this.instanceBuffer.setData(
+				this.instanceData,
+				Surface.gl.DYNAMIC_DRAW,
+				Surface.gl.ARRAY_BUFFER,
+				this.instanceCount * this.instanceBuffer.getLayout().getComponentCount()
+			);
 	
 			const shader = this.instancedTextureShader;
 			shader.bind();

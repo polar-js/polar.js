@@ -6,30 +6,22 @@ import { CameraCP } from '../Components';
 import { OrthographicCamera } from '../../Renderer/OrthographicCamera';
 import { Surface } from '../../Renderer/Surface';
 import { Input } from '../../Core/Input';
+import { Event, EventDispatcher } from '../../Events/Event';
+import { CanvasResizeEvent } from '../../Events/ApplicationEvent';
+import { MouseWheelEvent } from '../../Events/MouseEvent';
 
 /** A simple camera movement controller. */
 export class CameraControllerSystem extends System {
 
 	public onAttach(): void {
-		const controllerData: CameraControllerCP = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
+		const controllerData = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
 
-		let aspectRatio = controllerData.aspectRatio == 0 ? Surface.getWidth() / Surface.getHeight() : controllerData.aspectRatio;
+		let aspectRatio = !controllerData.aspectRatio ? Surface.getWidth() / Surface.getHeight() : controllerData.aspectRatio;
 
 		(<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera = new OrthographicCamera(-aspectRatio * controllerData.zoomLevel, 
 			aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
 
 		let camera = (<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera;
-
-		window.addEventListener('mousewheel', (ev: MouseWheelEvent) => {
-			controllerData.zoomLevel += ev.deltaY / 1000 * controllerData.zoomLevel;
-			controllerData.zoomLevel = controllerData.zoomLevel > 0.1 ? controllerData.zoomLevel : 0.1;
-			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
-		});
-
-		Surface.addResizeCallback(canvas => {
-			aspectRatio = canvas.width / canvas.height;
-			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
-		});
 
 		camera.setPosition(controllerData.cameraPosition);
 		camera.setRotation(controllerData.cameraRotation);
@@ -71,15 +63,47 @@ export class CameraControllerSystem extends System {
 			}
 			if (doRotation) {
 				camera.setRotation(controllerData.cameraRotation);
+				this.eventCallbackFn(new CameraTransformEvent());
 			}
 		}
 		
 		// Only recalculate if the position has changed.
-		if (doPosition)
+		if (doPosition) {
 			camera.setPosition(controllerData.cameraPosition);
+			this.eventCallbackFn(new CameraTransformEvent());
+		}
 	}
 
 	public endUpdate(dt: number): void {}
+
+	public onEvent(event: Event): void {
+		const dispatcher = new EventDispatcher(event);
+		
+		// onCanvasResize
+		dispatcher.dispatch(CanvasResizeEvent, canvasEvent => {
+			const controllerData = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
+			const camera = (<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera;
+
+			let aspectRatio = canvasEvent.width / canvasEvent.height;
+			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+			this.eventCallbackFn(new CameraTransformEvent());
+			return false;
+		});
+
+		// onMouseScroll
+		dispatcher.dispatch(MouseWheelEvent, mouseEvent => {
+			const controllerData = <CameraControllerCP>this.getManager().getSingleton('Polar:CameraController');
+			const camera = (<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera;
+
+			let aspectRatio = !controllerData.aspectRatio ? Surface.getWidth() / Surface.getHeight() : controllerData.aspectRatio;
+
+			controllerData.zoomLevel += mouseEvent.deltaY / 1000 * controllerData.zoomLevel;
+			controllerData.zoomLevel = controllerData.zoomLevel > 0.1 ? controllerData.zoomLevel : 0.1;
+			camera.setProjection(-aspectRatio * controllerData.zoomLevel, aspectRatio * controllerData.zoomLevel, -controllerData.zoomLevel, controllerData.zoomLevel);
+			this.eventCallbackFn(new CameraTransformEvent());
+			return false;
+		});
+	}
 
 	public getComponentTuples(): string[][] {
 		return [];
@@ -132,5 +156,20 @@ export class CameraControllerCP extends Component {
 		this.cameraPosition = cameraPosition;
 		this.cameraRotation = cameraRotation;
 		this.cameraRotationSpeed = cameraRotationSpeed;
+	}
+}
+
+export class CameraTransformEvent extends Event {
+
+	public constructor() {
+		super();
+	}
+
+	public getEventType(): string {
+		return 'Polar:CameraTransformEvent';
+	}
+	
+	public toString(): string {
+		return 'Polar:CameraTransformEvent';
 	}
 }

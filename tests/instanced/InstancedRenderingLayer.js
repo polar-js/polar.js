@@ -1,9 +1,11 @@
 class InstancedRenderingLayer extends Polar.Layer {
 	constructor() {
 		super('example');
+	}
 
+	onAttach() {
 		// Create world manager.
-		this.manager = new Polar.WorldManager();
+		this.manager = new Polar.WorldManager(this.eventCallbackFn);
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
@@ -103,5 +105,9 @@ class InstancedRenderingLayer extends Polar.Layer {
 		}
 
 		Polar.Renderer.endScene();
+	}
+
+	onEvent(event) {
+		this.cameraController.onEvent(event);
 	}
 }

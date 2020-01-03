@@ -2,20 +2,24 @@ import { System } from '../System';
 import { Component } from '../Component';
 import { Entity } from '../Entity';
 import { TextureLibrary } from '../../Renderer/TextureLibrary';
+import { Event } from '../../Events/Event';
 
 /** A system which loads and allows textures to be accessed using aliases within the entity component system. */
 export class TextureLoadSystem extends System {
+	
 	public onAttach(): void {
 		let component = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
 		component.library = new TextureLibrary();
 		component.library.loadManyFromPath(component.texturePaths);
 	}
-
+	
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {}
-
+	
 	public beginUpdate(dt: number): void {}
-
+	
 	public endUpdate(dt: number): void {}
+	
+	public onEvent(event: Event): void {}
 
 	public getComponentTuples(): string[][] {
 		return [];
@@ -44,21 +48,13 @@ export class TextureRefCP extends Component {
 	public readonly type = 'Polar:TextureRef';
 	/** The alias of the texture within the texture library. */
 	public alias: string;
-	/** The unscaled width of the rendered texture in world units. */
-	public width: number;
-	/** The unscaled height of the rendered texture in world units. */
-	public height: number;
 
 	/**
 	 * Create a new texture reference component.
 	 * @param {string} alias The alias of the texture within the texture library.
-	 * @param {string} width The unscaled width of the rendered texture in world units.
-	 * @param {string} height The unscaled height of the rendered texture in world units.
 	 */
-	public constructor(alias: string, width: number, height: number) {
+	public constructor(alias: string) {
 		super();
 		this.alias = alias;
-		this.width = width;
-		this.height = height;
 	}
 }

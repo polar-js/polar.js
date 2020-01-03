@@ -40,9 +40,14 @@ export function getFragmentSource(): string {
 	void main() {
 
 		float step = 0.1;
-		float dist = length(v_Position) * 2.0;
-		int index = int(floor(dist / step));
-		
-		color = vec4(v_Color, mix(u_Kernel[index], u_Kernel[index + 1], mod(dist, step) / step) * v_Intensity);
+		float invStep = 10.0;
+		float dist = length(v_Position);
+		float distXInvStep = dist * invStep;
+		float fIndex = floor(distXInvStep);
+		int index = int(fIndex);
+
+		color = vec4(v_Color, mix(u_Kernel[index], u_Kernel[index + 1], distXInvStep - fIndex) * v_Intensity);
+		//color = vec4(v_Color, mix(u_Kernel[index], u_Kernel[index + 1], mod(dist, step) * invStep) * v_Intensity);
+		//color = vec4(v_Color, v_Intensity);
 	}`;
 }

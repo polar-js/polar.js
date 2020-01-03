@@ -22,10 +22,12 @@ class TestSystem extends Polar.System {
 		const transform = entity.getComponent('Polar:Transform');
 		transform.x += 0.5 * dt;
 		transform.y += 0.1 * dt;
-		transform.transform = Polar.createTransform(transform.x, transform.y, transform.scale, transform.scale, transform.rotation, 0);
+		transform.transform = Polar.createTransform(transform.x, transform.y, transform.rotation, transform.scaleX, transform.scaleY, 0);
 	}
 
 	endUpdate(dt) {}
+
+	onEvent(event) {}
 
 	getComponentTuples() {
 		return [['Polar:Transform', 'Sandbox:Test']];
@@ -39,14 +41,16 @@ class TestSystem extends Polar.System {
 class ExampleECSLayer extends Polar.Layer {
 	constructor() {
 		super('example');
-
+	}
+	
+	onAttach() {
 		this.images = new Polar.ImageLibrary();
 		this.images.loadPath('checkerboard', '/textures/checkerboard.png');
 		this.images.loadPath('test1', '/textures/1.png');
 		this.images.loadPath('test2', '/textures/2.png');
 
 		// Create world manager.
-		this.manager = new Polar.WorldManager();
+		this.manager = new Polar.WorldManager(this.eventCallbackFn);
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
@@ -107,5 +111,9 @@ class ExampleECSLayer extends Polar.Layer {
 		}
 		
 		this.manager.onUpdate(deltaTime);
+	}
+
+	onEvent(event) {
+		this.manager.onEvent(event);
 	}
 }

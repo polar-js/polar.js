@@ -1,7 +1,9 @@
 class ExampleLayer extends Polar.Layer {
 	constructor() {
 		super('example');
+	}
 
+	onAttach() {
 		// Create the sprite's texture.
 		const checkerboard = new Polar.Texture2D();
 		checkerboard.loadFromPath('/textures/checkerboard.png');
@@ -22,5 +24,9 @@ class ExampleLayer extends Polar.Layer {
 		Polar.Renderer.submitSprite(this.checkerboardSprite);
 
 	    Polar.Renderer.endScene();
+	}
+
+	onEvent(event) {
+		this.cameraController.onEvent(event);
 	}
 }

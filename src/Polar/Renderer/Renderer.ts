@@ -13,6 +13,7 @@ import { ParticleRenderer } from './ParticleRenderer';
 import { InstancedRenderer } from './InstancedRenderer';
 import { LightRenderer } from './LightRenderer';
 import { PostprocessingStage } from './PostprocessingStage';
+import { Event } from '../Events/Event';
 import * as TextureShaderSource from './ShaderSource/TextureShaderSource';
 import * as ColorShaderSource from './ShaderSource/ColorShaderSource';
 
@@ -187,6 +188,18 @@ export class Renderer {
 			vertexBuffer.setLayout(layout);
 			this.circleVA.addVertexBuffer(vertexBuffer, this.shaderLibrary.get('ColorShader'));
 			this.circleVA.unbind();
+		}
+	}
+
+	/**
+	 * Called every event. Not to be called by users.
+	 * @internal
+	 * @param {Event} event The event.
+	 */
+	public static onEvent(event: Event) {
+		LightRenderer.onEvent(event);
+		for (const stage of this.postprocessingStages) {
+			stage.onEvent(event);
 		}
 	}
 
@@ -391,7 +404,7 @@ export class Renderer {
 
 		shader.bind();
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
-		shader.uploadUniformMat4('u_Transform', createTransform(x0, y0, Math.sqrt(dx*dx + dy*dy), 0, angle, zIndex));
+		shader.uploadUniformMat4('u_Transform', createTransform(x0, y0, angle, Math.sqrt(dx*dx + dy*dy), 0, zIndex));
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.lineVA.bind();
@@ -412,7 +425,7 @@ export class Renderer {
 
 		shader.bind();
 		shader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
-		shader.uploadUniformMat4('u_Transform', createTransform(x, y, radius, radius, zIndex));
+		shader.uploadUniformMat4('u_Transform', createTransform(x, y, 0, radius, radius, zIndex));
 		shader.uploadUniformFloat4('u_Color', color);
 
 		this.circleVA.bind();
@@ -472,6 +485,26 @@ export class Renderer {
 		this.postprocessingStages.find((value: PostprocessingStage, index: number, array: PostprocessingStage[]) => {
 			return value.getName() === name;
 		}).disable();
+	}
+
+	/**
+	 * Set a postprocessing stage's uniform.
+	 * @param {string} stageName The postprocessing stage's name.
+	 * @param {string} uniformName The uniform's name within the stage' shader.
+	 * @param {number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4 | boolean | Float32Array} value The value to set the uniform to.
+	 */
+	public static setPostprocessingStageUniform(stageName: string, uniformName: string, 
+		value: number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4 | boolean | Float32Array) {
+		const stage = this.postprocessingStages.find((value, index) => {
+			return value.getName() === stageName;
+		});
+
+		if (stage) {
+			stage.setUniform(uniformName, value);
+		}
+		else {
+			console.error(`Stage ${stageName} not found.`);
+		}
 	}
 
 	/** Enable lighting. */

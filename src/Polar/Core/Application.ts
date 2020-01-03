@@ -4,6 +4,7 @@ import { Renderer } from '../Renderer/Renderer';
 import { Surface } from '../Renderer/Surface';
 import { Input } from './Input';
 import { ApplicationSettings } from './ApplicationSettings';
+import { Event } from '../Events/Event';
 
 /** Represents a Polar Application to be attached to the engine. */
 export abstract class Application {
@@ -18,8 +19,10 @@ export abstract class Application {
 	public constructor(settings: ApplicationSettings) {
 		this.layerStack = new LayerStack();
 
+		Surface.setEventCallback(this.onEvent.bind(this));
+
 		Surface.init(settings);
-		Input.init();
+		Input.init(this.onEvent.bind(this));
 		Renderer.init();
 	}
 
@@ -51,6 +54,8 @@ export abstract class Application {
 	 */
 	public pushLayer(layer: Layer) {
 		this.layerStack.pushLayer(layer);
+		var app = this;
+		layer.eventCallbackFn = this.onEvent.bind(this);
 		layer.onAttach();
 	}
 
@@ -60,5 +65,18 @@ export abstract class Application {
 	public pushOverlay(layer: Layer) {
 		this.layerStack.pushOverlay(layer);
 		layer.onAttach();
+	}
+
+	public onEvent(event: Event) {
+		if (!this.layerStack || !this.layerStack.layers) return;
+
+		Renderer.onEvent(event);
+
+		for (const layer of this.layerStack.layers) {
+			layer.onEvent(event);
+
+			// Allow layers to block events from passing to the next layer.
+			if (event.handled === true) break;
+		}
 	}
 }

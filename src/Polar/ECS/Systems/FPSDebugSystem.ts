@@ -4,6 +4,7 @@ import { Component} from '../Component';
 import { Entity } from '../Entity';
 import { Timer } from '../../Util/Timer';
 import { Surface } from '../../Renderer/Surface';
+import { Event } from '../../Events/Event';
 
 export class FPSDebugSystem extends System {
 
@@ -35,6 +36,7 @@ export class FPSDebugSystem extends System {
 	
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {}
 	public endUpdate(dt: number): void {}
+	public onEvent(event: Event): void {}
 	public getComponentTuples(): string[][] { return []; }
 	public getName(): string { return 'Polar:FPSDebugSystem'; }
 }

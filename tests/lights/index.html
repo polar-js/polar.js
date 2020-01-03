@@ -11,13 +11,14 @@
             <canvas id="test-canvas"></canvas>
             <div class="game-overlay">
                 <h1>Click to place a light.</h1>
+                <h2 id="light-counter">Light Count: 0</h2>
                 <label class="checkbox-container">Enable Lighting
                     <input type="checkbox" id="enable-lighting-checkbox" checked/>
                     <span class="checkmark"></span>
                 </label>
 
                 <label class="slider-container">Intensity
-                    <input type="range" min="0" max="1" value="30" class="slider" step="0.01" id="intensity-slider">
+                    <input type="range" min="0" max="1" value="0.6" class="slider" step="0.01" id="intensity-slider">
                 </label>
 
                 <h1>Ambient Light Color</h1>

@@ -191,10 +191,11 @@ export class VertexBuffer {
 	 * @param {Float32Array} data The data.
 	 * @param {number} [usage=STATIC_DRAW] The OpenGL usage.
 	 * @param {number} [target=ARRAY_BUFFER] The OpenGL target.
+	 * @param {number} [length] The length of data to upload.
 	 */
-	public setData(data: Float32Array, usage: number = Surface.gl.STATIC_DRAW, target: number = Surface.gl.ARRAY_BUFFER) {
+	public setData(data: Float32Array, usage: number = Surface.gl.STATIC_DRAW, target: number = Surface.gl.ARRAY_BUFFER, length?: number) {
 		Surface.gl.bindBuffer(target, this.buffer);
-		Surface.gl.bufferData(target, data, usage);
+		Surface.gl.bufferData(target, data, usage, 0, length);
 	}
 
 	/** Set buffer sub data.

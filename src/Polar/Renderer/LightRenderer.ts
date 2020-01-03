@@ -8,28 +8,10 @@ import { RenderCommand } from './RenderCommand';
 import { FrameBuffer } from './FrameBuffer';
 import { Texture2D } from './Texture';
 import { RenderBuffer } from './RenderBuffer';
+import { Event, EventDispatcher } from '../Events/Event';
+import { CanvasResizeEvent } from 'Polar/Events/ApplicationEvent';
 import * as LightShaderSource from './ShaderSource/LightShaderSource';
 import * as MultiplyTextureShaderSource from './ShaderSource/MultiplyTextureShaderSource';
-
-/** Represents a point light which illuminates a 2D scene with lighting enabled. */
-export class PointLight {
-	/** The light's transform. The light's quad is 1x1 units and can be scaled or translated by manipulating this matrix. */
-	public transform: glm.mat4;
-	/** The color of the light. */
-	public color: glm.vec3;
-	/** The intensity of the light, from 0 to 1. If the value is raised above 1, the edges of the light will appear more bright and the center will not get brighter. */
-	public intensity: number;
-
-	/**
-	 * Copy a light from an existing one.
-	 * @param light 
-	 */
-	public constructor(light: PointLight) {
-		this.transform = light.transform;
-		this.color = light.color;
-		this.intensity = light.intensity;
-	}
-}
 
 /** The maximum number of lights able to be used in a scene. */
 const MAX_LIGHTS = 1e4;
@@ -96,11 +78,6 @@ export class LightRenderer {
 
 		if (!this.spriteFB.isComplete())
 			console.error('Framebuffer not complete!');
-
-		Surface.addResizeCallback(canvas => {
-			this.spriteFB.resize(canvas.width, canvas.height);
-			this.lightFB.resize(canvas.width, canvas.height);
-		});
 		
 		// SETUP SHADER //
 		this.lightShader = new Shader('LightShader', LightShaderSource.getVertexSource(), LightShaderSource.getFragmentSource());
@@ -167,19 +144,30 @@ export class LightRenderer {
 		this.lightFB.getTexture().unbind();
 	}
 
+	public static onEvent(event: Event) {
+		const dispatcher = new EventDispatcher(event);
+		// onCanvasResize
+		dispatcher.dispatch(CanvasResizeEvent, canvasEvent => {
+			this.spriteFB.resize(canvasEvent.width, canvasEvent.height);
+			this.lightFB.resize(canvasEvent.width, canvasEvent.height);
+			return false;
+		});
+	}
+
 	/**
 	 * Submit a light to be rendered.
 	 * @param {PointLight} light The light.
 	 */
-	public static submitLight(light: PointLight) {
+	public static submitLight(color: glm.vec3, intensity: number, transform: glm.mat4) {
 		if (this.lightCount < MAX_LIGHTS) {
-			this.lightData.set(Float32Concat(light.transform, Float32Concat(light.color, new Float32Array([light.intensity]))), 
+			this.lightData.set(Float32Concat(transform, Float32Concat(color, new Float32Array([intensity]))), 
 				this.lightCount * this.instanceBuffer.getLayout().getComponentCount());
 			this.lightCount++;
 		}
 	}
 
-	/** Begin the light renderer's scene. Only to be called by the Polar Renderer.
+	/** 
+	 * Begin the light renderer scene. Only to be called by the Polar Renderer.
 	 * @internal
 	 */
 	public static beginScene(camera: OrthographicCamera) {
@@ -189,14 +177,20 @@ export class LightRenderer {
 		Surface.clear();
 	}
 
-	/** End the light renderer's scene. Only to be called by the Polar Renderer.
+	/** 
+	 * End the light renderer scene. Only to be called by the Polar Renderer.
 	 * @internal
 	 */
 	public static endScene() {
 		this.lightFB.bind();
 		Surface.clear(glm.vec4.fromValues(this.ambientLightColor[0], this.ambientLightColor[1], this.ambientLightColor[2], 1));
 		if (this.lightCount > 0) {
-			this.instanceBuffer.setData(this.lightData, Surface.gl.DYNAMIC_DRAW);
+			this.instanceBuffer.setData(
+				this.lightData,
+				Surface.gl.DYNAMIC_DRAW,
+				Surface.gl.ARRAY_BUFFER,
+				this.lightCount * this.instanceBuffer.getLayout().getComponentCount()
+			);
 	
 			this.lightShader.bind();
 			this.lightShader.uploadUniformMat4('u_ViewProjection', this.viewProjectionMatrix);
@@ -205,8 +199,6 @@ export class LightRenderer {
 	
 			this.instanceVA.bind();
 			RenderCommand.drawElementsInstanced(this.instanceVA, this.lightCount);
-
-			//console.log(`Rendering ${this.lightCount} lights!`);
 		}
 		this.lightFB.unbind();
 	}

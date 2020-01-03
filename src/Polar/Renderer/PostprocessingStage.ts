@@ -7,8 +7,10 @@ import { VertexBuffer, IndexBuffer, BufferElement, BufferLayout, ShaderDataType 
 import { VertexArray } from './VertexArray';
 import { Texture2D } from './Texture';
 import { RenderCommand } from './RenderCommand';
+import { Event, EventDispatcher, EventHandler } from '../Events/Event';
+import { CanvasResizeEvent } from '../Events/ApplicationEvent';
 
-export class PostprocessingStage {
+export class PostprocessingStage implements EventHandler {
 
 	protected name: string;
 	protected shader: Shader;
@@ -76,10 +78,6 @@ export class PostprocessingStage {
 		this.screenVA.unbind();
 		this.fbo.unbind();
 		this.fbo.getTexture().unbind();
-
-		Surface.addResizeCallback(canvas => {
-			this.fbo.resize(canvas.width, canvas.height);
-		});
 	}
 
 	/** Bind the postprocessing stage
@@ -174,5 +172,15 @@ export class PostprocessingStage {
 	 */
 	public setUniform(name: string, value: number | glm.vec2 | glm.vec3 | glm.vec4 | glm.mat3 | glm.mat4 | boolean | Float32Array) {
 		this.uniforms.set(name, [this.uniforms.get(name)[0], value]);
+	}
+
+	public onEvent(event: Event) {
+		const dispatcher = new EventDispatcher(event);
+		dispatcher.dispatch(CanvasResizeEvent, this.onCanvasResize.bind(this));
+	}
+
+	private onCanvasResize(event: CanvasResizeEvent): boolean {
+		this.fbo.resize(event.width, event.height);
+		return false;
 	}
 }

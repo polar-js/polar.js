@@ -17,10 +17,12 @@ class TestSystem extends Polar.System {
 		const transform = entity.getComponent('Polar:Transform');
 		transform.x += 0.5 * dt;
 		transform.y += 0.1 * dt;
-		transform.transform = Polar.createTransform(transform.x, transform.y, transform.scale, transform.scale, transform.rotation, 0);
+		transform.transform = Polar.createTransform(transform.x, transform.y, transform.rotation, transform.scaleX, transform.scaleY, 0);
 	}
 
 	endUpdate(dt) {}
+
+	onEvent(event) {}
 
 	getComponentTuples() {
 		return [['Polar:Transform', 'Sandbox:Test']];
@@ -34,7 +36,9 @@ class TestSystem extends Polar.System {
 class ECSFromFileLayer extends Polar.Layer {
 	constructor() {
 		super('example');
+	}
 
+	onAttach() {
 		this.images = new Polar.ImageLibrary();
 		this.images.loadPath('checkerboard', '/textures/checkerboard.png');
 		this.images.loadPath('test1', '/textures/1.png');
@@ -90,7 +94,7 @@ class ECSFromFileLayer extends Polar.Layer {
 		}`);
 
 		// Create world manager.
-		this.manager = new Polar.WorldManager(ecsState);
+		this.manager = new Polar.WorldManager(this.eventCallbackFn, ecsState);
 
 		this.fpsTimer = new Polar.Timer(1, false, true);
 		this.deltaNum = 0;
@@ -119,5 +123,9 @@ class ECSFromFileLayer extends Polar.Layer {
 		Polar.Surface.font.fillText(`FPS: ${this.currentFPS}`, 10, 30);
 		
 		this.manager.onUpdate(deltaTime);
+	}
+
+	onEvent(event) {
+		this.manager.onEvent(event);
 	}
 }

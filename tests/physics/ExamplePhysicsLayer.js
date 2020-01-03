@@ -1,9 +1,11 @@
 class ExamplePhysicsLayer extends Polar.Layer {
 	constructor() {
 		super('example');
+	}
 
+	onAttach() {
 		// Create world manager.
-		this.manager = new Polar.WorldManager();
+		this.manager = new Polar.WorldManager(this.eventCallbackFn);
 
 		// Initialize singletons.
 		this.manager.addSingleton(new Polar.CameraCP());
@@ -29,7 +31,8 @@ class ExamplePhysicsLayer extends Polar.Layer {
 		// Add entities.
 		{
 			const entity = this.manager.createEntity();
-			entity.addComponent(new Polar.Texture2DCP(checkerboard, 0.5, 0.5));
+			entity.addComponent(new Polar.Texture2DCP(checkerboard));
+			entity.addComponent(new Polar.BodyTextureAttachmentCP(0, 0, 0.5, 0.5, 0));
 
 			const body = new Polar.p2.Body({
 				mass: 1,
@@ -40,13 +43,15 @@ class ExamplePhysicsLayer extends Polar.Layer {
 				width: 0.5,
 				height: 0.5
 			}));
-			entity.addComponent(new Polar.PhysicsBodyCP(body, this.manager.getSingleton('Polar:PhysicsWorld').world));
+			entity.addComponent(new Polar.PhysicsBodyCP(body));
+			this.manager.getSingleton('Polar:PhysicsWorld').world.addBody(body);
 			this.manager.registerComponents(entity);
 		}
 
 		{
 			const entity = this.manager.createEntity();
 			entity.addComponent(new Polar.Texture2DCP(checkerboard));
+			entity.addComponent(new Polar.BodyTextureAttachmentCP(0, 0, 1, 1, 0));
 
 			const body = new Polar.p2.Body({
 				mass: 0,
@@ -56,7 +61,8 @@ class ExamplePhysicsLayer extends Polar.Layer {
 				width: 1,
 				height: 1
 			}));
-			entity.addComponent(new Polar.PhysicsBodyCP(body, this.manager.getSingleton('Polar:PhysicsWorld').world));
+			entity.addComponent(new Polar.PhysicsBodyCP(body));
+			this.manager.getSingleton('Polar:PhysicsWorld').world.addBody(body);
 			this.manager.registerComponents(entity);
 		}
 
@@ -66,5 +72,9 @@ class ExamplePhysicsLayer extends Polar.Layer {
 	onUpdate(deltaTime) {
 		// UPDATE ECS MANAGER //
 		this.manager.onUpdate(deltaTime);
+	}
+
+	onEvent(event) {
+		this.manager.onEvent(event);
 	}
 }

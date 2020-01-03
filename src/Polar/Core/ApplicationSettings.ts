@@ -5,7 +5,7 @@ export class ApplicationSettings {
 	/** The ID of the HTMLCanvasElement. */
 	public canvasID: string;
 	/** The display mode of the game engine.
-	 * @remarks
+	 * 
 	 * Can be 'fixed' or 'fill'.
 	 */
 	public displayMode: string;
@@ -15,4 +15,6 @@ export class ApplicationSettings {
 	public height: number;
 	/** The background color of the surface. */
 	public clearColor: glm.vec3 = glm.vec3.fromValues(0.1, 0.1, 0.1);
+	/** Whether the context menu appears when the user right clicks on the canvas. */
+	public allowContextMenu: boolean = false;
 }

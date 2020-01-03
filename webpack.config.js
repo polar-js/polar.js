@@ -26,5 +26,6 @@ module.exports = env => ({
 		library: 'Polar',
 		libraryTarget: 'window'
 	},
-	watch: env.production ? false : true
+	watch: env.production ? false : true,
+	devtool: 'eval-source-map'
 });

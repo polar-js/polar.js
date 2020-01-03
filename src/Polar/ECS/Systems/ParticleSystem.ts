@@ -4,8 +4,10 @@ import { Component} from '../Component';
 import { Entity } from '../Entity';
 import { ParticleRenderer } from '../../Renderer/ParticleRenderer';
 import { CameraCP } from '../Components';
+import { Event } from '../../Events/Event';
 
 export class ParticleSystem extends System {
+	
 	public onAttach(): void {}
 
 	public beginUpdate(dt: number): void {
@@ -15,11 +17,13 @@ export class ParticleSystem extends System {
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {
 		ParticleRenderer.renderParticleEmitter((<ParticleEmitterCP>entity.getComponent('Polar:ParticleEmitter')).emitter, dt);
 	}
-
+	
 	public endUpdate(dt: number): void {
 		ParticleRenderer.endParticleScene();
 	}
-
+	
+	public onEvent(event: Event): void {}
+	
 	public getComponentTuples(): string[][] {
 		return [['Polar:ParticleEmitter']];
 	}

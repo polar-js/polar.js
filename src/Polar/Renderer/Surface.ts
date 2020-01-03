@@ -2,6 +2,8 @@ import * as glm from 'gl-matrix';
 import { ApplicationSettings } from '../Core/ApplicationSettings';
 import { RenderCommand } from './RenderCommand';
 import { Timer } from '../Util/Timer';
+import { Event } from '../Events/Event';
+import { CanvasResizeEvent } from '../Events/ApplicationEvent';
 
 // TODO: Make gl external to surface?
 //export var gl: WebGL2RenderingContext;
@@ -28,7 +30,9 @@ export class Surface {
 	
 	private static resizing: boolean = false;
 
-	private static resizeCallbacks: Array<(canvas: HTMLCanvasElement) => void>;
+	private static eventCallbackFn: (event: Event) => void;
+
+	//private static resizeCallbacks: Array<(canvas: HTMLCanvasElement) => void>;
 	private static resizeTimer: Timer;
 	private static canvasSize: glm.vec2;
 	
@@ -39,7 +43,7 @@ export class Surface {
 	public static init(settings: ApplicationSettings) {
 		this.settings = settings;
 		this.resizeTimer = new Timer(0.3, false, true);
-		this.resizeCallbacks = new Array<(canvas: HTMLCanvasElement) => void>();
+		//this.resizeCallbacks = new Array<(canvas: HTMLCanvasElement) => void>();
 
 		if (!this.settings.clearColor) this.settings.clearColor = glm.vec3.fromValues(0.1, 0.1, 0.1);
 
@@ -62,16 +66,17 @@ export class Surface {
 			this.canvas.width = this.settings.width || 780;
 			this.canvas.height = this.settings.height || 480;
 		}
+		
 		this.gl = this.canvas.getContext('webgl2');
 
 		// CREATE FONT CANVAS //
 		this.fontCanvas = document.createElement('canvas');
 		if (this.canvas.nextSibling) {
 			this.canvas.parentNode.insertBefore(this.fontCanvas, this.canvas.nextSibling);
-		  }
-		  else {
+		}
+		else {
 			this.canvas.parentNode.appendChild(this.fontCanvas);
-		  }
+		}
 		this.fontCanvas.style.position = 'absolute';
 		this.fontCanvas.style.left =  this.canvas.offsetLeft.toString() + 'px';
 		this.fontCanvas.style.top = this.canvas.offsetTop.toString() + 'px';
@@ -83,6 +88,15 @@ export class Surface {
 		this.font = this.fontCanvas.getContext('2d');
 
 		this.canvasSize = glm.vec2.fromValues(this.canvas.clientWidth, this.canvas.clientHeight);
+
+		if (!this.settings.allowContextMenu) {
+			this.canvas.oncontextmenu = e => {
+				e.preventDefault();
+			};
+			this.fontCanvas.oncontextmenu = e => {
+				e.preventDefault();
+			};
+		}
 
 		RenderCommand.setClearColor(glm.vec4.fromValues(this.settings.clearColor[0], this.settings.clearColor[1], this.settings.clearColor[2], 1.0));
 	}
@@ -134,11 +148,12 @@ export class Surface {
 	}
 
 	/**
-	 * Add a callback which is run when the main canvas is resized. Checks every 300ms. Minimum of 300ms between each call.
-	 * @param {(canvas: HTMLCanvasElement) => void} callback The callback which is executed on resize.
+	 * Sets the event callback function which the surface uses to push events. Set only in Polar.Application. Not to be used by users.
+	 * @internal
+	 * @param {(event: Event) => void} callback The callback function.
 	 */
-	public static addResizeCallback(callback: (canvas: HTMLCanvasElement) => void) {
-		this.resizeCallbacks.push(callback);
+	public static setEventCallback(callback: (event: Event) => void) {
+		this.eventCallbackFn = callback;
 	}
 
 	/**
@@ -164,9 +179,7 @@ export class Surface {
 				this.fontCanvas.style.height = (this.canvas.height - 1) + 'px';
 
 				this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-				for (const callback of this.resizeCallbacks) {
-					callback(this.canvas);
-				}
+				this.eventCallbackFn(new CanvasResizeEvent(this.canvas.width, this.canvas.height));
 			}
 
 			this.canvasSize = glm.vec2.fromValues(this.canvas.width, this.canvas.height);

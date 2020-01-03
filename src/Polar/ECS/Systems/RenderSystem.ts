@@ -1,35 +1,37 @@
+import * as glm from 'gl-matrix';
 import { System } from '../System';
 import { Entity } from '../Entity';
 import { Component } from '../Component';
 import { TextureRefCP, TextureLibraryCP } from '../Systems/TextureLoad';
 import { Renderer } from '../../Renderer/Renderer';
 import { Texture2DCP, TransformCP, CameraCP } from '../Components';
-import { PhysicsBodyCP } from './Physics';
+import { PhysicsBodyCP, BodyTextureAttachmentCP } from './Physics';
 import { createTransform } from '../../Util/Math';
-import * as glm from 'gl-matrix';
+import { Event } from '../../Events/Event';
 
 /** System which renders entities.
  * 
  * @system 'Polar:RenderSystem'
- * @tuples {'Polar:Transform', 'Polar:Texture2D'}, {'Polar:PhysicsBody', 'Polar:Texture2D'}
+ * @tuples ['Polar:Transform', 'Polar:Texture2D'], ['Polar:PhysicsBody', 'Polar:Texture2D'], ['Polar:Transform', 'Polar:TextureRef'], ['Polar:PhysicsBody', 'Polar:TextureRef'], ['Polar:Transform', 'Polar:Outline']
  */
 export class RenderSystem extends System {
-
+	
 	public onAttach(): void {}
-
+	
 	public getComponentTuples(): string[][] {
 		return [
 			['Polar:Transform', 'Polar:Texture2D'],
-			['Polar:PhysicsBody', 'Polar:Texture2D'],
+			['Polar:PhysicsBody', 'Polar:BodyTextureAttachment', 'Polar:Texture2D'],
 			['Polar:Transform', 'Polar:TextureRef'],
-			['Polar:PhysicsBody', 'Polar:TextureRef'],
-			['Polar:Transform', 'Polar:Outline']];
+			['Polar:PhysicsBody', 'Polar:BodyTextureAttachment', 'Polar:TextureRef'],
+			['Polar:Transform', 'Polar:Outline']
+		];
 	}
-
+	
 	public getName(): string {
 		return 'Polar:RenderSystem';
 	}
-
+	
 	public onEntityUpdate(dt: number, entity: Entity, subIndex: number): void {
 		// Render sprites with Texture2D component.
 		if (subIndex == 0) {
@@ -39,8 +41,16 @@ export class RenderSystem extends System {
 		else if (subIndex == 1) {
 			const body = (<PhysicsBodyCP>entity.getComponent('Polar:PhysicsBody')).body;
 			const texture = <Texture2DCP>entity.getComponent('Polar:Texture2D');
-			Renderer.submitTextured(texture.texture, createTransform(body.position[0], body.position[1], texture.width, texture.height, body.angle));
-			console.log(`${body.position[0]}, ${body.position[1]}, ${texture.texture.getWidth()}, ${texture.texture.getWidth()}, ${body.angle}`);
+			const textureAttachment = <BodyTextureAttachmentCP>entity.getComponent('Polar:BodyTextureAttachment');
+			const sin = Math.sin(body.angle);
+			const cos = Math.cos(body.angle);
+			Renderer.submitTextured(texture.texture, createTransform(
+				body.position[0] + cos * textureAttachment.offsetX - sin * textureAttachment.offsetY, 
+				body.position[1] + sin * textureAttachment.offsetX + cos * textureAttachment.offsetY, 
+				body.angle + textureAttachment.rotation,
+				textureAttachment.width, 
+				textureAttachment.height
+			));
 		}
 		// Render sprites with TextureRef component.
 		else if (subIndex == 2) {
@@ -53,9 +63,17 @@ export class RenderSystem extends System {
 			const body = (<PhysicsBodyCP>entity.getComponent('Polar:PhysicsBody')).body;
 			const textureCP = <TextureRefCP>entity.getComponent('Polar:TextureRef');
 			const textureLibCP = <TextureLibraryCP>this.getManager().getSingleton('Polar:TextureLibrary');
+			const textureAttachment = <BodyTextureAttachmentCP>entity.getComponent('Polar:BodyTextureAttachment');
 			const texture = textureLibCP.library.get(textureCP.alias);
-			Renderer.submitTextured(texture, createTransform(body.position[0], body.position[1], textureCP.width, textureCP.height, body.angle));
-			console.log(`${body.position[0]}, ${body.position[1]}, ${texture.getWidth()}, ${texture.getWidth()}, ${body.angle}`);
+			const sin = Math.sin(body.angle);
+			const cos = Math.cos(body.angle);
+			Renderer.submitTextured(texture, createTransform(
+				body.position[0] + cos * textureAttachment.offsetX - sin * textureAttachment.offsetY, 
+				body.position[1] + sin * textureAttachment.offsetX + cos * textureAttachment.offsetY, 
+				body.angle + textureAttachment.rotation,
+				textureAttachment.width, 
+				textureAttachment.height
+			));
 		}
 		// Render outline.
 		else if (subIndex == 4) {
@@ -64,20 +82,31 @@ export class RenderSystem extends System {
 			Renderer.submitColoredOutline(color, transform);
 		}
 	}
-
+	
 	public beginUpdate(dt: number): void {
 		Renderer.beginScene((<CameraCP>this.getManager().getSingleton('Polar:Camera')).camera);
 	}
-
+	
 	public endUpdate(dt: number): void {
 		Renderer.endScene();
 	}
+	
+	public onEvent(event: Event): void {}
 }
 
+/**
+ * Stores data about an entities outline. Entities with this component and a transform component will have a square outline rendered around them.
+ * @component
+ */
 export class OutlineCP extends Component {
 	public readonly type = 'Polar:Outline';
+	/** The outline color. */
 	public color: glm.vec4;
 
+	/**
+	 * Create a new outline component.
+	 * @param {glm.vec4} [color=glm.vec4.fromValues(1, 0, 0, 1)] The outline color.
+	 */
 	public constructor(color: glm.vec4 = glm.vec4.fromValues(1, 0, 0, 1)) {
 		super();
 		this.color = color;

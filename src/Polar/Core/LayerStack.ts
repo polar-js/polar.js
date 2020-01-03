@@ -1,7 +1,8 @@
 import { Layer } from './Layer';
 
 export class LayerStack {
-	private layers: Layer[];
+	
+	public layers: Layer[];
 	private layerInsertIndex = 0;
 
 	/** Create a new layer stack. */

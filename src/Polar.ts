@@ -30,8 +30,13 @@ import * as InvertShaderSource from './Polar/Renderer/ShaderSource/InvertShaderS
 import * as GrayscaleShaderSource from './Polar/Renderer/ShaderSource/GrayscaleShaderSource';
 import * as VignetteShaderSource from './Polar/Renderer/ShaderSource/VignetteShaderSource';
 import * as GaussianBlurShaderSource from './Polar/Renderer/ShaderSource/GaussianBlurShaderSource';
+import * as ChromaticAberrationShaderSource from './Polar/Renderer/ShaderSource/ChromaticAberrationShaderSource';
+import * as GrainShaderSource from './Polar/Renderer/ShaderSource/GrainShaderSource';
 
-export { Application, glm, p2, TextureShaderSource, ColorShaderSource, InvertShaderSource, GrayscaleShaderSource, VignetteShaderSource, GaussianBlurShaderSource };
+export { Application, glm, p2, 
+	TextureShaderSource, ColorShaderSource, InvertShaderSource, 
+	GrayscaleShaderSource, VignetteShaderSource, GaussianBlurShaderSource, 
+	ChromaticAberrationShaderSource, GrainShaderSource };
 
 export * from './Polar/Core/Layer';
 export * from './Polar/Core/Input';
@@ -63,11 +68,16 @@ export * from './Polar/ECS/System';
 export * from './Polar/ECS/WorldManager';
 export * from './Polar/ECS/ECSState';
 export * from './Polar/ECS/Systems/CameraControllerSystem';
-export * from './Polar/ECS/Systems/RenderSystem';
-export * from './Polar/ECS/Systems/Physics';
+export * from './Polar/ECS/Systems/LightRenderSystem';
 export * from './Polar/ECS/Systems/ParticleSystem';
+export * from './Polar/ECS/Systems/Physics';
+export * from './Polar/ECS/Systems/RenderSystem';
 export * from './Polar/ECS/Systems/TransformSystem';
 export * from './Polar/ECS/Systems/TextureLoad';
+export * from './Polar/Events/ApplicationEvent';
+export * from './Polar/Events/Event';
+export * from './Polar/Events/KeyEvent';
+export * from './Polar/Events/MouseEvent';
 export * from './Polar/Util/Timer';
 export * from './Polar/Util/OrthographicCameraController';
 export * from './Polar/Util/Math';

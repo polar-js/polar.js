@@ -1,10 +1,12 @@
+import * as glm from 'gl-matrix';
 import { OrthographicCamera } from '../Renderer/OrthographicCamera';
 import { Input } from '../Core/Input';
-import { Surface } from '../Renderer/Surface';
-import * as glm from 'gl-matrix';
+import { Event, EventDispatcher, EventHandler } from '../Events/Event';
+import { CanvasResizeEvent } from 'Polar/Events/ApplicationEvent';
+import { MouseWheelEvent } from 'Polar/Events/MouseEvent';
 
 /** Class which controls the input and control of an orthographic camera. */
-export class OrthographicCameraController {
+export class OrthographicCameraController implements EventHandler {
 	private aspectRatio: number;
 	private zoomLevel: number;
 	private camera: OrthographicCamera;
@@ -29,17 +31,6 @@ export class OrthographicCameraController {
 		this.zoomLevel = initialZoomLevel;
 		this.doRotation = doRotation;
 		this.camera = new OrthographicCamera(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
-
-		window.addEventListener('mousewheel', (ev: MouseWheelEvent) => {
-			this.zoomLevel += ev.deltaY / 1000 * this.zoomLevel;
-			this.zoomLevel = this.zoomLevel > 0.1 ? this.zoomLevel : 0.1;
-			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
-		});
-
-		Surface.addResizeCallback(canvas => {
-			this.aspectRatio = canvas.width / canvas.height;
-			this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
-		});
 	}
 
 	/**
@@ -83,6 +74,25 @@ export class OrthographicCameraController {
 		// Only recalculate if the position has changed.
 		if (doPosition)
 			this.camera.setPosition(this.cameraPosition);
+	}
+
+	public onEvent(event: Event) {
+		const dispatcher = new EventDispatcher(event);
+		dispatcher.dispatch(CanvasResizeEvent, this.onCanvasResize.bind(this));
+		dispatcher.dispatch(MouseWheelEvent, this.onMouseWheel.bind(this));
+	}
+
+	private onCanvasResize(event: CanvasResizeEvent): boolean {
+		this.aspectRatio = event.width / event.height;
+		this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
+		return false;
+	}
+
+	private onMouseWheel(event: MouseWheelEvent): boolean {
+		this.zoomLevel += event.deltaY / 1000 * this.zoomLevel;
+		this.zoomLevel = this.zoomLevel > 0.1 ? this.zoomLevel : 0.1;
+		this.camera.setProjection(-this.aspectRatio * this.zoomLevel, this.aspectRatio * this.zoomLevel, -this.zoomLevel, this.zoomLevel);
+		return false;
 	}
 
 	/**

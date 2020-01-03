@@ -1,4 +1,5 @@
 import * as glm from 'gl-matrix';
+import { Event } from '../Events/Event';
 
 /** Class representing an orthographic camera for use in a Polar scene. */
 export class OrthographicCamera {
@@ -8,6 +9,8 @@ export class OrthographicCamera {
 
 	private position: glm.vec3;
 	private rotation: number;
+
+	private eventCallbackFn: (event: Event) => void;
 
 	/**
 	 * Create an orthographic camera.
@@ -37,8 +40,6 @@ export class OrthographicCamera {
 
 		glm.mat4.invert(this.viewMatrix, transform);
 		glm.mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
-		const event = new CustomEvent('Polar:CameraTransform');
-		window.dispatchEvent(event);
 	}
 
 	/**
@@ -111,7 +112,5 @@ export class OrthographicCamera {
 		this.viewProjectionMatrix = glm.mat4.create();
 		glm.mat4.ortho(this.projectionMatrix, left, right, bottom, top, -1.0, 1.0);
 		glm.mat4.multiply(this.viewProjectionMatrix, this.projectionMatrix, this.viewMatrix);
-		const event = new CustomEvent('Polar:CameraTransform');
-		window.dispatchEvent(event);
 	}
 }

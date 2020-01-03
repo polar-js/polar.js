@@ -2,18 +2,25 @@ import { System } from './System';
 import { Entity } from './Entity';
 import { Component } from './Component';
 import { ECSState, ECSLoader, EntityTemplate } from './ECSState';
+import { Event, EventHandler, EventCreator } from 'Polar/Events/Event';
 
 /** Controls and manages the entity component system of a world. */
-export class WorldManager {
+export class WorldManager implements EventHandler, EventCreator {
 	private systems: System[];
-
+	
 	private entities: Map<number, Entity>;
 	private entityCount: number;
-
+	
 	private singletons: Entity;
-
+	
+	eventCallbackFn: (event: Event) => void;
+	
 	/** Create a new world manager. */
-	public constructor(state?: ECSState) {
+	public constructor(eventCallbackFn: (event: Event) => void, state?: ECSState) {
+		
+		if (!eventCallbackFn)
+			console.error('No event callback function specified. If this is being called from a layer, input this.eventCallbackFn.');
+		this.eventCallbackFn = eventCallbackFn;
 
 		this.entityCount = 0;
 		this.entities = new Map<number, Entity>();
@@ -24,12 +31,12 @@ export class WorldManager {
 			for (let component of state.singletons.components) {
 				this.singletons.addComponent(component);
 			}
-
+			
 			// Load systems.
 			for (let system of ECSLoader.getSystems(state)) {
 				this.addSystem(system);
 			}
-
+			
 			// Load entities.
 			for (let template of state.entities) {
 				let entity = this.createEntity();
@@ -63,11 +70,22 @@ export class WorldManager {
 	}
 
 	/**
+	 * Propagates an event to all the world manager systems. To be called in Layer.onEvent(...).
+	 * @param {Event} event The event.
+	 */
+	public onEvent(event: Event) {
+		for (const system of this.systems) {
+			system.onEvent(event);
+		}
+	}
+	
+	/**
 	 * Add a system to the world.
 	 * @param {System} system The system to be added.
 	 */
 	public addSystem(system: System) {
 		system.getManager = () => { return this; };
+		system.eventCallbackFn = this.eventCallbackFn;
 		this.systems.push(system);
 		system.onAttach();
 	}
@@ -111,7 +129,6 @@ export class WorldManager {
 	 * @returns {boolean} Whether the entity existed and was removed.
 	 */
 	public removeEntityById(eid: number): boolean {
-
 		this.removeEntitySubscriptions(eid);
 		return this.entities.delete(eid);
 	}
