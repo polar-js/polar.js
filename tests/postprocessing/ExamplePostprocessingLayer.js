@@ -19,9 +19,9 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		this.manager.addSystem(new Polar.ParticleSystem());
 
 		const e = this.manager.createEntity();
-		e.addComponent(new Polar.TransformCP());
+		e.addComponent(new Polar.TransformCP(0, 0, 0, 16/3, 3));
 		const alphatest = new Polar.Texture2D();
-		alphatest.loadFromPath('/textures/alphatest.png');
+		alphatest.loadFromPath('/textures/scene.png');
 		e.addComponent(new Polar.Texture2DCP(alphatest));
 		this.manager.registerComponents(e);
 
@@ -95,6 +95,22 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		setupPostprocessingCheckbox('chromatic-aberration-checkbox', 'ChromaticAberration');
 		setupPostprocessingCheckbox('grain-checkbox', 'Grain');
 
+		this.doTrip = false;
+		document.getElementById('trip-checkbox').addEventListener('change', event => {
+			if (event.target.checked) {
+				document.getElementById('blur-h-checkbox').checked = true;
+				document.getElementById('blur-v-checkbox').checked = true;
+				document.getElementById('chromatic-aberration-checkbox').checked = true;
+				Polar.Renderer.enablePostprocessingStage('HorizontalBlur');
+				Polar.Renderer.enablePostprocessingStage('VerticalBlur');
+				Polar.Renderer.enablePostprocessingStage('ChromaticAberration');
+				this.doTrip = true;
+			}
+			else {
+				this.doTrip = false;
+			}
+		});
+
 		Polar.Renderer.disablePostprocessingStage('Invert');
 		Polar.Renderer.disablePostprocessingStage('Grayscale');
 		Polar.Renderer.disablePostprocessingStage('Vignette');
@@ -108,6 +124,11 @@ class ExamplePostprocessingLayer extends Polar.Layer {
 		this.manager.onUpdate(deltaTime);
 
 		Polar.Renderer.setPostprocessingStageUniform('Grain', 'u_Variant', Math.random());
+		if (this.doTrip) {
+			Polar.Renderer.setPostprocessingStageUniform('ChromaticAberration', 'u_Intensity', 0.02 * Math.sin(performance.now() / 350));
+			Polar.Renderer.setPostprocessingStageUniform('HorizontalBlur', 'u_Spread', 5 * Math.sin(performance.now() / 400));
+			Polar.Renderer.setPostprocessingStageUniform('VerticalBlur', 'u_Spread', 5 * Math.sin(performance.now() / 450));
+		}
 	}
 
 	onEvent(event) {

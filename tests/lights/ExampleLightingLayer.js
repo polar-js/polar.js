@@ -21,10 +21,10 @@ class ExampleLightingLayer extends Polar.Layer {
 
 		// Create the sprite's texture.
 		const checkerboardTexture = new Polar.Texture2D();
-		checkerboardTexture.loadFromPath('/textures/checkerboard.png');
+		checkerboardTexture.loadFromPath('/textures/scene.png');
 
 		const boxEntity = this.manager.createEntity();
-		boxEntity.addComponent(new Polar.TransformCP(0, 0, 0, 1, 1));
+		boxEntity.addComponent(new Polar.TransformCP(0, 0, 0, 16 / 3, 3));
 		boxEntity.addComponent(new Polar.Texture2DCP(checkerboardTexture));
 		this.manager.registerComponents(boxEntity);
 
