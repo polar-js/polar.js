@@ -2,7 +2,7 @@ import { System } from './System';
 import { Entity } from './Entity';
 import { Component } from './Component';
 import { ECSState, ECSLoader, EntityTemplate } from './ECSState';
-import { Event, EventHandler, EventCreator } from 'Polar/Events/Event';
+import { Event, EventHandler, EventCreator } from '../Events/Event';
 
 /** Controls and manages the entity component system of a world. */
 export class WorldManager implements EventHandler, EventCreator {

@@ -9,7 +9,7 @@ import { FrameBuffer } from './FrameBuffer';
 import { Texture2D } from './Texture';
 import { RenderBuffer } from './RenderBuffer';
 import { Event, EventDispatcher } from '../Events/Event';
-import { CanvasResizeEvent } from 'Polar/Events/ApplicationEvent';
+import { CanvasResizeEvent } from '../Events/ApplicationEvent';
 import * as LightShaderSource from './ShaderSource/LightShaderSource';
 import * as MultiplyTextureShaderSource from './ShaderSource/MultiplyTextureShaderSource';
 

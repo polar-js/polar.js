@@ -2,8 +2,8 @@ import * as glm from 'gl-matrix';
 import { OrthographicCamera } from '../Renderer/OrthographicCamera';
 import { Input } from '../Core/Input';
 import { Event, EventDispatcher, EventHandler } from '../Events/Event';
-import { CanvasResizeEvent } from 'Polar/Events/ApplicationEvent';
-import { MouseWheelEvent } from 'Polar/Events/MouseEvent';
+import { CanvasResizeEvent } from '../Events/ApplicationEvent';
+import { MouseWheelEvent } from '../Events/MouseEvent';
 
 /** Class which controls the input and control of an orthographic camera. */
 export class OrthographicCameraController implements EventHandler {
