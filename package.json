@@ -33,7 +33,7 @@
         "typedoc": "^0.15.0",
         "typescript": "^3.6.4",
         "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10"
+        "webpack-cli": "^3.3.12"
     },
     "dependencies": {
         "@types/gl-matrix": "^2.4.5",

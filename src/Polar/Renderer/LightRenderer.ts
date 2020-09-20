@@ -160,7 +160,7 @@ export class LightRenderer {
 	 */
 	public static submitLight(color: glm.vec3, intensity: number, transform: glm.mat4) {
 		if (this.lightCount < MAX_LIGHTS) {
-			this.lightData.set(Float32Concat(transform, Float32Concat(color, new Float32Array([intensity]))), 
+			this.lightData.set(Float32Concat(new Float32Array(transform), Float32Concat(new Float32Array(color), new Float32Array([intensity]))), 
 				this.lightCount * this.instanceBuffer.getLayout().getComponentCount());
 			this.lightCount++;
 		}

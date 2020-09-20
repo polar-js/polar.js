@@ -8,8 +8,7 @@
 
 
 Polar.js is a quick, intuitive and easy 2D game engine developed in TypeScript for use on the web. It uses WebGL2 to deliver competitive performance and an entity component system to ensure scalability and ease of development.
-## Showcase
-https://youtu.be/ZVPHzbGP_gs
+
 ## Getting Started
 ```js
 // Add some example code here

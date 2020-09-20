@@ -79,8 +79,8 @@ export class TextureAtlas {
 		for (const rect of bin.rects) {
 			const entry = rect as AtlasEntry;
 			entry.bounds = glm.vec4.create();
-			entry.bounds.set([entry.x / bin.width, entry.y / bin.height,
-				entry.width / bin.width, entry.height / bin.height]);
+			entry.bounds = glm.vec4.fromValues(entry.x / bin.width, entry.y / bin.height,
+				entry.width / bin.width, entry.height / bin.height);
 
 			this.entries.set(entry.alias, entry);
 			this.context.drawImage(entry.image, entry.x, entry.y);
