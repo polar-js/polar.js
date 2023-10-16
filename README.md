@@ -6,8 +6,8 @@
 
 #### [documentation](https://polar.js.org) | [npm](http://npmjs.org/package/polar.js) | [github](https://github.com/JellyAlex/polar.js)
 
-
-Polar.js is a quick, intuitive and easy 2D game engine developed in TypeScript for use on the web. It uses WebGL2 to deliver competitive performance and an entity component system to ensure scalability and ease of development.
+This is a WebGL-based game engine we wrote back in highschool.
+[This video](https://youtu.be/ZVPHzbGP_gs) is a good showcase of what it can do.
 
 ## Getting Started
 ```js
@@ -27,8 +27,8 @@ npm install polar.js
 ```
 Alternatively, you can bundle the engine with your app seperately by downloading the package with npm.
 
-## Examples
-Some basic examples of what was made with the engine can be found here *link to other github and gh pages with some examples on*
+## Showcase
+https://youtu.be/ZVPHzbGP_gs
 
 ## Contribute
 Feel free to fork a recent commit to add, edit or optimise the engine.
