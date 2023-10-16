@@ -6,8 +6,8 @@
 
 #### [documentation](https://polar.js.org) | [npm](http://npmjs.org/package/polar.js) | [github](https://github.com/JellyAlex/polar.js)
 
-This is a WebGL-based game engine we wrote back in highschool.
-[This video](https://youtu.be/ZVPHzbGP_gs) is a good showcase of what it can do.
+Polar.js is a WebGL-based game engine we wrote back in highschool.
+This [video](https://youtu.be/ZVPHzbGP_gs) is a good showcase of what it can do.
 
 ## Getting Started
 ```js
